@@ -109,8 +109,6 @@ class RegistrationForm extends React.Component {
     }
 
     verifyRecaptchaCallback(response) {
-        //console.log("HERE IS THE VERIFICATON CALLBACK")
-        //console.log(response);
         this.setState({gRecaptchaResponse: response});
     };
 
@@ -144,9 +142,9 @@ RegistrationForm.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.getIn('auth.isAuthenticated'.split('.')),
-    errors: state.getIn('auth.registration.errors'.split('.')),
-    redirect: state.getIn('auth.registration.redirect'.split('.')),
+    isAuthenticated: state.getInPath('auth.isAuthenticated'),
+    errors: state.getInPath('auth.registration.errors'),
+    redirect: state.getInPath('auth.registration.redirect'),
 })
 
 const mapDispatchToProps = dispatch => {
