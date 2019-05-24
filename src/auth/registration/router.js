@@ -5,8 +5,8 @@ import RegistrationPage from './index'
 import ActivationPage from './activate'
 import { LoginPage } from './login'
 
-import PasswordResetPage from './password/reset'
-import PasswordResetConfirmPage from './password/confirm'
+import PasswordResetPage from '../password/reset'
+import PasswordResetConfirmPage from '../password/confirm'
 
 
 class AccountsRouter extends React.Component {

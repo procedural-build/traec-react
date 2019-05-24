@@ -1,6 +1,6 @@
 {
   "name": "traec-react",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -36,8 +36,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json",
-    "prepublish": "npm run build",
-    "publish": "npm publish ./dist"
+    "prepublish": "",
+    "publish": "npm run build && npm publish ./dist"
   },
   "repository": {
     "type": "git",
