@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
 import { BSCard } from 'AppSrc/utils/bootstrap'
-import { postPasswordReset } from "../../_redux/actionCreators"
+import { postPasswordReset } from "../_redux/actionCreators"
 
 
 class PasswordResetPage extends React.Component {

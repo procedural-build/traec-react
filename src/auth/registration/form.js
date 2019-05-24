@@ -66,24 +66,13 @@ class RegistrationForm extends React.Component {
         e.preventDefault();
 
         const post = {
+            ...this.state,
             name: "",
-            username: this.state.username,
-            password: this.state.password,
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            email: this.state.email,
-            password1: this.state.password1,
-            password2: this.state.password2,
             gRecaptchaSiteKey: getRecaptchaSiteKey(),
-            gRecaptchaResponse: this.state.gRecaptchaResponse,
         }
 
         // Call action when form submitted
-        //console.log(this.props.postLogin);
         this.props.dispatch(postRegistration(post));
-    }
-
-    componentWillMount() {
     }
 
     render_item(attr, placeholder, help_block, fieldType="text") {

@@ -3,7 +3,6 @@ import {Route, Switch} from "react-router-dom";
 
 import RegistrationPage from './index'
 import ActivationPage from './activate'
-import UserProfile from 'AppSrc/user'
 import { LoginPage } from './login'
 
 import PasswordResetPage from './password/reset'
@@ -23,7 +22,7 @@ class AccountsRouter extends React.Component {
         
                     {/* Login and profile pages */}
                     <Route exact path={`${baseUrl}/login`} component={LoginPage} />
-                    <Route exact path={`${baseUrl}/profile`} component={UserProfile} />
+                    <Route exact path={`${baseUrl}/profile`} component={this.props.UserProfile} />
 
                     {/* Password reset pages */}
                     <Route exact path={`${baseUrl}/password/reset`} component={PasswordResetPage} />
