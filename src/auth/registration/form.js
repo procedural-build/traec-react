@@ -1,11 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { Link } from "react-router-dom";
-import { Redirect } from 'react-router'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Recaptcha from 'react-recaptcha';
-import Cookies from 'js-cookie';
 import { postRegistration } from "../_redux/actionCreators"
 
 /* TODO: This may be changed to make use of a csrftoken

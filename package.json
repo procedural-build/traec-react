@@ -13,6 +13,7 @@
     "react-redux": "^7.0.3",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
+    "react-date-picker": "^7.5.0",
     "jwt-decode": "^2.2.0"
   },
   "devDependencies": {
