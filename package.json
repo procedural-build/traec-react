@@ -1,0 +1,45 @@
+{
+  "name": "traec-react",
+  "version": "0.1.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "traec": "^1.4.0",
+    "node": "^10.15.3",
+    "nodejs": "^0.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-recaptcha": "^2.3.10",
+    "react-redux": "^7.0.3",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
+    "jwt-decode": "^2.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-preset-es2015": "^6.24.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json",
+    "prepublish": "npm run build",
+    "publish": "npm publish ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/procedural-build/traec.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/procedural-build/traec/issues"
+  },
+  "homepage": "https://github.com/procedural-build/traec#readme"
+}
