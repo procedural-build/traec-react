@@ -1,12 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { connect } from 'react-redux';
 
-import { Link } from "react-router-dom";
-import { Icon } from "AppSrc/dashboards/icons";
 import RegistrationForm from './form';
 import { RegistrationConfirmationCard } from './confirm'
 import { BSCard } from 'AppSrc/utils/bootstrap'
+
 
 class RegistrationPage extends React.Component {
 

@@ -1,7 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
-
-import {Route, Switch, Link} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 
 import RegistrationPage from './index'
 import ActivationPage from './activate'

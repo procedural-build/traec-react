@@ -1,12 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import { Link } from "react-router-dom";
-import { Icon } from "AppSrc/dashboards/icons";
-import { BSCard, BSBtn } from 'AppSrc/utils/bootstrap'
-
+import { BSCard } from 'AppSrc/utils/bootstrap'
 import { postPasswordResetConfirm } from "AppSrc/auth/_redux/actionCreators"
 import LoginForm from 'AppSrc/auth/form'
 

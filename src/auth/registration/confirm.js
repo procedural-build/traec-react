@@ -1,9 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { BSCard } from 'AppSrc/utils/bootstrap'
 
-import { Link } from "react-router-dom";
-import { Icon } from "AppSrc/dashboards/icons";
-import { BSCard, BSBtn } from 'AppSrc/utils/bootstrap'
 
 class RegistrationConfirmationCard extends React.Component {
 

@@ -1,8 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import { connect } from 'react-redux';
-
-import {RightArrow, Spinner} from 'AppSrc/utils/entities'
 import {companyPermissionRender} from 'traec/utils/permissions/company'
 
 import MemberList from './memberList';

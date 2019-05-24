@@ -1,5 +1,5 @@
 import React from "react";
-import { BSCard, BSBtn } from 'AppSrc/utils/bootstrap';
+import { BSCard } from 'AppSrc/utils/bootstrap';
 import LoginForm from '../form'
 
 

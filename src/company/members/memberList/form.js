@@ -1,14 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
-
-import {Link} from "react-router-dom";
-
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {fetchToState, toggleForm} from 'traec/redux/actionCreators'
 import { BaseForm } from 'AppSrc/utils/form'
 import {objToList} from 'AppSrc/utils'
+
 
 // Project field definitions
 export const inviteFields = {
@@ -19,6 +16,7 @@ export const inviteFields = {
     },
     //auth: {value:'', class: 'col mb-1', label: '', placeholder: 'AuthGroup'}
 }
+
 
 class InviteForm extends BaseForm {
 
