@@ -40,7 +40,7 @@ class ProjectMembers extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     const {projectId} = ownProps.match.params
-    let project = state.getIn(`entities.projects.byId.${projectId}`.split('.'))
+    let project = state.getInPath(`entities.projects.byId.${projectId}`)
     let company = project ? project.get('company') : null
     return { projectId, project, company}
 }

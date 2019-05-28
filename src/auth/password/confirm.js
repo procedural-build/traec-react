@@ -117,9 +117,9 @@ class PasswordResetConfirmPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.getIn('auth.isAuthenticated'.split('.')),
-    status: state.getIn('auth.registration.password_reset.status'.split('.')),
-    errors: state.getIn('auth.registration.password_reset.errors'.split('.'))
+    isAuthenticated: state.getInPath('auth.isAuthenticated'),
+    status: state.getInPath('auth.registration.password_reset.status'),
+    errors: state.getInPath('auth.registration.password_reset.errors')
 })
 
 const mapDispatchToProps = dispatch => {

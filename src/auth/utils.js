@@ -1,8 +1,8 @@
 
 
 export const authFailed = (state) => {
-    const isAuthenticated = state.getIn('auth.isAuthenticated'.split('.'))
-    const status = state.getIn('auth.status'.split('.'))
+    const isAuthenticated = state.getInPath('auth.isAuthenticated')
+    const status = state.getInPath('auth.status')
     if (!isAuthenticated && status == 'pending') {
         return false
     }

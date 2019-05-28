@@ -39,7 +39,7 @@ class RegistrationPage extends React.Component {
 
 
 const mapStateToProps = state => ({
-    redirect: state.getIn('auth.registration.redirect'.split('.')),
+    redirect: state.getInPath('auth.registration.redirect'),
 })
 
 const mapDispatchToProps = dispatch => {

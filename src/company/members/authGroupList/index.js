@@ -107,7 +107,7 @@ const mapStateToProps = (state, ownProps) => {
     return ({
         company,
         authgroups,
-        isAuthenticated: state.getIn('auth.isAuthorized'.split('.'))
+        isAuthenticated: state.getInPath('auth.isAuthorized')
     })
 }
 

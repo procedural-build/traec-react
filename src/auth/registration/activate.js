@@ -83,9 +83,9 @@ ActivationPage.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.getIn('auth.isAuthenticated'.split('.')),
-    status: state.getIn('auth.registration.activate.status'.split('.')),
-    errors: state.getIn('auth.registration.activate.errors'.split('.'))
+    isAuthenticated: state.getInPath('auth.isAuthenticated'),
+    status: state.getInPath('auth.registration.activate.status'),
+    errors: state.getInPath('auth.registration.activate.errors')
 })
 
 const mapDispatchToProps = dispatch => {

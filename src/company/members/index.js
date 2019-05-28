@@ -43,7 +43,7 @@ class CompanyMembers extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     const {companyId} = ownProps.match.params
-    let company = state.getIn(`entities.companies.byId.${companyId}`.split('.'))
+    let company = state.getInPath(`entities.companies.byId.${companyId}`)
     return { companyId, company}
 }
 

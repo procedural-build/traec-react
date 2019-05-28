@@ -1,12 +1,12 @@
 import React from "react";
 import {Route, Switch} from "react-router-dom";
 
-import RegistrationPage from './index'
-import ActivationPage from './activate'
-import { LoginPage } from './login'
+import RegistrationPage from './registration/index'
+import ActivationPage from './registration/activate'
+import LoginPage from './registration/login'
 
-import PasswordResetPage from '../password/reset'
-import PasswordResetConfirmPage from '../password/confirm'
+import PasswordResetPage from './password/reset'
+import PasswordResetConfirmPage from './password/confirm'
 
 
 class AccountsRouter extends React.Component {
@@ -34,4 +34,4 @@ class AccountsRouter extends React.Component {
     }
 }
 
-export { AccountsRouter };
+export default AccountsRouter;

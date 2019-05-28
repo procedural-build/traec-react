@@ -57,14 +57,14 @@ InviteForm.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     const {companyId} = ownProps
-    let authgroups = state.getIn(
-        `entities.companyObjects.byId.${companyId}.authgroups`.split('.')
+    let authgroups = state.getInPath(
+        `entities.companyObjects.byId.${companyId}.authgroups`
     )
     const s = ownProps.stateParams
     return ({
         authgroups,
-        newItem: state.getIn(`entities.${s.formObjPath}`.split('.')),
-        showForm: state.getIn(`entities.${s.formVisPath}`.split('.'))
+        newItem: state.getInPath(`entities.${s.formObjPath}`),
+        showForm: state.getInPath(`entities.${s.formVisPath}`)
     })
 }
 
