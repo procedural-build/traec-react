@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { BSCard } from 'AppSrc/utils/bootstrap'
+import { BSCard } from 'traec-react/utils/bootstrap'
 
 import { putActivation } from "../_redux/actionCreators"
 import LoginForm from '../form'

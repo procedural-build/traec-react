@@ -1,5 +1,5 @@
 import React from "react";
-import { BSCard } from 'AppSrc/utils/bootstrap'
+import { BSCard } from 'traec-react/utils/bootstrap'
 
 
 class RegistrationConfirmationCard extends React.Component {

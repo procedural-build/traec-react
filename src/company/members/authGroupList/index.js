@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import Traec from 'traec'
 
-import { BSCard, BSBtn } from 'AppSrc/utils/bootstrap';
+import { BSCard, BSBtn } from 'traec-react/utils/bootstrap';
 import CompanyAuthGroupForm from './form'
 import AuthGroupItem from './item'
 

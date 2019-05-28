@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
 import {fetchToState, toggleForm} from 'traec/redux/actionCreators'
-import { BaseForm } from 'AppSrc/utils/form'
+import { BaseForm } from 'traec-react/utils/form'
 import Traec from 'traec'
 
 

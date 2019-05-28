@@ -3,7 +3,7 @@ import { DropzoneButton } from "./dropZone";
 import Traec from "traec";
 import Octicon from "react-octicon";
 import { connect } from "react-redux";
-import { BSBtn } from "AppSrc/utils/bootstrap";
+import { BSBtn } from "traec-react/utils/bootstrap";
 
 class UploadDocumentButton extends React.Component {
   constructor(props) {

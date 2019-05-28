@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import RegistrationForm from './form';
 import { RegistrationConfirmationCard } from './confirm'
-import { BSCard } from 'AppSrc/utils/bootstrap'
+import { BSCard } from 'traec-react/utils/bootstrap'
 
 
 class RegistrationPage extends React.Component {

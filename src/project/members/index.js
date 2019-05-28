@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import { connect } from 'react-redux';
 
-import {RightArrow, Spinner} from 'AppSrc/utils/entities'
+import {RightArrow, Spinner} from 'traec-react/utils/entities'
 
 import MemberList from './memberList';
 import InviteList from './inviteList';

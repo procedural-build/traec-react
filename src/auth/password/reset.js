@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { BSCard } from 'AppSrc/utils/bootstrap'
+import { BSCard } from 'traec-react/utils/bootstrap'
 import { postPasswordReset } from "../_redux/actionCreators"
 
 

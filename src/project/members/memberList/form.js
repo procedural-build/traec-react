@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {fetchToState, toggleForm} from 'traec/redux/actionCreators'
-import { BaseForm } from 'AppSrc/utils/form'
-import {objToList} from 'AppSrc/utils'
+import { BaseForm } from 'traec-react/utils/form'
+import {objToList} from 'traec-react/utils'
 
 // Project field definitions
 export const inviteFields = {

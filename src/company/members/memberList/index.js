@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Traec from 'traec'
 
-import { BSCard, BSBtn, BSBtnDropdown } from 'AppSrc/utils/bootstrap';
+import { BSCard, BSBtn, BSBtnDropdown } from 'traec-react/utils/bootstrap';
 
-import { objToList } from 'AppSrc/utils'
+import { objToList } from 'traec-react/utils'
 import InviteForm, {inviteFields} from './form';
 import {companyPermissionRender} from 'traec/utils/permissions/company'
 import MemberItem from './item'

@@ -5,7 +5,7 @@ import Traec from 'traec'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { BSCard } from 'AppSrc/utils/bootstrap';
+import { BSCard } from 'traec-react/utils/bootstrap';
 import InviteItem from './item'
 
 

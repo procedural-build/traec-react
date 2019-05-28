@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Traec from 'traec'
 
-import { BSBtnDropdown } from 'AppSrc/utils/bootstrap';
+import { BSBtnDropdown } from 'traec-react/utils/bootstrap';
 import {projectPermissionRender} from 'traec/utils/permissions/project'
-import {confirmDelete} from 'AppSrc/utils/sweetalert'
+import {confirmDelete} from 'traec-react/utils/sweetalert'
 import DisciplineForm, {disciplineFields} from './form'
 
 

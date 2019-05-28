@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Traec from 'traec'
 
-import { BSBtnDropdown } from 'AppSrc/utils/bootstrap';
+import { BSBtnDropdown } from 'traec-react/utils/bootstrap';
 import {projectPermissionRender} from 'traec/utils/permissions/project'
-import {confirmDelete} from 'AppSrc/utils/sweetalert';
+import {confirmDelete} from 'traec-react/utils/sweetalert';
 
 
 export default class MemberItem extends React.Component {

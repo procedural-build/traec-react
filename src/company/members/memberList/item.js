@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Traec from 'traec'
-import { BSBtnDropdown } from 'AppSrc/utils/bootstrap';
+import { BSBtnDropdown } from 'traec-react/utils/bootstrap';
 
 import {companyPermissionRender} from 'traec/utils/permissions/company'
-import {confirmDelete} from 'AppSrc/utils/sweetalert' 
+import {confirmDelete} from 'traec-react/utils/sweetalert' 
 
 
 export default class MemberItem extends React.Component {

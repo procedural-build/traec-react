@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import PropTypes from 'prop-types';
 import Traec from 'traec'
 
-import { BSBtnDropdown } from 'AppSrc/utils/bootstrap';
+import { BSBtnDropdown } from 'traec-react/utils/bootstrap';
 import {ProjectAuthGroupForm} from './form'
 
 

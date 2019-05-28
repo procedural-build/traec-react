@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Traec from 'traec'
 
-import { BSCard, BSBtn } from 'AppSrc/utils/bootstrap';
+import { BSCard, BSBtn } from 'traec-react/utils/bootstrap';
 
 import {ProjectAuthGroupForm} from './form'
 import {projectPermissionRender} from 'traec/utils/permissions/project'
