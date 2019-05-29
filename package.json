@@ -35,7 +35,7 @@
     "babel-preset-es2015": "^6.24.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build",
     "matchversion": "npm --no-git-tag-version --allow-same-version version $(npm view traec-react version)",
     "patchversion": "npm --no-git-tag-version version patch",
     "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json",
