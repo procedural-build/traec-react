@@ -17,6 +17,7 @@
     "react-redux": "^7.0.3",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
+    "react-style-proptype": "^3.2.2",
     "react-tinymce": "^0.7.0",
     "sweetalert2": "^8.9.0",
     "traec": "^1.1.10"

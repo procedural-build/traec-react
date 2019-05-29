@@ -322,7 +322,7 @@ class BootstrapSplitPane extends React.Component {
       display: 'flex',
       flex: 1,
       height: '100%',
-      position: 'absolute',
+      //position: 'absolute',
       outline: 'none',
       overflow: 'hidden',
       MozUserSelect: 'text',

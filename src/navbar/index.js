@@ -28,16 +28,23 @@ class Navbar extends React.Component {
     return this.props.items.map((item, i) => this.renderItem(item, i));
   }
 
+  render_brand() {
+    let {brand} = this.props
+    if (brand) { return brand }
+    return (<React.Fragment>Track | <b>Procedural</b>.build</React.Fragment>)
+  }
+
   render() {
+    let {extraClass} = this.props
     return (
       <div className="navbar-area">
         <nav
-          className="navbar navbar-expand-lg navbar-light bg-light navbar-static-top mb-3"
+          className={`navbar navbar-expand-lg navbar-light bg-light navbar-static-top ${extraClass}`}
           role="navigation"
         >
           <div className="container-fluid">
             <span className="navbar-brand">
-              Track | <b>Procedural</b>.build
+              {this.render_brand()}
             </span>
 
             <button
