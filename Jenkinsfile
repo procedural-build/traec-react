@@ -6,7 +6,7 @@ pipeline {
 
   }
 environment {
-        SECRET = credentials('TOKEN')
+        SECRET = credentials('TOKEN2')
     }
 
   stages {
