@@ -66,6 +66,12 @@ class DisciplineList extends React.Component {
                 />
             ))
 
+        let fields = {
+            name: Object.assign({}, disciplineFields.name),
+            auth: Object.assign({}, disciplineFields.auth),
+            approver: Object.assign({}, disciplineFields.approver)
+        }
+
         return (
             <div className="row">
                 <BSCard 
@@ -83,7 +89,7 @@ class DisciplineList extends React.Component {
                         projectId={this.props.projectId} 
                         stateParams={this.state.formParams.stateParams} 
                         fetchParams={this.state.formParams.fetchParams}
-                        fields={disciplineFields}
+                        fields={fields}
                     />}
                 />
             </div>

@@ -66,6 +66,7 @@ const mapStateToProps = (state, ownProps) => {
     let authgroups = state.getInPath(`entities.projectObjects.byId.${projectId}.authgroups`)
     let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`)
     const s = ownProps.stateParams
+    console.log("MAP STATE TO PROPS", s.formObjPath, s.formVisPath)
     return ({
         authgroups,
         disciplines,

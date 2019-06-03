@@ -13,16 +13,7 @@ export default class DisciplineItem extends React.Component {
     constructor(props) {
         super(props)
 
-        let {item, projectId} = props
-        const itemId = item.get('uid')
-        this.fetch = new Traec.Fetch('project_discipline', 'put', {projectId, projectDisciplineId: itemId})
-        this.fetch.updateFetchParams({
-            preFetchHook: (body) => {
-                body.approver = body.approver || null 
-                return body
-            }
-        })
-
+        this.fetch = this.getFetch(props)
         this.state = {
             formParams: {
                 ...this.fetch.params
@@ -33,15 +24,6 @@ export default class DisciplineItem extends React.Component {
         this.dropDownLinks = this.dropDownLinks.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.editItem = this.editItem.bind(this)
-    }
-
-    stateParams() {
-        const project = this.props.item.project
-        const basePath = `${project.uid}.members`
-        return ({
-            objPath: `entities.members.items`,
-            formVisPath: `${basePath}.SHOW_FORM`
-        })
     }
 
     deleteItem(e) {
@@ -57,9 +39,8 @@ export default class DisciplineItem extends React.Component {
         })
     }
 
-    editItem(e) {
-        e.preventDefault();
-        let {item, projectId} = this.props
+    getFetch(props) {
+        let {item, projectId} = props
         const itemId = item.get('uid')
 
         let fetch = new Traec.Fetch('project_discipline', 'put', {projectId, projectDisciplineId: itemId})
@@ -68,10 +49,18 @@ export default class DisciplineItem extends React.Component {
                 body.approver = body.approver || null 
                 return body
             },
-            //postSuccessHook: () => {location.reload()}
+            postSuccessHook: () => (location.reload())
         })
-        this.setState({formParams: {...fetch.params}})
 
+        return fetch
+    }
+
+    editItem(e) {
+        e.preventDefault();
+        let {item} = this.props
+        let fetch = this.getFetch(this.props)
+        console.log("CLICKED EDIT ON ITEM", item.get('name'), fetch.params.stateParams.formVisPath, fetch.params)
+        this.setState({formParams: {...fetch.params}})
         fetch.toggleForm()
     }
 
@@ -83,17 +72,21 @@ export default class DisciplineItem extends React.Component {
     }
 
     render_edit_form() {
-        let {item} = this.props
-        disciplineFields.name.value = item.get('name')
-        disciplineFields.auth.value = item.getInPath('auth.uid') || ""
-        disciplineFields.approver.value = item.get('approver') || ""
+        let {item, projectId} = this.props
+        let fields = {
+            name: Object.assign({}, disciplineFields.name, {value: item.get('name') || ""}),
+            auth: Object.assign({}, disciplineFields.auth, {value: item.getInPath('auth.uid') || ""}),
+            approver: Object.assign({}, disciplineFields.approver, {value: item.get('approver') || ""}),
+
+        }
+        let fetch = this.getFetch(this.props)
+        console.log("RENDERING FORM", item.get('name'), fetch.params.stateParams.formVisPath, fields)
         return (
             <DisciplineForm
-                projectId={this.props.projectId} 
+                projectId={projectId} 
                 itemId={item.get('uid')}
-                stateParams={this.state.formParams.stateParams} 
-                fetchParams={this.state.formParams.fetchParams}
-                fields={disciplineFields}
+                {...fetch.params}
+                fields={fields}
             />
         )
     }
@@ -122,7 +115,7 @@ export default class DisciplineItem extends React.Component {
     render () {
         let {index: i, item, projectId, indent = 0} = this.props
 
-
+        console.log("RENDERING ITEM", item.get('name'), this.getFetch(this.props).params.stateParams.formVisPath)
         return (
             <React.Fragment>
                 <div className="row" key={i} style={{backgroundColor: (i+1) % 2 ? "#ddd" : ""}}>
