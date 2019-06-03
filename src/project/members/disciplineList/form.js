@@ -62,16 +62,14 @@ class DisciplineForm extends BaseForm {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const projectId = ownProps.projectId
+    const {stateParams, projectId} = ownProps
     let authgroups = state.getInPath(`entities.projectObjects.byId.${projectId}.authgroups`)
     let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`)
-    const s = ownProps.stateParams
-    console.log("MAP STATE TO PROPS", s.formObjPath, s.formVisPath)
     return ({
         authgroups,
         disciplines,
-        newItem: state.getInPath(`entities.${s.formObjPath}`),
-        showForm: state.getInPath(`entities.${s.formVisPath}`)
+        newItem: state.getInPath(`entities.${stateParams.formObjPath}`),
+        showForm: state.getInPath(`entities.${stateParams.formVisPath}`)
     })
 }
 

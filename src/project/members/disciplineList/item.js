@@ -59,7 +59,6 @@ export default class DisciplineItem extends React.Component {
         e.preventDefault();
         let {item} = this.props
         let fetch = this.getFetch(this.props)
-        console.log("CLICKED EDIT ON ITEM", item.get('name'), fetch.params.stateParams.formVisPath, fetch.params)
         this.setState({formParams: {...fetch.params}})
         fetch.toggleForm()
     }
@@ -80,7 +79,6 @@ export default class DisciplineItem extends React.Component {
 
         }
         let fetch = this.getFetch(this.props)
-        console.log("RENDERING FORM", item.get('name'), fetch.params.stateParams.formVisPath, fields)
         return (
             <DisciplineForm
                 projectId={projectId} 
@@ -115,7 +113,6 @@ export default class DisciplineItem extends React.Component {
     render () {
         let {index: i, item, projectId, indent = 0} = this.props
 
-        console.log("RENDERING ITEM", item.get('name'), this.getFetch(this.props).params.stateParams.formVisPath)
         return (
             <React.Fragment>
                 <div className="row" key={i} style={{backgroundColor: (i+1) % 2 ? "#ddd" : ""}}>
