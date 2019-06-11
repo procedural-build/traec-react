@@ -10,6 +10,11 @@ environment {
     }
 
   stages {
+    stage('NPM Install') {
+      steps {
+        sh 'npm install'
+      }
+    }
     stage('Test') {
       when {
         anyOf {
@@ -18,7 +23,7 @@ environment {
         }
       }
       steps {
-        sh ' echo "beginning NPM" && npm install && npm test'
+        sh ' echo "beginning NPM" && npm test'
       }
     }
     stage('Publish') {
