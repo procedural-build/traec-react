@@ -11,6 +11,12 @@ environment {
 
   stages {
     stage('Test') {
+      when {
+        anyOf {
+          branch 'dev*'
+          branch 'test*'
+        }
+      }
       steps {
         sh ' echo "beginning NPM" && npm install && npm test'
       }
