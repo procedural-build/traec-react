@@ -17,14 +17,12 @@ class Navbar extends React.Component {
     if (Im.List.isList(to)) {
       return <DropDownItem key={keyIndex} label={label} items={to} />;
     } else {
-      return <MenuItem key={keyIndex} label={label} to={to} />;
+      return <MenuItem key={keyIndex} label={label} to={to} item={item} />;
     }
   }
 
   renderItems() {
-    if (this.props.items == undefined) {
-      return "";
-    }
+    if (this.props.items == null) { return null; }
     return this.props.items.map((item, i) => this.renderItem(item, i));
   }
 
