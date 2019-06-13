@@ -1,11 +1,20 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import Octicon from 'react-octicon';
 
 
 class DropDownItem extends React.Component {
 
+    renderIcon( item ) {
+        let iconName = item.get('octicon')
+        if (!iconName) {return null}
+        return (<Octicon name={iconName}/>);
+    }
+
     renderItem( item, keyIndex ) {
-        const label = item.get('label')
+        let labelText = item.get('label')
+        if (!labelText) { return (<hr key={keyIndex} />) }
+        const label = <span>{this.renderIcon(item)} {labelText}</span>
         const to = item.get('to')
         const onClick = item.get('onClick')
         if (!(label == undefined)) {

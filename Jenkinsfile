@@ -10,9 +10,20 @@ environment {
     }
 
   stages {
-    stage('Test') {
+    stage('NPM Install') {
       steps {
-        sh ' echo "beginning NPM" && npm install && npm test'
+        sh 'npm install'
+      }
+    }
+    stage('Test') {
+      when {
+        anyOf {
+          branch 'dev*'
+          branch 'test*'
+        }
+      }
+      steps {
+        sh ' echo "beginning NPM" && npm test'
       }
     }
     stage('Publish') {
