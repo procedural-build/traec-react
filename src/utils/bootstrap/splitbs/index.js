@@ -6,7 +6,8 @@ import { polyfill } from 'react-lifecycles-compat';
 import Pane from './Pane';
 import Resizer, { RESIZER_DEFAULT_CLASSNAME } from './Resizer';
 import './styles.css'
-import myImage from './collapse.svg'
+import collapseBar from './collapse.png'
+import uncollapseBar from './collapse.svg'
 
 /*
 Fork of react-split-pane (https://github.com/tomkp/react-split-pane)
@@ -80,7 +81,9 @@ class BootstrapSplitPane extends React.Component {
       pane1ClassName: `col-sm-${defaultColSize}`, 
       pane2ClassName: `col-sm-${12-defaultColSize}`,
       collapsed: true,
-
+      collapseButtonIndex: 0,
+      collapseButtonImgList: [collapseBar, uncollapseBar],
+      
       // these are props that are needed in static functions. ie: gDSFP
       instanceProps: {
         size,
@@ -299,11 +302,21 @@ class BootstrapSplitPane extends React.Component {
   getSplitSize() {
     let {splitGridNum} = this.state
     return (this.totalWidth()*splitGridNum/12)
-  }
+  }  
 
   collapseSidebar(){
+    if(this.state.collapseButtonIndex == 0){
+      this.setState({
+        collapseButtonIndex: 1
+      })
+    }else{
+      this.setState({
+        collapseButtonIndex: 0
+      })
+    }
+    
     this.setState({
-      collapsed: !this.state.collapsed
+      collapsed: !this.state.collapsed,
     });
 
     if(this.state.collapsed == true){
@@ -314,10 +327,13 @@ class BootstrapSplitPane extends React.Component {
         ...this.getPaneClasses(0)
       })
 
+
     if (this.props.onCollapseHook) { 
         this.props.onCollapseHook() 
       }
     }else if(this.state.collapsed == false){
+            //set collapsebutton from svg to png  
+
       let splitGridNum = localStorage.getItem(this.props.localStorageKey) || 3
 
       this.setState({
@@ -435,7 +451,7 @@ class BootstrapSplitPane extends React.Component {
           style={resizerStyle || {}}
         />
                     <div>
-                      <img className='collapseButton' src='collapse.png' onClick= {this.collapseSidebar}></img>
+                      <img className='collapseButton' src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} onClick= {this.collapseSidebar}></img>
                     </div>
 
         <Pane
