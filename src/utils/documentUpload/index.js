@@ -20,12 +20,7 @@ class UploadDocumentButton extends React.Component {
   }
 
   addDocument(docId) {
-    let {
-      trackerId,
-      refId,
-      commitId,
-      rootTreeId: treeId
-    } = this.getUrlParams();
+    let { trackerId, refId, commitId, rootTreeId: treeId } = this.getUrlParams();
     let fetch = new Traec.Fetch("tracker_ref_document", "put", {
       trackerId,
       refId,
@@ -84,11 +79,7 @@ class UploadDocumentButton extends React.Component {
     let url = currentDocObject.get("url");
     return (
       <React.Fragment>
-        {this.checkIfDocumentIsUploaded() ? (
-          <Octicon name="check" className="float-left" />
-        ) : (
-          <Octicon name="file" />
-        )}
+        {this.checkIfDocumentIsUploaded() ? <Octicon name="check" className="float-left" /> : <Octicon name="file" />}
         <a href={url} download={filename}>
           {filename}
         </a>
@@ -147,24 +138,16 @@ class UploadDocumentButton extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   let { commitId, rootTreeId, subDoc } = ownProps;
   let tree = state.getInPath(`entities.trees.byId.${rootTreeId}`);
-  let commitEdges = commitId
-    ? state.getInPath(`entities.commitEdges.byId.${commitId}`)
-    : null;
+  let commitEdges = commitId ? state.getInPath(`entities.commitEdges.byId.${commitId}`) : null;
   const docId = subDoc.get("uid");
-  const doc = state.getInPath(
-    `entities.commitEdges.byId.${commitId}.documents.${docId}`
-  );
+  const doc = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}`);
   let currentDocObject = false;
   let hasUploaded = false;
 
   if (doc) {
-    const docStatus = state.getInPath(
-      `entities.docStatuses.byId.${doc.get("status")}`
-    );
+    const docStatus = state.getInPath(`entities.docStatuses.byId.${doc.get("status")}`);
     currentDocObject = docStatus
-      ? state.getInPath(
-          `entities.docObjects.byId.${docStatus.get("current_object")}`
-        )
+      ? state.getInPath(`entities.docObjects.byId.${docStatus.get("current_object")}`)
       : null;
   }
 
