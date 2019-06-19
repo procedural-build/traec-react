@@ -1,7 +1,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-export class LandingPage extends React.Component {
+export class TraecLandingPage extends React.Component {
   constructor(props) {
     super(props);
   }

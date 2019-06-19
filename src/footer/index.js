@@ -1,18 +1,16 @@
 import React from "react";
 
-export class Footer extends React.Component {
-  render() {
-    return (
-      <div className="footer">
-        <div className="footer-inner">
-          <p>News</p>
-          <p>About</p>
-          <p>Help</p>
-        </div>
-        <div className="footer-tools">
-          <span className="go-top" />
-        </div>
+export const TraecFooter = function() {
+  return (
+    <div className="footer fixed-bottom">
+      <div className="footer-inner col-sm-12">
+        <div className="col-sm-3">News</div>
+        <div className="col-sm-3">About</div>
+        <div className="col-sm-3">Help</div>
       </div>
-    );
-  }
-}
+      <div className="footer-tools">
+        <span className="go-top" />
+      </div>
+    </div>
+  );
+};

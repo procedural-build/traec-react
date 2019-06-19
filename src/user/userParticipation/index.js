@@ -11,7 +11,7 @@ import UserCompanies from "../userCompanies/company";
 import ProjectInvites from "../userProjects/projectInvite";
 import UserProjects from "../userProjects/project";
 
-export class UserParticipation extends React.Component {
+export class TraecUserParticipation extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -56,7 +56,7 @@ const navBarLinks = function() {
   return [{ label: "Home", to: "/" }];
 };
 
-UserParticipation.propTypes = {
+TraecUserParticipation.propTypes = {
   isAuthenticated: PropTypes.bool
 };
 
@@ -73,4 +73,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UserParticipation);
+)(TraecUserParticipation);
