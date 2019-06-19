@@ -49,3 +49,9 @@
 .Resizer.disabled:hover {
   border-color: transparent;
 }
+
+.collapseButton{
+    /* content: url("./collapse.png"); */
+    width: 20px;
+    height:20px;
+}
