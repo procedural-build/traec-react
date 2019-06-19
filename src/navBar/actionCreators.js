@@ -1,4 +1,4 @@
-export const setNavbarItems = itemDict => {
+export const setNavBarItems = itemDict => {
   return {
     type: "ENTITY_SET_IN",
     payload: itemDict,
