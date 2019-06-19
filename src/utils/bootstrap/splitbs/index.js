@@ -6,7 +6,7 @@ import { polyfill } from 'react-lifecycles-compat';
 import Pane from './Pane';
 import Resizer, { RESIZER_DEFAULT_CLASSNAME } from './Resizer';
 import './styles.css'
-import myImage from './collapse.svg'
+
 
 /*
 Fork of react-split-pane (https://github.com/tomkp/react-split-pane)
@@ -80,7 +80,8 @@ class BootstrapSplitPane extends React.Component {
       pane1ClassName: `col-sm-${defaultColSize}`, 
       pane2ClassName: `col-sm-${12-defaultColSize}`,
       collapsed: true,
-
+      collapseButtonIndex: 0,
+      collapseButtonImgList: ["https://image.flaticon.com/icons/svg/126/126492.svg", "https://image.flaticon.com/icons/svg/18/18069.svg"],
       // these are props that are needed in static functions. ie: gDSFP
       instanceProps: {
         size,
@@ -302,13 +303,21 @@ class BootstrapSplitPane extends React.Component {
   }
 
   collapseSidebar(){
+    if(this.state.collapseButtonIndex == 0){
+      this.setState({
+        collapseButtonIndex: 1
+      })
+    }else{
+      this.setState({
+        collapseButtonIndex: 0
+      })
+    }
+
+
     this.setState({
       collapsed: !this.state.collapsed
     });
     if(this.state.collapsed == true){
-      var src = document.getElementsByClassName("collapseButton")
-      // Need to toggle this image src from one state to the other
-      document.getElementsByClassName("collapseButton").src = "https://image.flaticon.com/icons/svg/18/18069.svg";
 
       this.setState({
         pane1Size : 0,
@@ -439,8 +448,7 @@ class BootstrapSplitPane extends React.Component {
           style={resizerStyle || {}}
         />
                     <div>
-                      <img className='collapseButton' src="https://image.flaticon.com/icons/svg/126/126492.svg" onClick= {this.collapseSidebar}/>
-                    </div>
+                    <img className='collapseButton' src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} onClick= {this.collapseSidebar}></img>                    </div>
 
         <Pane
           className={pane2Classes}
