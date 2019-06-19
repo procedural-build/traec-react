@@ -20,7 +20,7 @@ const colorScale = chroma.scale([
 ]);
 
 export default class ProjectItem extends React.Component {
-  render_related_commits(project) {
+  renderRelatedCommits(project) {
     let commits = project.get("related_commits");
     if (!commits) {
       return null;
@@ -85,7 +85,7 @@ export default class ProjectItem extends React.Component {
     return commitList;
   }
 
-  render_related_refs(project) {
+  renderRelatedRefs(project) {
     let refs = project.get("related_refs");
     if (!refs) {
       return null;
@@ -145,7 +145,6 @@ export default class ProjectItem extends React.Component {
       return null;
     }
     let rowNum = counter.row++;
-    console.log("TRACKERS", trackers);
     return trackers.toList().map((item, i) => (
       <div key={i} className="col-sm-12">
         <Link to={`/tracker/${item.get("uid")}`}>{item.get("name")}</Link>

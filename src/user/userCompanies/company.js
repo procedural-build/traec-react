@@ -46,7 +46,7 @@ class UserCompanies extends React.Component {
     fetch.toggleForm();
   }
 
-  render_add_company_button() {
+  renderAddCompanyButton() {
     if (isSuperuser(this.props.user)) {
       return <BSBtn id="add-company" onClick={this.onClick} text="Create a Company" />;
     }
@@ -80,7 +80,7 @@ class UserCompanies extends React.Component {
         id="user-companies"
         widthOffset="col-sm-12"
         title="My Company Memberships"
-        button={this.render_add_company_button()}
+        button={this.renderAddCompanyButton()}
         body={itemList}
         form={<BaseFormConnected params={this.state.formParams.params} fields={companyFields} />}
       />

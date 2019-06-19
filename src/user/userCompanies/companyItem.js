@@ -29,24 +29,24 @@ export default class CompanyItem extends React.Component {
     });
   }
 
-  render_menu() {
+  renderMenu() {
     if (!isSuperuser(this.props.user)) {
       return null;
     }
     return <BSBtnDropdown links={[{ name: "Delete", onClick: this.deleteCompany.bind(this) }]} />;
   }
 
-  render_children() {
+  renderChildren() {
     let { company, allCompanies, dispatch, indentLevel, index, user } = this.props;
     if (!company) {
       return null;
     }
-    let childids = company.get("childids");
-    if (!childids) {
+    let childIds = company.get("childids");
+    if (!childIds) {
       return null;
     }
-    let subCompanies = childids.map((childid, i) => {
-      let child = allCompanies.get(childid);
+    let subCompanies = childIds.map((childId, i) => {
+      let child = allCompanies.get(childId);
       if (!child) {
         return null;
       }
@@ -75,10 +75,10 @@ export default class CompanyItem extends React.Component {
             <span style={{ marginLeft: `${indentLevel * 1}em` }}>
               <Link to={"/company/" + company.get("uid")}>{company.get("name")}</Link>
             </span>
-            {this.render_menu()}
+            {this.renderMenu()}
           </div>
         </div>
-        {this.render_children()}
+        {this.renderChildren()}
       </React.Fragment>
     );
   }
