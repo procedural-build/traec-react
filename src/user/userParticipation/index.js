@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { authFailed } from "traec-react/auth/utils";
-import { setNavbarItems } from "traec-react/navBar";
+import { setNavBarItems } from "traec-react/navBar";
 
 import CompanyInvites from "../userCompanies/companyInvite";
 import UserCompanies from "../userCompanies/company";
@@ -17,7 +17,7 @@ export class UserParticipation extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(setNavbarItems(navBarLinks()));
+    this.props.dispatch(setNavBarItems(navBarLinks()));
   }
 
   render() {

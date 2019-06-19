@@ -3,6 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Octicon from "react-octicon";
+import { setSideBarItems } from "traec/redux/actionCreators";
+
+export { setSideBarItems };
 
 /* Demos for Collapsable sidebar here:
  * https://bootstrapious.com/p/bootstrap-sidebar

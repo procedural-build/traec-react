@@ -4,7 +4,7 @@ import Im from "traec/immutable";
 import DropdownLogin from "./loginDropdown";
 import { MenuItem } from "./item";
 import { DropDownItem } from "./dropdown";
-import { setNavBarItems } from "./actionCreators";
+import { setNavBarItems } from "traec/redux/actionCreators";
 
 export { setNavBarItems };
 
