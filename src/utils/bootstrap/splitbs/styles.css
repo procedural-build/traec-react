@@ -50,14 +50,8 @@
   border-color: transparent;
 }
 
-.collapseButton {
-    width: 20px;
-    height:20px;
-
-
-}
-
-.collapseButtonImage{
+.collapseButton{
+    /* content: url("./collapse.png"); */
     width: 20px;
     height:20px;
 }
