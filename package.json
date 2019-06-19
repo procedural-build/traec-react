@@ -12,6 +12,7 @@
     "react-date-picker": "^7.5.0",
     "react-dom": "^16.8.6",
     "react-dropzone": "^10.1.4",
+    "react-markdown": "^4.0.8",
     "react-octicon": "^3.0.1",
     "react-recaptcha": "^2.3.10",
     "react-redux": "^7.0.3",
