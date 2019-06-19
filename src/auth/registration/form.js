@@ -1,8 +1,8 @@
 import React from "react";
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import Recaptcha from 'react-recaptcha';
-import { postRegistration } from "../_redux/actionCreators"
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import Recaptcha from "react-recaptcha";
+import { postRegistration } from "../_redux/actionCreators";
 
 /* TODO: This may be changed to make use of a csrftoken
 const csrftoken = Cookies.get('csrftoken');
@@ -19,139 +19,139 @@ registration and activation api endpoints only.
 //const gRecaptchaSiteKey = "6LesrYYUAAAAAOSE244oWzmKo18m0YFuC-o4U9il"
 
 const getRecaptchaSiteKey = () => {
-    const hostname = location.hostname
-    if (hostname.endsWith('sustainabilitytool.net')) {
-        return '6LesrYYUAAAAAOSE244oWzmKo18m0YFuC-o4U9il'
-    } else if (hostname.endsWith('sustainabilitytool.com')) {
-        return '6LfJt4sUAAAAAIGNjKs8OeA3gmDAYXmeiUHMtp2o'
-    } else if (hostname.endsWith('ods-track.com')) {
-        return '6LdViicUAAAAADRyFSQpSwJ3OBPjwC_jcrJizqsx'
-    } else {
-        return '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
-    }
-}
+  const hostname = location.hostname;
+  if (hostname.endsWith("sustainabilitytool.net")) {
+    return "6LesrYYUAAAAAOSE244oWzmKo18m0YFuC-o4U9il";
+  } else if (hostname.endsWith("sustainabilitytool.com")) {
+    return "6LfJt4sUAAAAAIGNjKs8OeA3gmDAYXmeiUHMtp2o";
+  } else if (hostname.endsWith("ods-track.com")) {
+    return "6LdViicUAAAAADRyFSQpSwJ3OBPjwC_jcrJizqsx";
+  } else {
+    return "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+  }
+};
 
 class RegistrationForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      first_name: "",
+      last_name: "",
+      username: "",
+      email: "",
+      password1: "",
+      password2: "",
+      errors: null,
+      gRecaptchaResponse: "123"
+    };
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.verifyRecaptchaCallback = this.verifyRecaptchaCallback.bind(this);
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            first_name: '',
-            last_name: '',
-            username: '',
-            email: '',
-            password1: '',
-            password2: '',
-            errors: null,
-            gRecaptchaResponse: "123"
-        }
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.verifyRecaptchaCallback = this.verifyRecaptchaCallback.bind(this);
+  onChange(e) {
+    if (e.target.name == "email") {
+      this.setState({
+        [e.target.name]: e.target.value,
+        username: e.target.value
+      });
+    } else {
+      this.setState({ [e.target.name]: e.target.value });
     }
+  }
 
-    onChange(e) {
-        if (e.target.name == 'email') {
-            this.setState({
-                [e.target.name]: e.target.value,
-                username: e.target.value
-            });
-        } else {
-            this.setState({[e.target.name]: e.target.value});
-        }
-    }
+  onSubmit(e) {
+    console.log("Registration form submitted");
+    e.preventDefault();
 
-    onSubmit(e) {
-        console.log("Registration form submitted")
-        e.preventDefault();
-
-        const post = {
-            ...this.state,
-            name: "",
-            gRecaptchaSiteKey: getRecaptchaSiteKey(),
-        }
-
-        // Call action when form submitted
-        this.props.dispatch(postRegistration(post));
-    }
-
-    render_item(attr, placeholder, help_block, fieldType="text") {
-        // Get the validity and error message of this field
-        const errors = this.props.errors
-        const validClass = (errors && errors.has(attr)) ? "is-invalid" : ""
-        const error = (validClass) ? <div className="invalid-feedback">{errors.get(attr).join(' ')}</div> : null
-        // Render
-        return (
-            <div className="form-group">
-                <input className={`form-control form-control-sm ${validClass}`} 
-                    disabled={attr == 'username' ? 'disabled' : ''}
-                    placeholder={placeholder} type={fieldType} name={attr} 
-                    onChange={this.onChange} value={this.state[attr]}
-                />
-                {error}
-                {help_block}
-            </div>
-        );
-    }
-
-    render_non_field_errors() {
-        const attr = "non_field_errors"
-        const errors = this.props.errors
-        if (errors && errors.has(attr)) {
-            //console.log("NON_FIELD_ERRORS", errors)
-            return (
-                <div className="alert alert-danger form-control-sm">
-                    {errors.get(attr)}
-                </div>
-            )
-        }
-        return ""
-    }
-
-    verifyRecaptchaCallback(response) {
-        this.setState({gRecaptchaResponse: response});
+    const post = {
+      ...this.state,
+      name: "",
+      gRecaptchaSiteKey: getRecaptchaSiteKey()
     };
 
-    render() {
-        let isAuthWarning = this.props.isAuthenticated ? <p>Logged in</p> : ""
-        return (
-            <form className="form" onSubmit={this.onSubmit}>
-                {this.render_non_field_errors()}
-                {this.render_item("first_name", "First Name")}
-                {this.render_item("last_name", "Last Name")}
-                {this.render_item("email", "E-mail")}
-                {this.render_item("username", "Username")}
-                {this.render_item("password1", "Password", "", "password")}
-                {this.render_item("password2", "Password (again)", "", "password")}
+    // Call action when form submitted
+    this.props.dispatch(postRegistration(post));
+  }
 
-                <Recaptcha 
-                    sitekey={getRecaptchaSiteKey()}
-                    verifyCallback={this.verifyRecaptchaCallback}
-                />
+  render_item(attr, placeholder, help_block, fieldType = "text") {
+    // Get the validity and error message of this field
+    const errors = this.props.errors;
+    const validClass = errors && errors.has(attr) ? "is-invalid" : "";
+    const error = validClass ? <div className="invalid-feedback">{errors.get(attr).join(" ")}</div> : null;
+    // Render
+    return (
+      <div className="form-group">
+        <input
+          className={`form-control form-control-sm ${validClass}`}
+          disabled={attr == "username" ? "disabled" : ""}
+          placeholder={placeholder}
+          type={fieldType}
+          name={attr}
+          onChange={this.onChange}
+          value={this.state[attr]}
+        />
+        {error}
+        {help_block}
+      </div>
+    );
+  }
 
-                <div className="form-group">
-                    <button className="btn btn-sm btn-primary btn-block" type="submit">Register</button>
-                </div>
-            </form>
-        );
+  render_non_field_errors() {
+    const attr = "non_field_errors";
+    const errors = this.props.errors;
+    if (errors && errors.has(attr)) {
+      //console.log("NON_FIELD_ERRORS", errors)
+      return <div className="alert alert-danger form-control-sm">{errors.get(attr)}</div>;
     }
+    return "";
+  }
+
+  verifyRecaptchaCallback(response) {
+    this.setState({ gRecaptchaResponse: response });
+  }
+
+  render() {
+    let isAuthWarning = this.props.isAuthenticated ? <p>Logged in</p> : "";
+    return (
+      <form className="form" onSubmit={this.onSubmit}>
+        {this.render_non_field_errors()}
+        {this.render_item("first_name", "First Name")}
+        {this.render_item("last_name", "Last Name")}
+        {this.render_item("email", "E-mail")}
+        {this.render_item("username", "Username")}
+        {this.render_item("password1", "Password", "", "password")}
+        {this.render_item("password2", "Password (again)", "", "password")}
+
+        <Recaptcha sitekey={getRecaptchaSiteKey()} verifyCallback={this.verifyRecaptchaCallback} />
+
+        <div className="form-group">
+          <button className="btn btn-sm btn-primary btn-block" type="submit">
+            Register
+          </button>
+        </div>
+      </form>
+    );
+  }
 }
 
 RegistrationForm.propTypes = {
-    isAuthenticated: PropTypes.bool,
+  isAuthenticated: PropTypes.bool
 };
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.getInPath('auth.isAuthenticated'),
-    errors: state.getInPath('auth.registration.errors'),
-    redirect: state.getInPath('auth.registration.redirect'),
-})
+  isAuthenticated: state.getInPath("auth.isAuthenticated"),
+  errors: state.getInPath("auth.registration.errors"),
+  redirect: state.getInPath("auth.registration.redirect")
+});
 
 const mapDispatchToProps = dispatch => {
-    return {
-        dispatch: dispatch
-    }
-}
+  return {
+    dispatch: dispatch
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
-
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RegistrationForm);

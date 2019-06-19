@@ -4,11 +4,9 @@ import Im from "traec/immutable";
 import DropdownLogin from "./loginDropdown";
 import { MenuItem } from "./item";
 import { DropDownItem } from "./dropdown";
-import { setNavbarItems } from './actionCreators';
-
+import { setNavbarItems } from "./actionCreators";
 
 export { setNavbarItems };
-
 
 class Navbar extends React.Component {
   renderItem(item, keyIndex) {
@@ -22,18 +20,26 @@ class Navbar extends React.Component {
   }
 
   renderItems() {
-    if (this.props.items == null) { return null; }
+    if (this.props.items == null) {
+      return null;
+    }
     return this.props.items.map((item, i) => this.renderItem(item, i));
   }
 
   render_brand() {
-    let {brand} = this.props
-    if (brand) { return brand }
-    return (<React.Fragment>Track | <b>Procedural</b>.build</React.Fragment>)
+    let { brand } = this.props;
+    if (brand) {
+      return brand;
+    }
+    return (
+      <React.Fragment>
+        Track | <b>Procedural</b>.build
+      </React.Fragment>
+    );
   }
 
   render() {
-    let {extraClass} = this.props
+    let { extraClass } = this.props;
     return (
       <div className="navbar-area">
         <nav
@@ -41,9 +47,7 @@ class Navbar extends React.Component {
           role="navigation"
         >
           <div className="container-fluid">
-            <span className="navbar-brand">
-              {this.render_brand()}
-            </span>
+            <span className="navbar-brand">{this.render_brand()}</span>
 
             <button
               className="navbar-toggler border-0"

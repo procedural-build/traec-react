@@ -8,7 +8,6 @@ import LoginForm from "traec-react/auth/form";
 import { logoutToken } from "traec-react/auth/_redux/actions";
 import { DropDownItem } from "./dropdown";
 
-
 class DropdownLogin extends React.Component {
   logoutClicked(e) {
     console.log("Logout button clicked");
@@ -51,13 +50,7 @@ class DropdownLogin extends React.Component {
       );
     } else {
       //console.log("I am Authenticated")
-      return (
-        <DropDownItem
-          label={label}
-          items={this.userDropDownItems()}
-          extraDropdownClass={"dropdown-menu-right"}
-        />
-      );
+      return <DropDownItem label={label} items={this.userDropDownItems()} extraDropdownClass={"dropdown-menu-right"} />;
     }
   }
 }

@@ -95,35 +95,23 @@ export class DropzoneButton extends React.Component {
   }
 
   render() {
-    let selectAreaText =
-      this.props.selectAreaText || "Click here to select a file";
+    let selectAreaText = this.props.selectAreaText || "Click here to select a file";
     return (
       <div>
-        <Dropzone
-          onDrop={this.props.onDrop}
-          onFileDialogCancel={this.onCancel.bind(this)}
-        >
+        <Dropzone onDrop={this.props.onDrop} onFileDialogCancel={this.onCancel.bind(this)}>
           {({ getRootProps, getInputProps }) => {
             if (this.props.selectedFiles.length) {
               return (
                 <React.Fragment>
                   {this.props.selectedFiles} {this.props.confirmButton} |
-                  <button
-                    className="btn btn-sm btn-default pl-1 pr-1 m-0 p-0"
-                    onClick={this.props.onCancelUpload}
-                  >
+                  <button className="btn btn-sm btn-default pl-1 pr-1 m-0 p-0" onClick={this.props.onCancelUpload}>
                     Clear
                   </button>
                 </React.Fragment>
               );
             }
             return (
-              <div
-                {...getRootProps()}
-                className={`btn btn-sm btn-secondary ${
-                  this.props.extra_className
-                }`}
-              >
+              <div {...getRootProps()} className={`btn btn-sm btn-secondary ${this.props.extra_className}`}>
                 <input {...getInputProps()} />
                 {selectAreaText}
               </div>
