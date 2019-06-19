@@ -6,6 +6,7 @@ import { polyfill } from 'react-lifecycles-compat';
 import Pane from './Pane';
 import Resizer, { RESIZER_DEFAULT_CLASSNAME } from './Resizer';
 import './styles.css'
+import {jiraExpand, jiraCollapse} from './jira-icons'
 
 
 /*
@@ -81,7 +82,7 @@ class BootstrapSplitPane extends React.Component {
       pane2ClassName: `col-sm-${12-defaultColSize}`,
       collapsed: true,
       collapseButtonIndex: 0,
-      collapseButtonImgList: ["https://image.flaticon.com/icons/svg/126/126492.svg", "https://image.flaticon.com/icons/svg/18/18069.svg"],
+      collapseButtonImgList: [jiraExpand, jiraCollapse],
       // these are props that are needed in static functions. ie: gDSFP
       instanceProps: {
         size,
@@ -447,8 +448,21 @@ class BootstrapSplitPane extends React.Component {
           split={split}
           style={resizerStyle || {}}
         />
-                    <div>
-                    <img className='collapseButton' src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} onClick= {this.collapseSidebar}></img>                    </div>
+        
+
+        {/*
+        */}
+        <div>
+          <button className="jira-btn" style={{zIndex: 100}} onClick= {this.collapseSidebar}>
+          {/*<img 
+              className='collapseButton' 
+              style={{zIndex: 100, position: 'absolute', transform: !this.state.collapseButtonIndex ? 'translateX(-10px)' : 'translateX(-10px)'}}
+              src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} 
+              
+          />*/}
+            {this.state.collapseButtonIndex ? jiraExpand : jiraCollapse}
+          </button>  
+        </div>
 
         <Pane
           className={pane2Classes}
