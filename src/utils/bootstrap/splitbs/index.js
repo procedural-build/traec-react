@@ -305,8 +305,10 @@ class BootstrapSplitPane extends React.Component {
     this.setState({
       collapsed: !this.state.collapsed
     });
-
     if(this.state.collapsed == true){
+      var src = document.getElementsByClassName("collapseButton")
+      // Need to toggle this image src from one state to the other
+      document.getElementsByClassName("collapseButton").src = "https://image.flaticon.com/icons/svg/18/18069.svg";
 
       this.setState({
         pane1Size : 0,
@@ -318,6 +320,8 @@ class BootstrapSplitPane extends React.Component {
         this.props.onCollapseHook() 
       }
     }else if(this.state.collapsed == false){
+      document.getElementsByClassName("collapseButton").src = "https://image.flaticon.com/icons/svg/126/126492.svg";
+
       let splitGridNum = localStorage.getItem(this.props.localStorageKey) || 3
 
       this.setState({
@@ -435,7 +439,7 @@ class BootstrapSplitPane extends React.Component {
           style={resizerStyle || {}}
         />
                     <div>
-                      <img className='collapseButton' src='collapse.png' onClick= {this.collapseSidebar}></img>
+                      <img className='collapseButton' src="https://image.flaticon.com/icons/svg/126/126492.svg" onClick= {this.collapseSidebar}/>
                     </div>
 
         <Pane
