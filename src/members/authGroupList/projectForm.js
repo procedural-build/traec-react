@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import CompanyAuthGroupForm from "../../../company/members/authGroupList/form";
+import CompanyAuthGroupForm from "./companyForm";
 
 export const authGroupFields = {
   name: { value: "", class: "col mb-1", label: "", placeholder: "Name" }

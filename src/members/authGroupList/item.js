@@ -2,12 +2,10 @@ import React from "react";
 import Traec from "traec";
 
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
-import { ProjectAuthGroupForm } from "./Projectform";
-import CompanyAuthGroupForm from "./Companyform";
+import { ProjectAuthGroupForm } from "./projectForm";
+import CompanyAuthGroupForm from "./companyForm";
 
 export default class AuthGroupItem extends React.Component {
-  authGroup;
-
   constructor(props) {
     super(props);
 
@@ -15,10 +13,8 @@ export default class AuthGroupItem extends React.Component {
 
     if (props.projectId) {
       this.fetch = new Traec.Fetch("project_authgroup", "put");
-      const authGroup = "project";
     } else if (props.companyId) {
       this.fetch = new Traec.Fetch("company_authgroup", "put");
-      const authGroup = "company";
     }
 
     this.state = {
@@ -54,7 +50,7 @@ export default class AuthGroupItem extends React.Component {
   }
 
   projectAuthForm() {
-    if (props.authGroup === "project") {
+    if (this.props.projectId) {
       return (
         <div className="row">
           <div className="col-sm-12">
@@ -72,7 +68,7 @@ export default class AuthGroupItem extends React.Component {
   }
 
   companyAuthForm() {
-    if (props.authGroup === "company") {
+    if (this.props.companyId) {
       return (
         <ProjectAuthGroupForm
           item={this.props.item}

@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
 import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
-import { ProjectAuthGroupForm } from "./Projectform";
-import CompanyAuthGroupForm from "./Companyform";
+import { ProjectAuthGroupForm } from "./projectForm";
+import CompanyAuthGroupForm from "./companyForm";
 import AuthGroupItem from "./item";
 
 class AuthGroupList extends React.Component {
