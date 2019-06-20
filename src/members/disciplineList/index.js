@@ -1,13 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import Traec from "traec";
-
 import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
-
-import { disciplineFields } from "./form";
-import DisciplineForm from "./form";
+import DisciplineForm, { disciplineFields } from "./form";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 import DisciplineItem from "./item";
 

@@ -1,7 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import Traec from "traec";
-
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 import { confirmDelete } from "traec-react/utils/sweetalert";

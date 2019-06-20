@@ -8,6 +8,7 @@ import MemberList from "./memberList";
 import InviteList from "./inviteList";
 import DisciplineList from "./disciplineList";
 import AuthGroupList from "./authGroupList";
+import { projectPermissionRender } from "traec/utils/permissions/project";
 
 class ProjectMembers extends React.Component {
   company_name() {
@@ -30,10 +31,17 @@ class ProjectMembers extends React.Component {
           {this.company_name()} <RightArrow /> {project.get("name")}
         </p>
 
+        {/*Render the members panel if allowed */}
         <MemberList projectId={projectId} />
+
+        {/*Render the invites panel if allowed */}
         <InviteList projectId={projectId} />
+
+        {/*Render the discipline panel if allowed */}
         <DisciplineList projectId={projectId} />
-        <AuthGroupList projectId={projectId} />
+
+        {/*Render the authGroup panel if allowed */}
+        {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
       </React.Fragment>
     );
   }

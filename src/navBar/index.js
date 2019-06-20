@@ -5,6 +5,7 @@ import DropdownLogin from "./loginDropdown";
 import { MenuItem } from "./item";
 import { DropDownItem } from "./dropdown";
 import { setNavBarItems } from "traec/redux/actionCreators";
+import { Link } from "react-router-dom";
 
 export { setNavBarItems };
 
@@ -23,7 +24,7 @@ export class NavBar extends React.Component {
     }
     return (
       <React.Fragment>
-        Track | <b>Procedural</b>.build
+        Traec | <b>Procedural</b>.build
       </React.Fragment>
     );
   }
@@ -37,7 +38,9 @@ export class NavBar extends React.Component {
           role="navigation"
         >
           <div className="container-fluid">
-            <span className="navbar-brand">{this.renderBrand()}</span>
+            <Link to="/" className="navbar-brand">
+              {this.renderBrand()}
+            </Link>
 
             <button
               className="navbar-toggler border-0"

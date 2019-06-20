@@ -31,8 +31,8 @@ class DisciplineForm extends BaseForm {
     // Update the selection list for discipline drop-down
     let newState = prevState;
     // Get the dropdown menu items for Auth Groups
-    if (nextProps.authgroups) {
-      DisciplineForm.setSelectOptions(newState.formFields.auth, nextProps.authgroups);
+    if (nextProps.authGroups) {
+      DisciplineForm.setSelectOptions(newState.formFields.auth, nextProps.authGroups);
     }
     // Get the disciplines
     if (nextProps.disciplines) {
@@ -59,7 +59,7 @@ class DisciplineForm extends BaseForm {
             </option>
           );
         });
-      if (state.value == "") {
+      if (state.value === "") {
         options = options.unshift(
           <option key={-1} value={""} disabled={true}>
             {state.header}
@@ -75,10 +75,10 @@ class DisciplineForm extends BaseForm {
 
 const mapStateToProps = (state, ownProps) => {
   const { stateParams, projectId } = ownProps;
-  let authgroups = state.getInPath(`entities.projectObjects.byId.${projectId}.authgroups`);
+  let authGroups = state.getInPath(`entities.projectObjects.byId.${projectId}.authGroups`);
   let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`);
   return {
-    authgroups,
+    authGroups,
     disciplines,
     newItem: state.getInPath(`entities.${stateParams.formObjPath}`),
     showForm: state.getInPath(`entities.${stateParams.formVisPath}`)
