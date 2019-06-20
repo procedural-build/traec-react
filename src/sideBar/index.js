@@ -87,7 +87,7 @@ const renderIcon = function(item) {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    items: state.getInPath(`entities.ui.sidebar.items`)
+    items: state.getInPath(`ui.sidebar.items`)
   };
 };
 

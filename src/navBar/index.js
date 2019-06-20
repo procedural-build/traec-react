@@ -77,7 +77,7 @@ const renderItem = function(item, keyIndex) {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    items: state.getInPath(`entities.ui.navbar.items`)
+    items: state.getInPath(`ui.navbar.items`)
   };
 };
 

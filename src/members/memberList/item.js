@@ -57,25 +57,25 @@ export default class MemberItem extends React.Component {
     return `${item.getIn(["user", "first_name"])} ${item.getIn(["user", "last_name"])}`;
   }
 
-  renderCompany(companyId) {
+  renderCompany(companyId, item) {
     return (
-      <div>
+      <React.Fragment>
         <div className="col-sm-2">{item.getIn(["auth", "name"])}</div>
         <div className="col-sm-2">
           {companyPermissionRender(companyId, true, [], <BSBtnDropdown links={this.dropDownLinks()} />)}
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 
-  renderProject(projectId) {
+  renderProject(projectId, item) {
     return (
-      <div>
+      <React.Fragment>
         <div className="col-sm-2">{item.getIn(["project_discipline", "name"])}</div>
         <div className="col-sm-2">
           {projectPermissionRender(projectId, true, [], <BSBtnDropdown links={this.dropDownLinks()} />)}
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -86,7 +86,7 @@ export default class MemberItem extends React.Component {
       <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
         <div className="col-sm-4">{this.get_member_name()}</div>
         <div className="col-sm-4">{item.getIn(["user", "email"])}</div>
-        {projectId ? this.renderProject(projectId) : this.renderCompany(companyId)}
+        {projectId ? this.renderProject(projectId, item) : this.renderCompany(companyId, item)}
       </div>
     );
   }

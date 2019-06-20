@@ -54,7 +54,7 @@ const mapStateToProps = (state, ownProps) => {
   let company = null;
   let invites = null;
 
-  if (props.projectId) {
+  if (ownProps.projectId) {
     project = state.getInPath(`entities.projects.byId.${projectId}`);
     invites = state.getInPath(`entities.projectObjects.byId.${projectId}.invites`);
     let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`);
@@ -65,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
         invites = invites.setInPath(`${key}.project_discipline`, disciplines.get(disciplineId));
       }
     }
-  } else if (props.companyId) {
+  } else if (ownProps.companyId) {
     company = state.getInPath(`entities.companies.byId.${companyId}`);
     invites = state.getInPath(`entities.companyObjects.byId.${companyId}.invites`);
   }

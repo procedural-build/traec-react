@@ -31,7 +31,7 @@ class TraecProjectDetail extends React.Component {
   }
 
   componentDidMount() {
-    const { projectId } = this.props.match.params;
+    const { projectId } = this.props;
     projectPermissionCheck(projectId, false, []);
 
     Traec.fetchRequired.bind(this)();
@@ -42,6 +42,7 @@ class TraecProjectDetail extends React.Component {
     projectPermissionCheck(projectId, false, []);
 
     this.setNavBar();
+    //this.setSideBar();
     Traec.fetchRequired.bind(this)();
   }
 
@@ -54,7 +55,7 @@ class TraecProjectDetail extends React.Component {
   }
 
   setSideBar(forceUpdate = false) {
-    let sideBarLinks = this.sidebarLinks();
+    let sideBarLinks = this.sideBarLinks();
     if ((!this.state.setSideBar && sideBarLinks) || forceUpdate) {
       if (!forceUpdate) {
         this.setState({ setSideBar: true });
@@ -75,6 +76,16 @@ class TraecProjectDetail extends React.Component {
           { label: "Email Settings", to: "email/settings" },
           { label: "Email Statistics", to: "email/report" }
         ]
+      }
+    ];
+    return projectPermissionFilter(projectId, links);
+  }
+
+  sideBarLinks() {
+    let { projectId } = this.props;
+    let links = [
+      {
+        to: [{ label: "Members", to: `/project/${projectId}/members/` }]
       }
     ];
     return projectPermissionFilter(projectId, links);
@@ -107,7 +118,11 @@ class TraecProjectDetail extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { projectId, refId } = ownProps.match.params;
+  let { projectId, refId } = ownProps;
+  if (!projectId) {
+    let { projectId, refId } = ownProps.match.params;
+  }
+
   let { company, project, tracker, trackerId, cref, isRootRef, rootRef, rootRefId } = getProjectProps(
     state,
     projectId,
