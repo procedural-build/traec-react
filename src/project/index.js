@@ -41,7 +41,7 @@ class TraecProjectDetail extends React.Component {
     const { projectId } = this.props.projectId;
     projectPermissionCheck(projectId, false, []);
 
-    this.setNavBar();
+    //this.setNavBar();
     //this.setSideBar();
     Traec.fetchRequired.bind(this)();
   }
@@ -91,10 +91,10 @@ class TraecProjectDetail extends React.Component {
     return projectPermissionFilter(projectId, links);
   }
 
-  render_main() {
+  renderMain() {
     let { company, project, projectId } = this.props;
     if (!project) {
-      return "";
+      return null;
     }
 
     return (
@@ -113,15 +113,13 @@ class TraecProjectDetail extends React.Component {
 
   render() {
     // Check the User permissions for this project
-    return projectPermissionRender(this.props.projectId, false, ["READ_PROJECT_REPORT"], this.render_main(), true);
+    return this.renderMain();
+    //return projectPermissionRender(this.props.projectId, false, ["READ_PROJECT_REPORT"], this.renderMain(), true);
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { projectId, refId } = ownProps;
-  if (!projectId) {
-    let { projectId, refId } = ownProps.match.params;
-  }
+  let { projectId, refId } = ownProps.match.params;
 
   let { company, project, tracker, trackerId, cref, isRootRef, rootRef, rootRefId } = getProjectProps(
     state,

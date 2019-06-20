@@ -58,6 +58,7 @@ class InviteForm extends BaseForm {
           </option>
         );
       });
+      debugger;
       if (state.value === "") {
         options = options.unshift(
           <option key={-1} value={""} disabled={true}>
