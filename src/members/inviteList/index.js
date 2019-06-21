@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { BSCard } from "traec-react/utils/bootstrap";
 import InviteItem from "./item";
 
-class InviteList extends React.Component {
+export class InviteList extends React.Component {
   constructor(props) {
     super(props);
 

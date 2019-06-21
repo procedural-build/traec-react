@@ -7,7 +7,7 @@ import DisciplineList from "./disciplineList";
 import AuthGroupList from "./authGroupList";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 
-class ProjectMembers extends React.Component {
+export class ProjectMembers extends React.Component {
   render() {
     const { projectId, project, company } = this.props;
     if (!project) {

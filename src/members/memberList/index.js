@@ -5,12 +5,12 @@ import Traec from "traec";
 import { BSCard, BSBtn, BSBtnDropdown } from "traec-react/utils/bootstrap";
 
 import { objToList } from "traec-react/utils";
-import InviteForm, { companyInviteFields, projectInviteFields } from "./form";
+import { InviteForm, companyInviteFields, projectInviteFields } from "./form";
 import { companyPermissionRender } from "traec/utils/permissions/company";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 import MemberItem from "./item";
 
-class MemberList extends React.Component {
+export class MemberList extends React.Component {
   constructor(props) {
     super(props);
 

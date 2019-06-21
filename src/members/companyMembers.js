@@ -6,7 +6,7 @@ import MemberList from "./memberList";
 import InviteList from "./inviteList";
 import AuthGroupList from "./authGroupList";
 
-class CompanyMembers extends React.Component {
+export class CompanyMembers extends React.Component {
   render() {
     const { companyId, company } = this.props;
     if (!company) {
