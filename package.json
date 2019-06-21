@@ -1,6 +1,6 @@
 {
   "name": "traec-react",
-  "version": "0.1.10",
+  "version": "0.1.20",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -68,7 +68,7 @@
     "test:watch": "npm test -- --watch",
     "matchversion": "npm --no-git-tag-version --allow-same-version version $(npm view traec-react version)",
     "patchversion": "npm --no-git-tag-version version patch",
-    "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json",
+    "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json && cd ./src && find ./ -type f ! -name \"*.js\" -exec cp -v --parents \\{\\} ../dist \\;",
     "pub": "npm run build && npm publish ./dist"
   },
   "repository": {
