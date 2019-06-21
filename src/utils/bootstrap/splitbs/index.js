@@ -5,6 +5,9 @@ import { polyfill } from 'react-lifecycles-compat';
 
 import Pane from './Pane';
 import Resizer, { RESIZER_DEFAULT_CLASSNAME } from './Resizer';
+import './styles.css'
+import {jiraExpand, jiraCollapse} from './jira-icons'
+
 
 /*
 Fork of react-split-pane (https://github.com/tomkp/react-split-pane)
@@ -51,6 +54,7 @@ class BootstrapSplitPane extends React.Component {
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
+    this.collapseSidebar = this.collapseSidebar.bind(this)
 
     // order of setting panel sizes.
     // 1. size
@@ -76,7 +80,9 @@ class BootstrapSplitPane extends React.Component {
       splitGridNum: defaultColSize,
       pane1ClassName: `col-sm-${defaultColSize}`, 
       pane2ClassName: `col-sm-${12-defaultColSize}`,
-
+      collapsed: true,
+      collapseButtonIndex: 0,
+      collapseButtonImgList: [jiraExpand, jiraCollapse],
       // these are props that are needed in static functions. ie: gDSFP
       instanceProps: {
         size,
@@ -106,7 +112,7 @@ class BootstrapSplitPane extends React.Component {
 
   onTouchStart(event) {
     const { allowResize, onDragStarted, split } = this.props;
-    if (allowResize) {
+    if (allowResize && this.state.collapsed) {
       unFocus(document, window);
       const position =
         split === 'vertical'
@@ -116,7 +122,6 @@ class BootstrapSplitPane extends React.Component {
       if (typeof onDragStarted === 'function') {
         onDragStarted();
       }
-
       this.setState({
         active: true,
         position,
@@ -124,21 +129,23 @@ class BootstrapSplitPane extends React.Component {
         pane2ClassName: null,
         pane1Size: this.getSplitSize()
       });
+
     }
   }
 
   onMouseMove(event) {
+    if(this.state.collapsed == true){              // Dont allow resize if collapsed    
     const eventWithTouches = Object.assign({}, event, {
       touches: [{ clientX: event.clientX, clientY: event.clientY }],
     });
     this.onTouchMove(eventWithTouches);
   }
-
+}
   onTouchMove(event) {
     const { allowResize, maxSize, minSize, onChange, localStorageKey, split, step } = this.props;
     const { active, position } = this.state;
-
-    if (allowResize && active) {
+    
+    if (allowResize && active && this.state.collapsed) {
       unFocus(document, window);
       const isPrimaryFirst = this.props.primary === 'first';
       const ref = isPrimaryFirst ? this.pane1 : this.pane2;
@@ -183,10 +190,10 @@ class BootstrapSplitPane extends React.Component {
           }
 
           let newSize = size - sizeDelta;
-          const newPosition = position - positionDelta;
+          const newPosition = position - positionDelta; 
 
-          if (newSize < minSize) {
-            newSize = minSize;
+          if (newSize < minSize) {     
+              newSize = minSize;
           } else if (maxSize !== undefined && newSize > newMaxSize) {
             newSize = newMaxSize;
           } else {
@@ -201,21 +208,24 @@ class BootstrapSplitPane extends React.Component {
           if (localStorageKey) {
             localStorage.setItem(localStorageKey, splitGridNum)
           }
-          
+
           this.setState({
             draggedSize: newSize,
+            pane1Size: newSize,
+            pane2Size: this.totalWidth() - newSize,
             [isPrimaryFirst ? 'pane1Size' : 'pane2Size']: newSize,
             splitGridNum
           });
         }
       }
     }
+    
   }
 
   onMouseUp() {
     const { allowResize, onDragFinished } = this.props;
     const { active, draggedSize } = this.state;
-    if (allowResize && active) {
+    if (allowResize && active && this.state.collapsed) {   
       if (typeof onDragFinished === 'function') {
         onDragFinished(draggedSize);
       }
@@ -252,22 +262,25 @@ class BootstrapSplitPane extends React.Component {
             props.maxSize,
             state.draggedSize
           );
+          
 
     if (props.size !== undefined) {
       newState.draggedSize = newSize;
     }
 
-    const isPanel1Primary = props.primary === 'first';
 
+    const isPanel1Primary = props.primary === 'first';
     newState[isPanel1Primary ? 'pane1Size' : 'pane2Size'] = newSize;
-    newState[isPanel1Primary ? 'pane2Size' : 'pane1Size'] = undefined;
+    newState[isPanel1Primary ? 'pane2Size' : 'pane1Size'] = window.innerWidth;
 
     newState.instanceProps = { size: props.size };
     return newState;
   }
 
-  getPaneClasses() {
-    let {splitGridNum} = this.state
+  getPaneClasses(splitGridNum=null) {
+    if (splitGridNum == null) {
+      splitGridNum = this.state.splitGridNum
+    }
     return {
       pane1ClassName: `col-sm-${splitGridNum}`, 
       pane2ClassName: `col-sm-${12-splitGridNum}`
@@ -280,7 +293,8 @@ class BootstrapSplitPane extends React.Component {
 
   getSplitPoint() {
     let ratio = this.pane1.clientWidth / this.totalWidth()
-    let splitGridNum = Math.min(Math.max(Math.round(12 * ratio), 1),11)
+    let minGridSize = this.props.allowZero ? 0 : 1
+    let splitGridNum = Math.min(Math.max(Math.round(12 * ratio), minGridSize),11)
     return {ratio, splitGridNum}
   }
 
@@ -289,6 +303,49 @@ class BootstrapSplitPane extends React.Component {
     return (this.totalWidth()*splitGridNum/12)
   }
 
+  collapseSidebar(){
+    if(this.state.collapseButtonIndex == 0){
+      this.setState({
+        collapseButtonIndex: 1
+      })
+    }else{
+      this.setState({
+        collapseButtonIndex: 0
+      })
+    }
+
+
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
+    if(this.state.collapsed == true){
+
+      this.setState({
+        pane1Size : 0,
+        splitGridNum: 0,
+        ...this.getPaneClasses(0)
+      })
+
+    if (this.props.onCollapseHook) { 
+        this.props.onCollapseHook() 
+      }
+    }else if(this.state.collapsed == false){
+      document.getElementsByClassName("collapseButton").src = "https://image.flaticon.com/icons/svg/126/126492.svg";
+
+      let splitGridNum = localStorage.getItem(this.props.localStorageKey) || 3
+
+      this.setState({
+        active: false,
+        
+        splitGridNum,
+        ...this.getPaneClasses(splitGridNum)
+      })
+
+    if (this.props.onExpandHook) { this.props.onExpandHook() }
+
+      }
+
+  }
 
   render() {
     const {
@@ -311,6 +368,7 @@ class BootstrapSplitPane extends React.Component {
 
     const { pane1Size, pane2Size } = this.state;
 
+    
     const disabledClass = allowResize ? '' : 'disabled';
     const resizerClassNamesIncludingDefault = resizerClassName
       ? `${resizerClassName} ${RESIZER_DEFAULT_CLASSNAME}`
@@ -322,7 +380,7 @@ class BootstrapSplitPane extends React.Component {
       display: 'flex',
       flex: 1,
       height: '100%',
-      //position: 'absolute',
+      // position: 'absolute',
       outline: 'none',
       overflow: 'hidden',
       MozUserSelect: 'text',
@@ -365,17 +423,19 @@ class BootstrapSplitPane extends React.Component {
         style={style}
       >
         <Pane
+        
           className={pane1Classes}
           key="pane1"
           eleRef={node => {
             this.pane1 = node;
           }}
-          size={this.state.active ? pane1Size : null}
+          size={this.state.active ? pane1Size : null}     
           split={split}
           style={pane1Style}
         >
           {notNullChildren[0]}
         </Pane>
+
         <Resizer
           className={disabledClass}
           onClick={onResizerClick}
@@ -388,6 +448,22 @@ class BootstrapSplitPane extends React.Component {
           split={split}
           style={resizerStyle || {}}
         />
+        
+
+        {/*
+        */}
+        <div>
+          <button className="jira-btn" style={{zIndex: 100}} onClick= {this.collapseSidebar}>
+          {/*<img 
+              className='collapseButton' 
+              style={{zIndex: 100, position: 'absolute', transform: !this.state.collapseButtonIndex ? 'translateX(-10px)' : 'translateX(-10px)'}}
+              src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} 
+              
+          />*/}
+            {this.state.collapseButtonIndex ? jiraExpand : jiraCollapse}
+          </button>  
+        </div>
+
         <Pane
           className={pane2Classes}
           key="pane2"
@@ -395,11 +471,13 @@ class BootstrapSplitPane extends React.Component {
             this.pane2 = node;
           }}
           size={this.state.active ? pane2Size : null}
+
           split={split}
           style={pane2Style}
         >
           {notNullChildren[1]}
         </Pane>
+        
       </div>
     );
   }
@@ -435,7 +513,7 @@ BootstrapSplitPane.propTypes = {
 
 BootstrapSplitPane.defaultProps = {
   allowResize: true,
-  minSize: 50,
+  minSize: 0,
   primary: 'first',
   split: 'vertical',
   paneClassName: '',
