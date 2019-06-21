@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
 import { ProjectAuthGroupForm } from "./projectForm";
-import CompanyAuthGroupForm from "./companyForm";
-import AuthGroupItem from "./item";
+import { CompanyAuthGroupForm } from "./companyForm";
+import { AuthGroupItem } from "./item";
 
-class AuthGroupList extends React.Component {
+export class AuthGroupList extends React.Component {
   constructor(props) {
     super(props);
 

@@ -2,11 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
 import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
-import DisciplineForm, { disciplineFields } from "./form";
+import { DisciplineForm, disciplineFields } from "./form";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 import DisciplineItem from "./item";
 
-class DisciplineList extends React.Component {
+export class DisciplineList extends React.Component {
   constructor(props) {
     super(props);
 

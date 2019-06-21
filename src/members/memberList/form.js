@@ -33,7 +33,7 @@ export const projectInviteFields = {
   }
 };
 
-class InviteForm extends BaseForm {
+export class InviteForm extends BaseForm {
   static getDerivedStateFromProps(nextProps, prevState) {
     let newState = prevState;
 
