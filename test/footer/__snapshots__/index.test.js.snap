@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer should match snapshot 1`] = `
+<div
+  className="footer fixed-bottom"
+>
+  <div
+    className="footer-inner row"
+  >
+    <div
+      className="col-sm-3"
+    />
+    <Link
+      className="col-sm-3"
+      to="/news"
+    >
+      News
+    </Link>
+    <Link
+      className="col-sm-3"
+      to="/about"
+    >
+      About
+    </Link>
+    <Link
+      className="col-sm-3"
+      to="/help"
+    >
+      Help
+    </Link>
+  </div>
+  <div
+    className="footer-tools"
+  >
+    <span
+      className="go-top"
+    />
+  </div>
+</div>
+`;

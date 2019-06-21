@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthGroupList should match snapshot 1`] = `null`;
+
+exports[`CompanyAuthGroupForm should match snapshot 1`] = `null`;
+
+exports[`CompanyMembers should match snapshot 1`] = `null`;
+
+exports[`DisciplineList should match snapshot 1`] = `null`;
+
+exports[`DisciplineList should match snapshot 2`] = `null`;
+
+exports[`InviteList should match snapshot 1`] = `null`;
+
+exports[`MemberList should match snapshot 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col-sm-12"
+    id=""
+  >
+    <div
+      className="card"
+    >
+      <div
+        className="card-header"
+      >
+        <h5
+          className="card-title float-left"
+        >
+          Members
+        </h5>
+      </div>
+      <div
+        className="card-body"
+      >
+        
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ProjectAuthGroupForm should match snapshot 1`] = `null`;
+
+exports[`ProjectMembers should match snapshot 1`] = `""`;
