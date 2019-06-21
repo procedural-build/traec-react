@@ -37,11 +37,11 @@ class InviteForm extends BaseForm {
   static getDerivedStateFromProps(nextProps, prevState) {
     let newState = prevState;
 
-    if (nextProps.authGroups) {
+    if (nextProps.fields.auth) {
       InviteForm.setSelectOptions(newState.formFields.auth, nextProps.authGroups);
     }
 
-    if (nextProps.disciplines) {
+    if (nextProps.fields.disciplines) {
       InviteForm.setSelectOptions(newState.formFields.project_discipline, nextProps.disciplines);
     }
 
@@ -58,7 +58,6 @@ class InviteForm extends BaseForm {
           </option>
         );
       });
-      debugger;
       if (state.value === "") {
         options = options.unshift(
           <option key={-1} value={""} disabled={true}>
