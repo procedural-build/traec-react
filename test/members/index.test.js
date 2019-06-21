@@ -15,7 +15,7 @@ import Im from "traec/immutable";
 import TestRenderer from "react-test-renderer";
 jest.mock("react-router-dom", () => ({ Link: "Link" }));
 
-describe("ProjectMembers", () => {
+xdescribe("ProjectMembers", () => {
   let wrapper;
   beforeEach(() => (wrapper = shallow(<ProjectMembers />)));
 
@@ -33,7 +33,7 @@ describe("ProjectMembers", () => {
   });
 });
 
-describe("CompanyMembers", () => {
+xdescribe("CompanyMembers", () => {
   let wrapper;
   beforeEach(() => (wrapper = shallow(<CompanyMembers />)));
 
@@ -51,7 +51,7 @@ describe("CompanyMembers", () => {
   });
 });
 
-describe("MemberList", () => {
+xdescribe("MemberList", () => {
   let wrapper;
 
   const dispatch = jest.fn();
@@ -77,7 +77,7 @@ describe("MemberList", () => {
   });
 });
 
-describe("InviteList", () => {
+xdescribe("InviteList", () => {
   let wrapper;
   const dispatch = jest.fn();
   const invites = {};
@@ -103,7 +103,7 @@ describe("InviteList", () => {
   });
 });
 
-describe("DisciplineList", () => {
+xdescribe("DisciplineList", () => {
   let wrapper;
   const key = jest.fn();
   const index = jest.fn();
@@ -137,7 +137,7 @@ describe("DisciplineList", () => {
   });
 });
 
-describe("ProjectAuthGroupForm", () => {
+xdescribe("ProjectAuthGroupForm", () => {
   let wrapper;
   const item = jest.fn();
   const projectId = jest.fn();
@@ -176,7 +176,7 @@ describe("ProjectAuthGroupForm", () => {
   });
 });
 
-describe("CompanyAuthGroupForm", () => {
+xdescribe("CompanyAuthGroupForm", () => {
   let wrapper;
   const item = jest.fn();
   const companyId = jest.fn();
@@ -215,7 +215,7 @@ describe("CompanyAuthGroupForm", () => {
   });
 });
 
-describe("AuthGroupList", () => {
+xdescribe("AuthGroupList", () => {
   let wrapper;
   const key = jest.fn();
   const index = jest.fn();
