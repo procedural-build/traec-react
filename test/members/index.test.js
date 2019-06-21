@@ -5,26 +5,23 @@ import { CompanyMembers } from "../../src/members/companyMembers";
 import { MemberList } from "../../src/members/memberList";
 import { InviteList } from "../../src/members/inviteList";
 import { DisciplineList } from "../../src/members/disciplineList";
-import { CompanyAuthGroupForm } from "../../src/members/authGroupList/companyForm";
-import { ProjectAuthGroupForm } from "../../src/members/authGroupList/projectForm";
 import { AuthGroupList } from "../../src/members/authGroupList";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import Octicon from "react-octicon";
-import Im from "traec/immutable";
-
 import TestRenderer from "react-test-renderer";
 jest.mock("react-router-dom", () => ({ Link: "Link" }));
 
-xdescribe("ProjectMembers", () => {
+describe("ProjectMembers", () => {
   let wrapper;
-  beforeEach(() => (wrapper = shallow(<ProjectMembers />)));
+  beforeEach(() => (wrapper = shallow(<ProjectMembers project={true} />)));
 
   it("should render a <div />", () => {
     expect(wrapper.find("div").length).toEqual(0);
   });
 
   it("should render a <h3 />", () => {
-    expect(wrapper.find("h3").length).toEqual(0);
+    expect(wrapper.find("h3").exists()).toBe(true);
+    expect(wrapper.find("h3").length).toEqual(1);
   });
 
   it("should match snapshot", () => {
@@ -35,18 +32,22 @@ xdescribe("ProjectMembers", () => {
 
 xdescribe("CompanyMembers", () => {
   let wrapper;
-  beforeEach(() => (wrapper = shallow(<CompanyMembers />)));
+  const companyId = jest.fn();
+  const company = jest.fn();
+  beforeEach(() => (wrapper = shallow(<CompanyMembers company={"company"} companyId={"1"} />)));
 
   it("should render a <div />", () => {
     expect(wrapper.find("div").length).toEqual(0);
   });
 
   it("should render a <h3 />", () => {
-    expect(wrapper.find("h3").length).toEqual(0);
+    // expect(wrapper.find("h3").length).toEqual(1);
+    expect(wrapper.find("h3").exists()).toBe(true);
+    // expect(wrapper.find('p').exists()).toBe(true);
   });
 
-  it("should match snapshot", () => {
-    const testRenderer = TestRenderer.create(<CompanyMembers />);
+  xit("should match snapshot", () => {
+    const testRenderer = TestRenderer.create(<CompanyMembers company={true} />);
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });
@@ -80,7 +81,7 @@ xdescribe("MemberList", () => {
 xdescribe("InviteList", () => {
   let wrapper;
   const dispatch = jest.fn();
-  const invites = {};
+  const invites = "hello";
   const companyId = jest.fn();
   const projectId = jest.fn();
 
@@ -92,7 +93,8 @@ xdescribe("InviteList", () => {
   );
 
   it("should contain InviteList", () => {
-    expect(wrapper.find("div").length).toEqual(0);
+    // expect(wrapper.find("div").length).toEqual(1);
+    expect(wrapper.find("div").exists()).toBe(true);
   });
 
   it("should match snapshot", () => {
@@ -126,7 +128,7 @@ xdescribe("DisciplineList", () => {
       ))
   );
   it("should contain DisciplineList", () => {
-    expect(wrapper.find("div").length).toEqual(0);
+    expect(wrapper.find("div").length).toEqual(1);
   });
 
   it("should match snapshot", () => {

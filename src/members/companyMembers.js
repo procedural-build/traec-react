@@ -9,9 +9,14 @@ import AuthGroupList from "./authGroupList";
 export class CompanyMembers extends React.Component {
   render() {
     const { companyId, company } = this.props;
+    console.log("compnay: ", company);
+    console.log("ID: ", companyId);
+
     if (!company) {
+      console.log("compnay: ", company);
       return null;
     }
+
     return (
       <React.Fragment>
         <h3>Company Members</h3>

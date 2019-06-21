@@ -10,9 +10,11 @@ import { projectPermissionRender } from "traec/utils/permissions/project";
 export class ProjectMembers extends React.Component {
   render() {
     const { projectId, project, company } = this.props;
+
     if (!project) {
       return "";
     }
+
     return (
       <React.Fragment>
         <h3>Project Member Admin</h3>
