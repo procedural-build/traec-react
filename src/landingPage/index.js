@@ -18,7 +18,9 @@ export const StaticContent = function(content = null) {
   }
   return (
     <React.Fragment>
-      <ReactMarkdown source={content.content} />
+      <div className="container">
+        <ReactMarkdown source={content.content} />
+      </div>
     </React.Fragment>
   );
 };
