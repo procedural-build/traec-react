@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import stylePropType from 'react-style-proptype';
-import { polyfill } from 'react-lifecycles-compat';
+import React from "react";
+import PropTypes from "prop-types";
+import stylePropType from "react-style-proptype";
+import { polyfill } from "react-lifecycles-compat";
 
-import Pane from './Pane';
-import Resizer, { RESIZER_DEFAULT_CLASSNAME } from './Resizer';
-import './styles.css'
-
+import Pane from "./Pane";
+import Resizer, { RESIZER_DEFAULT_CLASSNAME } from "./Resizer";
+import "./styles.css";
+import { jiraExpand, jiraCollapse } from "./jira-icons";
 
 /*
 Fork of react-split-pane (https://github.com/tomkp/react-split-pane)
@@ -24,12 +24,10 @@ function unFocus(document, window) {
   }
 }
 
-
 function getDefaultSize(defaultSize, minSize, maxSize, draggedSize) {
-  if (typeof draggedSize === 'number') {
-    const min = typeof minSize === 'number' ? minSize : 0;
-    const max =
-      typeof maxSize === 'number' && maxSize >= 0 ? maxSize : Infinity;
+  if (typeof draggedSize === "number") {
+    const min = typeof minSize === "number" ? minSize : 0;
+    const max = typeof maxSize === "number" && maxSize >= 0 ? maxSize : Infinity;
     return Math.max(min, Math.min(max, draggedSize));
   }
   if (defaultSize !== undefined) {
@@ -38,11 +36,9 @@ function getDefaultSize(defaultSize, minSize, maxSize, draggedSize) {
   return minSize;
 }
 
-
 function removeNullChildren(children) {
   return React.Children.toArray(children).filter(c => c);
 }
-
 
 class BootstrapSplitPane extends React.Component {
   constructor(props) {
@@ -53,58 +49,55 @@ class BootstrapSplitPane extends React.Component {
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
-    this.collapseSidebar = this.collapseSidebar.bind(this)
+    this.collapseSidebar = this.collapseSidebar.bind(this);
 
     // order of setting panel sizes.
     // 1. size
     // 2. getDefaultSize(defaultSize, minsize, maxSize)
 
-    const { size, defaultSize, minSize, maxSize, primary, localStorageKey} = props;
+    const { size, defaultSize, minSize, maxSize, primary, localStorageKey } = props;
 
-    let defaultColSize = props.defaultColSize || 3
+    let defaultColSize = props.defaultColSize || 3;
     if (localStorageKey) {
-      defaultColSize = localStorage.getItem(localStorageKey) || defaultColSize
+      defaultColSize = localStorage.getItem(localStorageKey) || defaultColSize;
     }
 
-    const initialSize =
-      size !== undefined
-        ? size
-        : getDefaultSize(defaultSize, minSize, maxSize, null);
+    const initialSize = size !== undefined ? size : getDefaultSize(defaultSize, minSize, maxSize, null);
 
     this.state = {
       active: false,
       resized: false,
-      pane1Size: primary === 'first' ? initialSize : undefined,
-      pane2Size: primary === 'second' ? initialSize : undefined,
+      pane1Size: primary === "first" ? initialSize : undefined,
+      pane2Size: primary === "second" ? initialSize : undefined,
       splitGridNum: defaultColSize,
-      pane1ClassName: `col-sm-${defaultColSize}`, 
-      pane2ClassName: `col-sm-${12-defaultColSize}`,
+      pane1ClassName: `col-sm-${defaultColSize}`,
+      pane2ClassName: `col-sm-${12 - defaultColSize}`,
       collapsed: true,
       collapseButtonIndex: 0,
-      collapseButtonImgList: ["https://image.flaticon.com/icons/svg/126/126492.svg", "https://image.flaticon.com/icons/svg/18/18069.svg"],
+      collapseButtonImgList: [jiraExpand, jiraCollapse],
       // these are props that are needed in static functions. ie: gDSFP
       instanceProps: {
-        size,
-      },
+        size
+      }
     };
   }
 
   componentDidMount() {
-    document.addEventListener('mouseup', this.onMouseUp);
-    document.addEventListener('mousemove', this.onMouseMove);
-    document.addEventListener('touchmove', this.onTouchMove);
-    this.setState({pane1Size: this.getSplitSize()});
+    document.addEventListener("mouseup", this.onMouseUp);
+    document.addEventListener("mousemove", this.onMouseMove);
+    document.addEventListener("touchmove", this.onTouchMove);
+    this.setState({ pane1Size: this.getSplitSize() });
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mouseup', this.onMouseUp);
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('touchmove', this.onTouchMove);
+    document.removeEventListener("mouseup", this.onMouseUp);
+    document.removeEventListener("mousemove", this.onMouseMove);
+    document.removeEventListener("touchmove", this.onTouchMove);
   }
 
   onMouseDown(event) {
     const eventWithTouches = Object.assign({}, event, {
-      touches: [{ clientX: event.clientX, clientY: event.clientY }],
+      touches: [{ clientX: event.clientX, clientY: event.clientY }]
     });
     this.onTouchStart(eventWithTouches);
   }
@@ -113,40 +106,37 @@ class BootstrapSplitPane extends React.Component {
     const { allowResize, onDragStarted, split } = this.props;
     if (allowResize && this.state.collapsed) {
       unFocus(document, window);
-      const position =
-        split === 'vertical'
-          ? event.touches[0].clientX
-          : event.touches[0].clientY;
+      const position = split === "vertical" ? event.touches[0].clientX : event.touches[0].clientY;
 
-      if (typeof onDragStarted === 'function') {
+      if (typeof onDragStarted === "function") {
         onDragStarted();
       }
       this.setState({
         active: true,
         position,
-        pane1ClassName: null, 
+        pane1ClassName: null,
         pane2ClassName: null,
         pane1Size: this.getSplitSize()
       });
-
     }
   }
 
   onMouseMove(event) {
-    if(this.state.collapsed == true){              // Dont allow resize if collapsed    
-    const eventWithTouches = Object.assign({}, event, {
-      touches: [{ clientX: event.clientX, clientY: event.clientY }],
-    });
-    this.onTouchMove(eventWithTouches);
+    if (this.state.collapsed == true) {
+      // Dont allow resize if collapsed
+      const eventWithTouches = Object.assign({}, event, {
+        touches: [{ clientX: event.clientX, clientY: event.clientY }]
+      });
+      this.onTouchMove(eventWithTouches);
+    }
   }
-}
   onTouchMove(event) {
     const { allowResize, maxSize, minSize, onChange, localStorageKey, split, step } = this.props;
     const { active, position } = this.state;
-    
+
     if (allowResize && active && this.state.collapsed) {
       unFocus(document, window);
-      const isPrimaryFirst = this.props.primary === 'first';
+      const isPrimaryFirst = this.props.primary === "first";
       const ref = isPrimaryFirst ? this.pane1 : this.pane2;
       const ref2 = isPrimaryFirst ? this.pane2 : this.pane1;
       if (ref) {
@@ -156,11 +146,8 @@ class BootstrapSplitPane extends React.Component {
         if (node.getBoundingClientRect) {
           const width = node.getBoundingClientRect().width;
           const height = node.getBoundingClientRect().height;
-          const current =
-            split === 'vertical'
-              ? event.touches[0].clientX
-              : event.touches[0].clientY;
-          const size = split === 'vertical' ? width : height;
+          const current = split === "vertical" ? event.touches[0].clientX : event.touches[0].clientY;
+          const size = split === "vertical" ? width : height;
           let positionDelta = position - current;
           if (step) {
             if (Math.abs(positionDelta) < step) {
@@ -181,7 +168,7 @@ class BootstrapSplitPane extends React.Component {
           let newMaxSize = maxSize;
           if (maxSize !== undefined && maxSize <= 0) {
             const splitPane = this.splitPane;
-            if (split === 'vertical') {
+            if (split === "vertical") {
               newMaxSize = splitPane.getBoundingClientRect().width + maxSize;
             } else {
               newMaxSize = splitPane.getBoundingClientRect().height + maxSize;
@@ -189,57 +176,56 @@ class BootstrapSplitPane extends React.Component {
           }
 
           let newSize = size - sizeDelta;
-          const newPosition = position - positionDelta; 
+          const newPosition = position - positionDelta;
 
-          if (newSize < minSize) {     
-              newSize = minSize;
+          if (newSize < minSize) {
+            newSize = minSize;
           } else if (maxSize !== undefined && newSize > newMaxSize) {
             newSize = newMaxSize;
           } else {
             this.setState({
               position: newPosition,
-              resized: true,
+              resized: true
             });
           }
 
-          let {ratio, splitGridNum} = this.getSplitPoint()
+          let { ratio, splitGridNum } = this.getSplitPoint();
           if (onChange) onChange(newSize, splitGridNum, ratio);
           if (localStorageKey) {
-            localStorage.setItem(localStorageKey, splitGridNum)
+            localStorage.setItem(localStorageKey, splitGridNum);
           }
 
           this.setState({
             draggedSize: newSize,
             pane1Size: newSize,
             pane2Size: this.totalWidth() - newSize,
-            [isPrimaryFirst ? 'pane1Size' : 'pane2Size']: newSize,
+            [isPrimaryFirst ? "pane1Size" : "pane2Size"]: newSize,
             splitGridNum
           });
         }
       }
     }
-    
   }
 
   onMouseUp() {
     const { allowResize, onDragFinished } = this.props;
     const { active, draggedSize } = this.state;
-    if (allowResize && active && this.state.collapsed) {   
-      if (typeof onDragFinished === 'function') {
+    if (allowResize && active && this.state.collapsed) {
+      if (typeof onDragFinished === "function") {
         onDragFinished(draggedSize);
       }
       // Round size down to 12ths
-      let totalWidth = this.pane1.clientWidth + this.pane2.clientWidth
-      let gridNum = Math.min(Math.max(Math.round(12 * this.pane1.clientWidth / totalWidth), 1),11)
-      let snappedSize = (gridNum / 12) * totalWidth
-      const isPrimaryFirst = this.props.primary === 'first';
+      let totalWidth = this.pane1.clientWidth + this.pane2.clientWidth;
+      let gridNum = Math.min(Math.max(Math.round((12 * this.pane1.clientWidth) / totalWidth), 1), 11);
+      let snappedSize = (gridNum / 12) * totalWidth;
+      const isPrimaryFirst = this.props.primary === "first";
 
-      this.setState({ 
-          active: false,
-          draggedSize: snappedSize,
-          [isPrimaryFirst ? 'pane1Size' : 'pane2Size']: snappedSize,
-          ...this.getPaneClasses()
-        });
+      this.setState({
+        active: false,
+        draggedSize: snappedSize,
+        [isPrimaryFirst ? "pane1Size" : "pane2Size"]: snappedSize,
+        ...this.getPaneClasses()
+      });
     }
   }
 
@@ -255,98 +241,86 @@ class BootstrapSplitPane extends React.Component {
     const newSize =
       props.size !== undefined
         ? props.size
-        : getDefaultSize(
-            props.defaultSize,
-            props.minSize,
-            props.maxSize,
-            state.draggedSize
-          );
-          
+        : getDefaultSize(props.defaultSize, props.minSize, props.maxSize, state.draggedSize);
 
     if (props.size !== undefined) {
       newState.draggedSize = newSize;
     }
 
-
-    const isPanel1Primary = props.primary === 'first';
-    newState[isPanel1Primary ? 'pane1Size' : 'pane2Size'] = newSize;
-    newState[isPanel1Primary ? 'pane2Size' : 'pane1Size'] = window.innerWidth;
+    const isPanel1Primary = props.primary === "first";
+    newState[isPanel1Primary ? "pane1Size" : "pane2Size"] = newSize;
+    newState[isPanel1Primary ? "pane2Size" : "pane1Size"] = window.innerWidth;
 
     newState.instanceProps = { size: props.size };
     return newState;
   }
 
-  getPaneClasses(splitGridNum=null) {
+  getPaneClasses(splitGridNum = null) {
     if (splitGridNum == null) {
-      splitGridNum = this.state.splitGridNum
+      splitGridNum = this.state.splitGridNum;
     }
     return {
-      pane1ClassName: `col-sm-${splitGridNum}`, 
-      pane2ClassName: `col-sm-${12-splitGridNum}`
-    }
+      pane1ClassName: `col-sm-${splitGridNum}`,
+      pane2ClassName: `col-sm-${12 - splitGridNum}`
+    };
   }
 
   totalWidth() {
-    return (this.pane1.clientWidth + this.pane2.clientWidth)
+    return this.pane1.clientWidth + this.pane2.clientWidth;
   }
 
   getSplitPoint() {
-    let ratio = this.pane1.clientWidth / this.totalWidth()
-    let minGridSize = this.props.allowZero ? 0 : 1
-    let splitGridNum = Math.min(Math.max(Math.round(12 * ratio), minGridSize),11)
-    return {ratio, splitGridNum}
+    let ratio = this.pane1.clientWidth / this.totalWidth();
+    let minGridSize = this.props.allowZero ? 0 : 1;
+    let splitGridNum = Math.min(Math.max(Math.round(12 * ratio), minGridSize), 11);
+    return { ratio, splitGridNum };
   }
 
   getSplitSize() {
-    let {splitGridNum} = this.state
-    return (this.totalWidth()*splitGridNum/12)
+    let { splitGridNum } = this.state;
+    return (this.totalWidth() * splitGridNum) / 12;
   }
 
-  collapseSidebar(){
-    if(this.state.collapseButtonIndex == 0){
+  collapseSidebar() {
+    if (this.state.collapseButtonIndex == 0) {
       this.setState({
         collapseButtonIndex: 1
-      })
-    }else{
+      });
+    } else {
       this.setState({
         collapseButtonIndex: 0
-      })
+      });
     }
-
 
     this.setState({
       collapsed: !this.state.collapsed
     });
-    if(this.state.collapsed == true){
-      var src = document.getElementsByClassName("collapseButton")
-      // Need to toggle this image src from one state to the other
-      document.getElementsByClassName("collapseButton").src = "https://image.flaticon.com/icons/svg/18/18069.svg";
-
+    if (this.state.collapsed == true) {
       this.setState({
-        pane1Size : 0,
+        pane1Size: 0,
         splitGridNum: 0,
         ...this.getPaneClasses(0)
-      })
+      });
 
-    if (this.props.onCollapseHook) { 
-        this.props.onCollapseHook() 
+      if (this.props.onCollapseHook) {
+        this.props.onCollapseHook();
       }
-    }else if(this.state.collapsed == false){
+    } else if (this.state.collapsed == false) {
       document.getElementsByClassName("collapseButton").src = "https://image.flaticon.com/icons/svg/126/126492.svg";
 
-      let splitGridNum = localStorage.getItem(this.props.localStorageKey) || 3
+      let splitGridNum = localStorage.getItem(this.props.localStorageKey) || 3;
 
       this.setState({
         active: false,
-        
+
         splitGridNum,
         ...this.getPaneClasses(splitGridNum)
-      })
+      });
 
-    if (this.props.onExpandHook) { this.props.onExpandHook() }
-
+      if (this.props.onExpandHook) {
+        this.props.onExpandHook();
       }
-
+    }
   }
 
   render() {
@@ -365,13 +339,12 @@ class BootstrapSplitPane extends React.Component {
       resizerClassName,
       resizerStyle,
       split,
-      style: styleProps,
+      style: styleProps
     } = this.props;
 
     const { pane1Size, pane2Size } = this.state;
 
-    
-    const disabledClass = allowResize ? '' : 'disabled';
+    const disabledClass = allowResize ? "" : "disabled";
     const resizerClassNamesIncludingDefault = resizerClassName
       ? `${resizerClassName} ${RESIZER_DEFAULT_CLASSNAME}`
       : resizerClassName;
@@ -379,59 +352,58 @@ class BootstrapSplitPane extends React.Component {
     const notNullChildren = removeNullChildren(children);
 
     const style = {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      height: '100%',
+      height: "100%",
       // position: 'absolute',
-      outline: 'none',
-      overflow: 'hidden',
-      MozUserSelect: 'text',
-      WebkitUserSelect: 'text',
-      msUserSelect: 'text',
-      userSelect: 'text',
-      ...styleProps,
+      outline: "none",
+      overflow: "hidden",
+      MozUserSelect: "text",
+      WebkitUserSelect: "text",
+      msUserSelect: "text",
+      userSelect: "text",
+      ...styleProps
     };
 
-    if (split === 'vertical') {
+    if (split === "vertical") {
       Object.assign(style, {
-        flexDirection: 'row',
+        flexDirection: "row",
         left: 0,
-        right: 0,
+        right: 0
       });
     } else {
       Object.assign(style, {
         bottom: 0,
-        flexDirection: 'column',
-        minHeight: '100%',
+        flexDirection: "column",
+        minHeight: "100%",
         top: 0,
-        width: '100%',
+        width: "100%"
       });
     }
 
-    const classes = ['SplitPane', className, split, disabledClass];
+    const classes = ["SplitPane", className, split, disabledClass];
 
     const pane1Style = { ...paneStyle, ...pane1StyleProps };
     const pane2Style = { ...paneStyle, ...pane2StyleProps };
 
-    const pane1Classes = ['Pane1', paneClassName, this.state.pane1ClassName, pane1ClassName].join(' ');
-    const pane2Classes = ['Pane2', paneClassName, this.state.pane2ClassName, pane2ClassName].join(' ');
+    const pane1Classes = ["Pane1", paneClassName, this.state.pane1ClassName, pane1ClassName].join(" ");
+    const pane2Classes = ["Pane2", paneClassName, this.state.pane2ClassName, pane2ClassName].join(" ");
 
     return (
       <div
-        className={classes.join(' ')}
+        className={classes.join(" ")}
         ref={node => {
           this.splitPane = node;
         }}
         style={style}
       >
         <Pane
-        
           className={pane1Classes}
           key="pane1"
           eleRef={node => {
             this.pane1 = node;
           }}
-          size={this.state.active ? pane1Size : null}     
+          size={this.state.active ? pane1Size : null}
           split={split}
           style={pane1Style}
         >
@@ -450,8 +422,20 @@ class BootstrapSplitPane extends React.Component {
           split={split}
           style={resizerStyle || {}}
         />
-                    <div>
-                    <img className='collapseButton' src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} onClick= {this.collapseSidebar}></img>                    </div>
+
+        {/*
+         */}
+        <div>
+          <button className="jira-btn" style={{ zIndex: 100 }} onClick={this.collapseSidebar}>
+            {/*<img 
+              className='collapseButton' 
+              style={{zIndex: 100, position: 'absolute', transform: !this.state.collapseButtonIndex ? 'translateX(-10px)' : 'translateX(-10px)'}}
+              src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} 
+              
+          />*/}
+            {this.state.collapseButtonIndex ? jiraExpand : jiraCollapse}
+          </button>
+        </div>
 
         <Pane
           className={pane2Classes}
@@ -460,13 +444,11 @@ class BootstrapSplitPane extends React.Component {
             this.pane2 = node;
           }}
           size={this.state.active ? pane2Size : null}
-
           split={split}
           style={pane2Style}
         >
           {notNullChildren[1]}
         </Pane>
-        
       </div>
     );
   }
@@ -476,13 +458,13 @@ BootstrapSplitPane.propTypes = {
   allowResize: PropTypes.bool,
   children: PropTypes.arrayOf(PropTypes.node).isRequired,
   className: PropTypes.string,
-  primary: PropTypes.oneOf(['first', 'second']),
+  primary: PropTypes.oneOf(["first", "second"]),
   minSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   maxSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   // eslint-disable-next-line react/no-unused-prop-types
   defaultSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  split: PropTypes.oneOf(['vertical', 'horizontal']),
+  split: PropTypes.oneOf(["vertical", "horizontal"]),
   onDragStarted: PropTypes.func,
   onDragFinished: PropTypes.func,
   onChange: PropTypes.func,
@@ -497,17 +479,17 @@ BootstrapSplitPane.propTypes = {
   pane1Style: stylePropType,
   pane2Style: stylePropType,
   resizerClassName: PropTypes.string,
-  step: PropTypes.number,
+  step: PropTypes.number
 };
 
 BootstrapSplitPane.defaultProps = {
   allowResize: true,
   minSize: 0,
-  primary: 'first',
-  split: 'vertical',
-  paneClassName: '',
-  pane1ClassName: '',
-  pane2ClassName: '',
+  primary: "first",
+  split: "vertical",
+  paneClassName: "",
+  pane1ClassName: "",
+  pane2ClassName: ""
 };
 
 polyfill(BootstrapSplitPane);
