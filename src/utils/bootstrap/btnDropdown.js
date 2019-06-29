@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Octicon from "react-octicon";
 
-
 export class BSBtnDropdown extends React.Component {
   renderItem(item, i) {
     if (item.name != undefined) {

@@ -14,11 +14,12 @@ export class BSBtn extends React.Component {
 
   render() {
     let { extra_className } = this.props;
+    let primaryOff = this.props.primaryOff ? "" : "btn-primary";
     let floatStr = this.props.noFloatRight ? "" : "float-right";
     return (
       <button
         onClick={this.handleClick}
-        className={`btn btn-sm btn-primary ${floatStr} ${extra_className}`}
+        className={`btn btn-sm ${primaryOff} ${floatStr} ${extra_className}`}
         disabled={this.props.disabled ? true : false}
       >
         {this.props.text}
