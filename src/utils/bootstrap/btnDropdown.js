@@ -1,8 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
-
 import { Link } from "react-router-dom";
-
 import Octicon from "react-octicon";
 
 export class BSBtnDropdown extends React.Component {
@@ -87,7 +84,7 @@ export class BSBtnDropdown extends React.Component {
   render() {
     const links = this.renderLinks();
     if (!links) {
-      return null;
+      return this.props.alwaysShowHeader ? this.menuHeader() : null;
     }
 
     return (
