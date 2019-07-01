@@ -4,7 +4,6 @@ import LoginForm from "../form";
 
 class LoginPage extends React.Component {
   render() {
-    //console.log(this.props.location)
     let { state } = this.props.location;
     let nextUrl = state ? state.nextUrl : "/accounts/profile";
 
