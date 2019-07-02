@@ -99,7 +99,7 @@ export class LoginForm extends React.Component {
           attribute="password"
           placeholder="Password"
           onChange={this.onChange}
-          helpBlock={passwordHelpBlock}
+          helpBlock={passwordHelpBlock()}
           fieldType="password"
           value={this.state["password"]}
           errors={errors}
