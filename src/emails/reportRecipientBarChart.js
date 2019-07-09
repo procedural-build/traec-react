@@ -31,9 +31,7 @@ export default class IndividualReportBarPlot extends React.Component {
     this.DrawBarChart(this.state.recipient);
   }
   DrawBarChart(recipient) {
-    if (!recipient) {
-      return null;
-    }
+    // debugger
 
     //Function to get nested values within object
     Object.byString = function(o, s) {

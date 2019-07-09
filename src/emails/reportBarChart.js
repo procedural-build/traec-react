@@ -19,6 +19,7 @@ export default class ReportBarPlot extends React.Component {
   constructor(props) {
     super(props);
     this.DrawBarChart = this.DrawBarChart.bind(this);
+
     this.state = {
       emails: props.emails
     };
@@ -40,6 +41,7 @@ export default class ReportBarPlot extends React.Component {
     Traec.fetchRequired.bind(this)();
     this.DrawBarChart(this.state.emails);
   }
+
   DrawBarChart(emails) {
     if (!emails) {
       return null;
@@ -127,7 +129,7 @@ export default class ReportBarPlot extends React.Component {
 
     var ymaxdomain = d3.max(yValueArray);
     x.domain(dateList);
-    y.domain([0, ymaxdomain]);
+    y.domain([0, ymaxdomain + 5]);
 
     var x1 = d3
       .scaleBand()
@@ -205,7 +207,7 @@ export default class ReportBarPlot extends React.Component {
     svg.call(tip);
 
     bars.on("mouseover", tip.show).on("mouseout", tip.hide);
-
+    let size = 18;
     var legend = svg
       .append("g")
       .attr("class", "legend")
@@ -213,20 +215,21 @@ export default class ReportBarPlot extends React.Component {
       //.attr("y", 50)
       .attr("height", 100)
       .attr("width", 100)
-      .attr("transform", "translate(200,50)");
+      .attr("transform", "translate(200,0)");
 
     svg
       .selectAll("legend")
       .data(LEGEND)
       .enter()
-      .append("circle")
-      .attr("cx", 10)
-      .attr("cy", function(d, i) {
-        return 100 + i * 25;
+      .append("rect")
+      .attr("x", 10)
+      .attr("y", function(d, i) {
+        return 100 + i * (size + 5);
       }) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("r", 7)
+      .attr("width", size)
+      .attr("height", size)
       .style("fill", function(d) {
-        return colorLegend(d);
+        return color(d);
       });
 
     svg
@@ -236,7 +239,7 @@ export default class ReportBarPlot extends React.Component {
       .append("text")
       .attr("x", 30)
       .attr("y", function(d, i) {
-        return 100 + i * 25;
+        return 100 + i * (size + 5) + size / 2;
       }) // 100 is where the first dot appears. 25 is the distance between dots
       .style("fill", function(d) {
         return colorLegend(d);
