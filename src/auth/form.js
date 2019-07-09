@@ -1,14 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
-import { logoutToken } from "./_redux/actions";
 import { postLogin, verifyToken } from "./_redux/actions";
-import store from "traec/redux/store";
 
-class LoginForm extends React.Component {
+export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,40 +46,7 @@ class LoginForm extends React.Component {
     }
   }
 
-  password_help_block() {
-    return (
-      <div>
-        <small id="passwordHelpBlock" className="form-text text-muted float-right">
-          <Link to="/accounts/password/reset/">Reset your password</Link>
-        </small>
-        <div style={{ clear: "both" }} />
-      </div>
-    );
-  }
-
-  render_item(attr, placeholder, help_block, fieldType = "text") {
-    // Get the validity and error message of this field
-    const errors = this.props.errors;
-    const validClass = errors && errors.has(attr) ? "is-invalid" : "";
-    const error = validClass ? <div className="invalid-feedback">{errors.get(attr).join(" ")}</div> : null;
-    // Render
-    return (
-      <div className="form-group">
-        <input
-          className={`form-control form-control-sm ${validClass}`}
-          placeholder={placeholder}
-          type={fieldType}
-          name={attr}
-          onChange={this.onChange}
-          value={this.state[attr]}
-        />
-        {error}
-        {help_block}
-      </div>
-    );
-  }
-
-  render_non_field_errors() {
+  renderNonFieldErrors() {
     const attr = "non_field_errors";
     const errors = this.props.errors;
     if (errors && errors.has(attr)) {
@@ -93,7 +56,7 @@ class LoginForm extends React.Component {
     return "";
   }
 
-  render_create_account() {
+  renderCreateAccount() {
     if (this.props.show_create_account === false) {
       return "";
     }
@@ -106,12 +69,7 @@ class LoginForm extends React.Component {
     );
   }
 
-  logoutClicked(e) {
-    e.preventDefault();
-    store.dispatch(logoutToken());
-  }
-
-  render_logged_in() {
+  renderLoggedIn() {
     let { nextUrl, isAuthenticated } = this.props;
     if (!isAuthenticated) {
       return null;
@@ -123,23 +81,36 @@ class LoginForm extends React.Component {
   }
 
   render() {
-    //console.log("AUTHENTICATED", this.props.isAuthenticated)
     if (this.props.isAuthenticated) {
-      return this.render_logged_in();
+      return this.renderLoggedIn();
     }
+    let errors = this.props.errors;
     return (
       <form className="form" onSubmit={this.onSubmit}>
-        {this.render_non_field_errors()}
-        {this.render_item("username", "Username")}
-        {this.render_item("password", "Password", this.password_help_block(), "password")}
-
+        {this.renderNonFieldErrors()}
+        <LoginField
+          attribute="username"
+          placeholder="Username"
+          onChange={this.onChange}
+          value={this.state["username"]}
+          errors={errors}
+        />
+        <LoginField
+          attribute="password"
+          placeholder="Password"
+          onChange={this.onChange}
+          helpBlock={passwordHelpBlock()}
+          fieldType="password"
+          value={this.state["password"]}
+          errors={errors}
+        />
         <div className="form-group">
           <button className="btn btn-sm btn-primary btn-block" type="submit">
             Login
           </button>
         </div>
 
-        {this.render_create_account()}
+        {this.renderCreateAccount()}
       </form>
     );
   }
@@ -147,6 +118,41 @@ class LoginForm extends React.Component {
 
 LoginForm.propTypes = {
   isAuthenticated: PropTypes.bool
+};
+
+const passwordHelpBlock = function() {
+  return (
+    <div>
+      <small id="passwordHelpBlock" className="form-text text-muted float-right">
+        <Link to="/accounts/password/reset/">Reset your password</Link>
+      </small>
+      <div style={{ clear: "both" }} />
+    </div>
+  );
+};
+
+export const LoginField = function(props) {
+  let { attribute, placeholder, helpBlock, fieldType = "text", onChange, value, errors } = props;
+
+  // Get the validity and error message of this field
+  const validClass = errors && errors.has(attribute) ? "is-invalid" : "";
+  const error = validClass ? <div className="invalid-feedback">{errors.get(attribute).join(" ")}</div> : null;
+
+  // Render
+  return (
+    <div className="form-group">
+      <input
+        className={`form-control form-control-sm ${validClass}`}
+        placeholder={placeholder}
+        type={fieldType}
+        name={attribute}
+        onChange={onChange}
+        value={value}
+      />
+      {error}
+      {helpBlock}
+    </div>
+  );
 };
 
 const mapStateToProps = state => ({
