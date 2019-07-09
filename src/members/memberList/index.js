@@ -5,7 +5,7 @@ import Traec from "traec";
 import { BSCard, BSBtn, BSBtnDropdown } from "traec-react/utils/bootstrap";
 
 import { objToList } from "traec-react/utils";
-import { InviteForm, companyInviteFields, projectInviteFields } from "./form";
+import InviteForm, {companyInviteFields, projectInviteFields} from "./form";
 import { companyPermissionRender } from "traec/utils/permissions/company";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 import MemberItem from "./item";
@@ -49,6 +49,7 @@ export class MemberList extends React.Component {
 
   onClick(e) {
     e.preventDefault();
+    console.log("FDSAFDSA", this.fetch.params)
     this.fetch.toggleForm();
   }
 
@@ -62,26 +63,16 @@ export class MemberList extends React.Component {
         <MemberItem key={i} index={i} dispatch={dispatch} member={member} companyId={companyId} projectId={projectId} />
       ));
 
-    let permissionRender = null;
-    let inviteFields = null;
+    let permObjId = projectId ? projectId : companyId
+    let permRenderFunc = projectId ? projectPermissionRender : companyPermissionRender
+    let inviteFields = projectId ? projectInviteFields : companyInviteFields
 
-    if (projectId) {
-      permissionRender = projectPermissionRender(
-        projectId,
-        true,
-        [],
-        <BSBtn onClick={this.onClick} text="Send Invite" />
-      );
-      inviteFields = projectInviteFields;
-    } else if (companyId) {
-      permissionRender = companyPermissionRender(
-        companyId,
-        true,
-        [],
-        <BSBtn onClick={this.onClick} text="Send Invite" />
-      );
-      inviteFields = companyInviteFields;
-    }
+    let permissionRender = permRenderFunc(
+      permObjId, 
+      true, 
+      [],
+      (<BSBtn onClick={this.onClick} text="Send Invite" />)
+    )
 
     return (
       <div className="row">
@@ -94,8 +85,7 @@ export class MemberList extends React.Component {
             <InviteForm
               companyId={companyId}
               projectId={projectId}
-              stateParams={this.state.formParams.stateParams}
-              fetchParams={this.state.formParams.fetchParams}
+              params={this.state.formParams}
               fields={inviteFields}
             />
           }

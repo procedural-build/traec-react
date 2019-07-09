@@ -1,9 +1,6 @@
 import React from "react";
 
 export class BSCard extends React.Component {
-  form() {
-    return this.props.form ? this.props.form : "";
-  }
 
   render() {
     return (
@@ -15,7 +12,7 @@ export class BSCard extends React.Component {
           </div>
 
           <div className="card-body">
-            {this.form()}
+            {this.props.form}
             {this.props.body}
           </div>
         </div>

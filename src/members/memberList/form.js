@@ -41,7 +41,7 @@ export class InviteForm extends BaseForm {
       InviteForm.setSelectOptions(newState.formFields.auth, nextProps.authGroups);
     }
 
-    if (nextProps.fields.disciplines) {
+    if (nextProps.fields.project_discipline) {
       InviteForm.setSelectOptions(newState.formFields.project_discipline, nextProps.disciplines);
     }
 
@@ -51,7 +51,9 @@ export class InviteForm extends BaseForm {
   static setSelectOptions(state, items) {
     let options = [];
     if (items) {
-      options = objToList(items).map((item, i) => {
+      options = objToList(items)
+        .sortBy(i => i.get('name'))
+        .map((item, i) => {
         return (
           <option key={i} value={item.get("uid")}>
             {item.get("name")}
@@ -77,6 +79,7 @@ InviteForm.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const { companyId, projectId } = ownProps;
+  let stateParams = ownProps.stateParams || ownProps.params.stateParams
   let authGroups = null;
   let disciplines = null;
 
@@ -87,12 +90,11 @@ const mapStateToProps = (state, ownProps) => {
     authGroups = state.getInPath(`entities.companyObjects.byId.${companyId}.authGroups`);
   }
 
-  const s = ownProps.stateParams;
   return {
     authGroups,
     disciplines,
-    newItem: state.getInPath(`entities.${s.formObjPath}`),
-    showForm: state.getInPath(`entities.${s.formVisPath}`)
+    newItem: state.getInPath(`entities.${stateParams.formObjPath}`),
+    showForm: state.getInPath(`entities.${stateParams.formVisPath}`)
   };
 };
 
