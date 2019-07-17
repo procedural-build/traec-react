@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
+import ReportBarPlot from "./reportBarChart";
 
 export const EMAIL_TYPES = [
   "project_invite",
@@ -61,13 +62,16 @@ function RecipientTableHeaders() {
   );
 }
 
-class TraecProjectEmailReport extends React.Component {
+class ProjectEmailReport extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {};
 
-    this.requiredFetches = [new Traec.Fetch("project_email_recipient", "list")];
+    this.requiredFetches = [
+      new Traec.Fetch("project_email", "list"),
+      new Traec.Fetch("project_email_recipient", "list")
+    ];
 
     // action bindings
   }
@@ -81,10 +85,16 @@ class TraecProjectEmailReport extends React.Component {
   }
 
   render() {
-    let { recipients, projectId } = this.props;
+    let { recipients, projectId, emails } = this.props;
     if (!recipients) {
       return null;
     }
+    //   if (!recipients.get("sent")) {
+    //     setTimeout()
+    //     //window.location.reload();
+    //     console.log('agjhlfjksag')
+    //     // return null;
+    // }
 
     let rows = null;
 
@@ -106,7 +116,7 @@ class TraecProjectEmailReport extends React.Component {
         <h2>Email Recipients</h2>
 
         <p>The following email addresses have received notifications on this project.</p>
-
+        <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null}</div>
         <RecipientTableHeaders />
         {rows}
       </React.Fragment>
@@ -117,11 +127,13 @@ class TraecProjectEmailReport extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   let { projectId } = ownProps.match.params;
   let recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
+  let emails = state.getInPath(`entities.projectObjects.byId.${projectId}.emails`);
   // Add this to props
   return {
     projectId,
-    recipients
+    recipients,
+    emails
   };
 };
 
-export default connect(mapStateToProps)(TraecProjectEmailReport);
+export default connect(mapStateToProps)(ProjectEmailReport);

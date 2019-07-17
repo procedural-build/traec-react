@@ -30,6 +30,10 @@ export default class IndividualReportBarPlot extends React.Component {
     Traec.fetchRequired.bind(this)();
     this.DrawBarChart(this.state.recipient);
   }
+  componentWillMount() {
+    Traec.fetchRequired.bind(this)();
+    this.DrawBarChart(this.state.recipient);
+  }
   DrawBarChart(recipient) {
     // debugger
 
@@ -51,6 +55,7 @@ export default class IndividualReportBarPlot extends React.Component {
       }
       return o;
     };
+    var monthDateList = []; // List to hold all date values that wil be keys in the dateTypeMap (Used for easier access to drawing d3 charts)
 
     var dateTypeMap = {}; // Main object to store dates(by month) and the types of emails as well as their count. This splits into several lists for easier access for d3 to make the DOM
     var dateList = []; // List to hold all date values that wil be keys in the dateTypeMap (Used for easier access to drawing d3 charts)
@@ -61,8 +66,24 @@ export default class IndividualReportBarPlot extends React.Component {
 
     let sentItems = recipient.get("sent");
 
+    const month = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+
     for (let item of sentItems) {
       let dateValue = item.get("date").slice(0, 7);
+
       let typeValue = item.get("email_type");
       if (!emailTypeList.includes(typeValue)) {
         emailTypeList.push(typeValue);
@@ -71,10 +92,24 @@ export default class IndividualReportBarPlot extends React.Component {
       if (!currentDateTypeMap) {
         dateTypeMap[dateValue] = { [typeValue]: 1 };
         dateList.push(dateValue);
+        if (dateValue.slice(0, 4) == 2019) {
+          //Only analyze emails with 2019 date
+          if (dateValue.slice(5, 6) == 0) {
+            dateValue = dateValue.slice(6, 7);
+            monthDateList.push(month[dateValue - 1]);
+            // console.log(monthDateList)
+          } else {
+            dateValue = dateValue.slice(5, 7);
+            monthDateList.push(month[dateValue - 1]);
+          }
+        } else {
+          console.log("Wrong year");
+        }
       } else {
         Object.assign(currentDateTypeMap, { [typeValue]: (currentDateTypeMap[typeValue] || 0) + 1 });
       }
     }
+
     /*if (dateTypeMap.hasOwnProperty(dateValue)) {
             let currentDateTypeMap = dateTypeMap[dateValue]
             let currentTotal = currentDateTypeMap[typeValue] || 0
@@ -152,7 +187,7 @@ export default class IndividualReportBarPlot extends React.Component {
 
     var ymaxdomain = d3.max(yValueArray);
 
-    x.domain(dateList);
+    x.domain(monthDateList);
     y.domain([0, ymaxdomain + 3]);
 
     for (let i = 0; i < yValueArray.length; i++) {
@@ -221,13 +256,13 @@ export default class IndividualReportBarPlot extends React.Component {
       .attr("class", "axis")
       .call(d3.axisLeft(y).ticks(10, "s"))
       .append("text")
-      .attr("x", 10)
-      .attr("y", y(y.ticks().pop()) + 0.5)
+      .attr("x", 0)
+      .attr("y", 0 - margin.top / 2)
       .attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
       .attr("text-anchor", "start")
-      .text("Number of Emails");
+      .text("Email types sent per month");
 
     var tip = d3Tip()
       .attr("class", "d3-tip")
@@ -280,7 +315,7 @@ export default class IndividualReportBarPlot extends React.Component {
       })
       .attr("text-anchor", "left")
       .style("alignment-baseline", "middle");
-    return <svg width="1500" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
+    // return <svg width="1500" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
 
   render() {

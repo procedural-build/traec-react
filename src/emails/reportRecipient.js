@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
 import Moment from "moment";
+import IndividualReportBarPlot from "./reportRecipientBarChart";
 
 function ProjectSentEmail({ item, recipient, projectId }) {
   return (
@@ -30,7 +31,7 @@ function RecipientTableHeaders() {
   );
 }
 
-class TraecProjectRecipientEmailReport extends React.Component {
+class ProjectRecipientEmailReport extends React.Component {
   constructor(props) {
     super(props);
 
@@ -67,7 +68,7 @@ class TraecProjectRecipientEmailReport extends React.Component {
         <h2>Email Report for: {recipient.get("email")}</h2>
 
         <p>The following email notifications have been sent to this address.</p>
-
+        <div>{recipient.get("sent") ? <IndividualReportBarPlot recipient={recipient} /> : null}</div>
         <RecipientTableHeaders />
         {rows}
       </React.Fragment>
@@ -86,4 +87,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(TraecProjectRecipientEmailReport);
+export default connect(mapStateToProps)(ProjectRecipientEmailReport);
