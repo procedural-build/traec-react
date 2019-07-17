@@ -9,12 +9,6 @@ import { select } from "d3-selection";
 import { cluster, stratify } from "d3-hierarchy";
 import d3Tip from "d3-tip";
 
-// function mapStateToProps(state) {
-//   return {
-//     emails: state.getInPath(`entities.projectObjects.byId.${projectId}.emails`)
-//   }
-// }
-
 export default class ReportBarPlot extends React.Component {
   constructor(props) {
     super(props);
@@ -44,6 +38,7 @@ export default class ReportBarPlot extends React.Component {
 
   DrawBarChart(emails) {
     if (!emails) {
+      console.log("Fail");
       return null;
     }
     let emailData = {}; // Main object to store dates(by month) and the types of emails as well as their count. This splits into several lists for easier access for d3 to make the DOM
@@ -60,13 +55,38 @@ export default class ReportBarPlot extends React.Component {
               //Push email types into the legend
               LEGEND.push(emailTypeList[v]);
             }
-          */
-
+    */
+    const month = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
     for (var mail of emails.toList()) {
-      let minDate = mail.get("min_date").slice(0, 10);
+      let minDate = mail.get("min_date").slice(0, 7);
       let maxDate = mail.get("max_date").slice(0, 10);
       let emailTypes = mail.getInPath(`email_types`);
-      dateList.push(minDate + " -> " + maxDate);
+
+      if (minDate.slice(0, 4) == 2019) {
+        //Only analyze emails with 2019 date for now, todo in the future: add dropdown to select year
+        if (minDate.slice(5, 6) == 0) {
+          minDate = minDate.slice(6, 7);
+          dateList.push(month[minDate - 1]);
+        } else {
+          minDate = minDate.slice(5, 7);
+          dateList.push(month[minDate - 1]);
+        }
+      } else {
+        console.log("Wrong year");
+      }
       emailData[minDate] = { [emailTypes]: null };
     }
 
@@ -105,7 +125,7 @@ export default class ReportBarPlot extends React.Component {
 
     var svg = d3.select(".barChart");
     var margin = {
-      top: 5,
+      top: 20,
       right: 5,
       bottom: 5,
       left: 200
@@ -116,7 +136,8 @@ export default class ReportBarPlot extends React.Component {
       .range(["red", "orange", "gold", "green", "blue"]);
 
     var width = 1800;
-    var height = 500;
+    var height = 500 + margin.top + margin.bottom + 20;
+
     var color = d3.scaleOrdinal(["red", "orange", "gold", "green", "blue"]);
 
     var x = d3
@@ -126,7 +147,6 @@ export default class ReportBarPlot extends React.Component {
       y = d3.scaleLinear().rangeRound([height, 0]);
 
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
     var ymaxdomain = d3.max(yValueArray);
     x.domain(dateList);
     y.domain([0, ymaxdomain + 5]);
@@ -165,6 +185,8 @@ export default class ReportBarPlot extends React.Component {
           return x1(d.x) + 40;
         } else if (i > 24 && i <= 29) {
           return x1(d.x) + 50;
+        } else if (i > 29 && i <= 34) {
+          return x1(d.x) + 60;
         } else {
           return x1(d.x);
         }
@@ -189,13 +211,14 @@ export default class ReportBarPlot extends React.Component {
       .attr("class", "axis")
       .call(d3.axisLeft(y).ticks(10, "s"))
       .append("text")
-      .attr("x", 2)
-      .attr("y", y(y.ticks().pop()) + 0.5)
+      .attr("x", 0)
+      .attr("y", 0 - margin.top / 2)
+      // y(y.ticks().pop()) + -5
       .attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
       .attr("text-anchor", "start")
-      .text("Number of Emails");
+      .text("Email types sent per month");
 
     var tip = d3Tip()
       .attr("class", "d3-tip")
@@ -249,8 +272,10 @@ export default class ReportBarPlot extends React.Component {
       })
       .attr("text-anchor", "left")
       .style("alignment-baseline", "middle");
-    return <svg width="1800" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
+
+    // return <svg width="1800" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
+
   render() {
     return <svg width="1800" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
