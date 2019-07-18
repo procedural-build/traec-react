@@ -122,3 +122,54 @@ export class DropzoneButton extends React.Component {
     );
   }
 }
+
+export class DropzoneField extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      files: props.selectedFiles
+    };
+  }
+
+  onCancel() {
+    this.setState({
+      files: []
+    });
+  }
+
+  confirmState() {
+    return (
+      <div className="btn-group">
+        <div className="btn btn-default pl-1 pr-1 m-0 p-0" style={{ whiteSpace: "unset" }}>
+          {this.props.selectedFiles}
+        </div>
+        <button className="btn btn-default pl-1 pr-1 m-0 p-0" onClick={this.props.onConfirmUpload}>
+          {this.props.confirmText}
+        </button>
+        <button className="btn btn-default pl-1 pr-1 m-0 p-0" onClick={this.props.onCancelUpload}>
+          Clear
+        </button>
+      </div>
+    );
+  }
+  render() {
+    let selectAreaText = this.props.selectAreaText || "Click here to select a file";
+    return (
+      <div>
+        <Dropzone onDrop={this.props.onDrop} onFileDialogCancel={this.onCancel.bind(this)}>
+          {({ getRootProps, getInputProps }) => {
+            if (this.props.selectedFiles.length) {
+              return <React.Fragment>{this.confirmState()}</React.Fragment>;
+            }
+            return (
+              <div {...getRootProps()} className={`${this.props.extra_className}`}>
+                <input {...getInputProps()} />
+                {selectAreaText}
+              </div>
+            );
+          }}
+        </Dropzone>
+      </div>
+    );
+  }
+}
