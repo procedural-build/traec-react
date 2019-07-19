@@ -68,14 +68,13 @@ class ProjectRecipientEmailReport extends React.Component {
         <h2>Email Report for: {recipient.get("email")}</h2>
 
         <p>The following email notifications have been sent to this address.</p>
-        <RecipientTableHeaders />
         <div>{recipient.get("sent") ? <IndividualReportBarPlot recipient={recipient} /> : null}</div>
+        <RecipientTableHeaders />
       </div>
     );
   }
 
   setIsLoading() {
-    //console.log('check loading')
     let { recipient } = this.props;
     if (!recipient) {
       return null;

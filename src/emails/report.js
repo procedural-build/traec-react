@@ -73,6 +73,7 @@ class ProjectEmailReport extends React.Component {
 
     this.requiredFetches = [
       new Traec.Fetch("project_email", "list"),
+      new Traec.Fetch("project_email_recipient", "read"),
       new Traec.Fetch("project_email_recipient", "list")
     ];
 
@@ -81,25 +82,11 @@ class ProjectEmailReport extends React.Component {
 
   componentDidMount() {
     Traec.fetchRequired.bind(this)();
-    // this.ensureLoadedSVG();
   }
 
   componentDidUpdate() {
-    let { recipients, emails } = this.props;
     Traec.fetchRequired.bind(this)();
     this.setIsLoading();
-    // this.ensureLoadedSVG();
-  }
-
-  setIsLoading() {
-    //console.log('check loading')
-    let { recipients, emails } = this.props;
-    if (!recipients && !emails) {
-      return null;
-    }
-    if (recipients && this.state.isLoading) {
-      this.setState({ isLoading: false });
-    }
   }
 
   displayEmpty() {
@@ -117,11 +104,21 @@ class ProjectEmailReport extends React.Component {
         <h2>Email Recipients</h2>
 
         <p>The following email addresses have received notifications on this project.</p>
-        <RecipientTableHeaders />
         <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null} </div>
+        <RecipientTableHeaders />
       </div>
     );
   }
+
+  setIsLoading() {
+    let { recipients, emails } = this.props;
+    if (!recipients && !emails) {
+      return null;
+    } else if (recipients && this.state.isLoading) {
+      this.setState({ isLoading: false });
+    }
+  }
+
   render() {
     let { recipients, projectId, emails } = this.props;
     if (!recipients) {
@@ -129,15 +126,6 @@ class ProjectEmailReport extends React.Component {
     }
 
     let rows = null;
-
-    // If we have nothing then set a message          /* 19/07/19 - I am not sure if the method below is better, or the way i've done it
-    // if (recipients.toList().size == 0) {                         in the return statement is better.
-    //   rows = (
-    //     <p>                                         */
-    //       <b>No notifications sent for this project yet</b>
-    //     </p>
-    //   );
-    // }
 
     rows = recipients
       .toList()
@@ -160,14 +148,27 @@ class ProjectEmailReport extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { projectId } = ownProps.match.params;
-  let recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
-  let emails = state.getInPath(`entities.projectObjects.byId.${projectId}.emails`);
+  let { projectId, companyId, memberId } = ownProps.match.params;
+
+  if (projectId) {
+    var recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
+    var emails = state.getInPath(`entities.projectObjects.byId.${projectId}.emails`);
+  }
+
+  if (companyId) {
+    var members = state.getInPath(`entities.companyObjects.byId.${companyId}.members`);
+    var email = state.getInPath(`entities.companyObjects.byId.${companyId}.members.${memberId}.user.email`);
+  }
+
   // Add this to props
   return {
+    companyId,
     projectId,
     recipients,
-    emails
+    emails,
+    members,
+    memberId,
+    email
   };
 };
 
