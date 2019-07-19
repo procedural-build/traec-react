@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
-import Moment from "moment";
-import IndividualReportBarPlot from "./reportRecipientBarChart";
+import { loading } from "traec-react/utils/entities";
+import Moment, { min } from "moment";
+import IndividualReportBarPlot from "traec-react/emails/reportRecipientBarChart";
 
 function ProjectSentEmail({ item, recipient, projectId }) {
   return (
@@ -35,7 +36,9 @@ class ProjectRecipientEmailReport extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      isLoading: true
+    };
 
     this.requiredFetches = [new Traec.Fetch("project_email_recipient", "read")];
 
@@ -48,6 +51,38 @@ class ProjectRecipientEmailReport extends React.Component {
 
   componentDidUpdate() {
     Traec.fetchRequired.bind(this)();
+    this.setIsLoading();
+  }
+  displayEmpty() {
+    return (
+      <div>
+        <h3>No emails have been sent to any recipients.</h3>
+        <h5>Ensure there are members associated to this project first</h5>
+      </div>
+    );
+  }
+
+  displayEmailData({ recipient }) {
+    return (
+      <div>
+        <h2>Email Report for: {recipient.get("email")}</h2>
+
+        <p>The following email notifications have been sent to this address.</p>
+        <RecipientTableHeaders />
+        <div>{recipient.get("sent") ? <IndividualReportBarPlot recipient={recipient} /> : null}</div>
+      </div>
+    );
+  }
+
+  setIsLoading() {
+    //console.log('check loading')
+    let { recipient } = this.props;
+    if (!recipient) {
+      return null;
+    }
+    if (recipient.get("sent") && this.state.isLoading) {
+      this.setState({ isLoading: false });
+    }
   }
 
   render() {
@@ -65,11 +100,14 @@ class ProjectRecipientEmailReport extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Email Report for: {recipient.get("email")}</h2>
+        {/* Render the loading spinning wheel */}
+        {this.state.isLoading ? loading("report") : null}
+        {!this.state.isLoading && !recipient.get("sent")
+          ? this.displayEmpty()
+          : !this.state.isLoading
+          ? this.displayEmailData({ recipient })
+          : null}
 
-        <p>The following email notifications have been sent to this address.</p>
-        <div>{recipient.get("sent") ? <IndividualReportBarPlot recipient={recipient} /> : null}</div>
-        <RecipientTableHeaders />
         {rows}
       </React.Fragment>
     );

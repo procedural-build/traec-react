@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
-import ReportBarPlot from "./reportBarChart";
+import { loading } from "traec-react/utils/entities";
+import ReportBarPlot from "traec-react/emails/reportBarChart";
 
 export const EMAIL_TYPES = [
   "project_invite",
@@ -66,7 +67,9 @@ class ProjectEmailReport extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      isLoading: true
+    };
 
     this.requiredFetches = [
       new Traec.Fetch("project_email", "list"),
@@ -78,34 +81,63 @@ class ProjectEmailReport extends React.Component {
 
   componentDidMount() {
     Traec.fetchRequired.bind(this)();
+    // this.ensureLoadedSVG();
   }
 
   componentDidUpdate() {
+    let { recipients, emails } = this.props;
     Traec.fetchRequired.bind(this)();
+    this.setIsLoading();
+    // this.ensureLoadedSVG();
   }
 
+  setIsLoading() {
+    //console.log('check loading')
+    let { recipients, emails } = this.props;
+    if (!recipients && !emails) {
+      return null;
+    }
+    if (recipients && this.state.isLoading) {
+      this.setState({ isLoading: false });
+    }
+  }
+
+  displayEmpty() {
+    return (
+      <div>
+        <h3>No emails have been sent to any recipients.</h3>
+        <h5>Ensure there are members associated to this project first</h5>
+      </div>
+    );
+  }
+
+  displayEmailData({ recipients, emails }) {
+    return (
+      <div>
+        <h2>Email Recipients</h2>
+
+        <p>The following email addresses have received notifications on this project.</p>
+        <RecipientTableHeaders />
+        <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null} </div>
+      </div>
+    );
+  }
   render() {
     let { recipients, projectId, emails } = this.props;
     if (!recipients) {
       return null;
     }
-    //   if (!recipients.get("sent")) {
-    //     setTimeout()
-    //     //window.location.reload();
-    //     console.log('agjhlfjksag')
-    //     // return null;
-    // }
 
     let rows = null;
 
-    // If we have nothing then set a message
-    if (recipients.toList().size == 0) {
-      rows = (
-        <p>
-          <b>No notifications sent for this project yet</b>
-        </p>
-      );
-    }
+    // If we have nothing then set a message          /* 19/07/19 - I am not sure if the method below is better, or the way i've done it
+    // if (recipients.toList().size == 0) {                         in the return statement is better.
+    //   rows = (
+    //     <p>                                         */
+    //       <b>No notifications sent for this project yet</b>
+    //     </p>
+    //   );
+    // }
 
     rows = recipients
       .toList()
@@ -113,11 +145,14 @@ class ProjectEmailReport extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Email Recipients</h2>
+        {this.state.isLoading ? loading("report") : null}
 
-        <p>The following email addresses have received notifications on this project.</p>
-        <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null}</div>
-        <RecipientTableHeaders />
+        {!this.state.isLoading && recipients.toList().size == 0
+          ? this.displayEmpty()
+          : !this.state.isLoading
+          ? this.displayEmailData({ recipients, emails })
+          : null}
+
         {rows}
       </React.Fragment>
     );

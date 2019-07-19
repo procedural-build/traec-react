@@ -38,7 +38,6 @@ export default class ReportBarPlot extends React.Component {
 
   DrawBarChart(emails) {
     if (!emails) {
-      console.log("Fail");
       return null;
     }
     let emailData = {}; // Main object to store dates(by month) and the types of emails as well as their count. This splits into several lists for easier access for d3 to make the DOM
