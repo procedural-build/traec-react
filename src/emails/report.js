@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
-import ReportBarPlot from "./reportBarChart";
+import { loading } from "traec-react/utils/entities";
+import ReportBarPlot from "traec-react/emails/reportBarChart";
 
 export const EMAIL_TYPES = [
   "project_invite",
@@ -66,10 +67,13 @@ class ProjectEmailReport extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      isLoading: true
+    };
 
     this.requiredFetches = [
       new Traec.Fetch("project_email", "list"),
+      new Traec.Fetch("project_email_recipient", "read"),
       new Traec.Fetch("project_email_recipient", "list")
     ];
 
@@ -82,6 +86,37 @@ class ProjectEmailReport extends React.Component {
 
   componentDidUpdate() {
     Traec.fetchRequired.bind(this)();
+    this.setIsLoading();
+  }
+
+  displayEmpty() {
+    return (
+      <div>
+        <h3>No emails have been sent to any recipients.</h3>
+        <h5>Ensure there are members associated to this project first</h5>
+      </div>
+    );
+  }
+
+  displayEmailData({ recipients, emails }) {
+    return (
+      <div>
+        <h2>Email Recipients</h2>
+
+        <p>The following email addresses have received notifications on this project.</p>
+        <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null} </div>
+        <RecipientTableHeaders />
+      </div>
+    );
+  }
+
+  setIsLoading() {
+    let { recipients, emails } = this.props;
+    if (!recipients && !emails) {
+      return null;
+    } else if (recipients && this.state.isLoading) {
+      this.setState({ isLoading: false });
+    }
   }
 
   render() {
@@ -89,23 +124,8 @@ class ProjectEmailReport extends React.Component {
     if (!recipients) {
       return null;
     }
-    //   if (!recipients.get("sent")) {
-    //     setTimeout()
-    //     //window.location.reload();
-    //     console.log('agjhlfjksag')
-    //     // return null;
-    // }
 
     let rows = null;
-
-    // If we have nothing then set a message
-    if (recipients.toList().size == 0) {
-      rows = (
-        <p>
-          <b>No notifications sent for this project yet</b>
-        </p>
-      );
-    }
 
     rows = recipients
       .toList()
@@ -113,11 +133,14 @@ class ProjectEmailReport extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Email Recipients</h2>
+        {this.state.isLoading ? loading("report") : null}
 
-        <p>The following email addresses have received notifications on this project.</p>
-        <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null}</div>
-        <RecipientTableHeaders />
+        {!this.state.isLoading && recipients.toList().size == 0
+          ? this.displayEmpty()
+          : !this.state.isLoading
+          ? this.displayEmailData({ recipients, emails })
+          : null}
+
         {rows}
       </React.Fragment>
     );
@@ -125,14 +148,27 @@ class ProjectEmailReport extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { projectId } = ownProps.match.params;
-  let recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
-  let emails = state.getInPath(`entities.projectObjects.byId.${projectId}.emails`);
+  let { projectId, companyId, memberId } = ownProps.match.params;
+
+  if (projectId) {
+    var recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
+    var emails = state.getInPath(`entities.projectObjects.byId.${projectId}.emails`);
+  }
+
+  if (companyId) {
+    var members = state.getInPath(`entities.companyObjects.byId.${companyId}.members`);
+    var email = state.getInPath(`entities.companyObjects.byId.${companyId}.members.${memberId}.user.email`);
+  }
+
   // Add this to props
   return {
+    companyId,
     projectId,
     recipients,
-    emails
+    emails,
+    members,
+    memberId,
+    email
   };
 };
 
