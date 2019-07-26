@@ -7,6 +7,7 @@ import store from "traec/redux/store";
 import LoginForm from "traec-react/auth/form";
 import { logoutToken } from "traec-react/auth/_redux/actions";
 import { DropDownItem } from "./dropdown";
+import Octicons from 'react-octicon';
 
 export class DropdownLogin extends React.Component {
   logoutClicked(e) {
@@ -17,18 +18,24 @@ export class DropdownLogin extends React.Component {
     store.dispatch(logoutToken());
   }
 
+  getUserLabel() {
+    let { tokenData } = this.props;
+    let label = tokenData ? tokenData.get("username") : "User Menu";
+    //label = label.split("@")[0]
+    return label
+  }
+
   userDropDownItems() {
     return Im.fromJS([
-      { label: "My Profile", to: "/accounts/profile" },
-      {},
-      { label: "Logout", onClick: this.logoutClicked }
+      { label: this.getUserLabel(), to: '#'},
+      { label: "My Profile", to: "/accounts/profile", octicon:"home"},
+      { label: null },
+      { label: "Logout", onClick: this.logoutClicked, octicon:"sign-out" }
     ]);
   }
 
   render() {
-    let { tokenData } = this.props;
-    let label = tokenData ? tokenData.get("username") : "User Menu";
-    label = label.split("@")[0];
+    let label = "User"
     if (!this.props.isAuthenticated) {
       //console.log("I am not Authenticated")
       return (
