@@ -27,7 +27,6 @@ const getRecaptchaSiteKey = () => {
   } else if (hostname.endsWith("ods-track.com")) {
     return "6LdViicUAAAAADRyFSQpSwJ3OBPjwC_jcrJizqsx";
   } else {
-    console.log("DEV");
     return "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
   }
 };
@@ -102,14 +101,24 @@ class RegistrationForm extends React.Component {
     const attr = "non_field_errors";
     const errors = this.props.errors;
     if (errors && errors.has(attr)) {
-      //console.log("NON_FIELD_ERRORS", errors)
-      return <div className="alert alert-danger form-control-sm">{errors.get(attr)}</div>;
+      //console.log("NON_FIELD_ERRORS", errors);
+      return <div className="alert alert-danger form-control-sm">{this.modifyErrorMessage(errors.get(attr))}</div>;
     }
     return "";
   }
 
+  modifyErrorMessage(errors) {
+    let errorMessages = errors.map(error => {
+      if (error.startsWith("Captcha failed.")) {
+        return "reCAPTCHA failed. Please click the reset reCAPTCHA button and try again." + error.slice(15, 37);
+      } else {
+        return error;
+      }
+    });
+    return errorMessages;
+  }
   verifyRecaptchaCallback(response) {
-    this.setState({ gRecaptchaResponse: response }, () => console.log(this.state.gRecaptchaResponse));
+    this.setState({ gRecaptchaResponse: response });
   }
 
   render() {
