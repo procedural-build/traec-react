@@ -27,6 +27,7 @@ const getRecaptchaSiteKey = () => {
   } else if (hostname.endsWith("ods-track.com")) {
     return "6LdViicUAAAAADRyFSQpSwJ3OBPjwC_jcrJizqsx";
   } else {
+    console.log("DEV");
     return "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
   }
 };
@@ -50,7 +51,7 @@ class RegistrationForm extends React.Component {
   }
 
   onChange(e) {
-    if (e.target.name == "email") {
+    if (e.target.name === "email") {
       this.setState({
         [e.target.name]: e.target.value,
         username: e.target.value
@@ -84,7 +85,7 @@ class RegistrationForm extends React.Component {
       <div className="form-group">
         <input
           className={`form-control form-control-sm ${validClass}`}
-          disabled={attr == "username" ? "disabled" : ""}
+          disabled={attr === "username" ? "disabled" : ""}
           placeholder={placeholder}
           type={fieldType}
           name={attr}
@@ -108,11 +109,13 @@ class RegistrationForm extends React.Component {
   }
 
   verifyRecaptchaCallback(response) {
-    this.setState({ gRecaptchaResponse: response });
+    this.setState({ gRecaptchaResponse: response }, () => console.log(this.state.gRecaptchaResponse));
   }
 
   render() {
     let isAuthWarning = this.props.isAuthenticated ? <p>Logged in</p> : "";
+    let recaptchaInstance;
+
     return (
       <form className="form" onSubmit={this.onSubmit}>
         {this.render_non_field_errors()}
@@ -123,8 +126,15 @@ class RegistrationForm extends React.Component {
         {this.render_item("password1", "Password", "", "password")}
         {this.render_item("password2", "Password (again)", "", "password")}
 
-        <Recaptcha sitekey={getRecaptchaSiteKey()} verifyCallback={this.verifyRecaptchaCallback} />
-
+        <Recaptcha
+          ref={e => (recaptchaInstance = e)}
+          sitekey={getRecaptchaSiteKey()}
+          verifyCallback={this.verifyRecaptchaCallback}
+        />
+        <div className="btn btn-sm btn-secondary mt-2 mb-2" onClick={() => recaptchaInstance.reset()}>
+          {" "}
+          Reset reCAPTCHA{" "}
+        </div>
         <div className="form-group">
           <button className="btn btn-sm btn-primary btn-block" type="submit">
             Register
