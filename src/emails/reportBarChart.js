@@ -39,11 +39,10 @@ export default class ReportBarPlot extends React.Component {
 
   componentWillUnmount() {
     d3.select(".barChart").selectAll("*").remove;
-
-    // d3.select(".barChart").remove();
   }
 
   DrawBarChart(emails) {
+    d3.select(".barChart").selectAll("*").remove;
     if (!emails) {
       return null;
     }
@@ -72,7 +71,6 @@ export default class ReportBarPlot extends React.Component {
     ];
 
     for (var mail of emails.toList()) {
-      // console.log(mail)
       let minDate = mail.get("min_date").slice(0, 7);
       let maxDate = mail.get("max_date").slice(0, 10);
       let emailTypes = mail.getInPath(`email_types`);
@@ -105,9 +103,7 @@ export default class ReportBarPlot extends React.Component {
         currentEmailTypeString = currentEmailTypeString.toString();
         let currentStringLength = currentEmailTypeString.length; //Get Length of string of each email type
         if (currentData[0].includes(currentEmailTypeString)) {
-          // if(!emailTypeList.includes(currentEmailTypeString)){
           emailTypeList.push(currentEmailTypeString);
-          // }
           let beginningSliceValue = currentData[0].indexOf(currentEmailTypeString); //Find beginning index to slice the emailcount of each type
           let yValue = currentData[0].slice(
             currentStringLength + beginningSliceValue,
@@ -118,11 +114,13 @@ export default class ReportBarPlot extends React.Component {
         }
       }
     }
-    // console.log(emailTypeList)
+    yValueArray = yValueArray.filter(d => {
+      return d != 0;
+    });
+
     for (let i = 0; i < yValueArray.length; i++) {
       barplotCoordinateObject[i] = yValueArray[i];
     }
-    // console.log(barplotCoordinateObject)
 
     let data = Object.entries(barplotCoordinateObject).map(([key, value]) => ({
       x: key,
@@ -144,7 +142,7 @@ export default class ReportBarPlot extends React.Component {
 
     var width = 1800;
     var height = 500 + margin.top + margin.bottom + 20;
-
+    let yTicks = 5; //default number of yaxis ticks is 5, which is increased depending on number of emails
     var color = d3.scaleOrdinal(["red", "orange", "gold", "green", "blue"]);
 
     var x = d3
@@ -154,9 +152,22 @@ export default class ReportBarPlot extends React.Component {
       y = d3.scaleLinear().rangeRound([height, 0]);
 
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     var ymaxdomain = d3.max(yValueArray);
+
+    if (ymaxdomain <= 5) {
+      yTicks = ymaxdomain++;
+    } else if (ymaxdomain > 5 && ymaxdomain < 21) {
+      yTicks = ymaxdomain;
+      ymaxdomain += 4;
+    } else if (ymaxdomain >= 21) {
+      ymaxdomain += 5;
+      yTicks = 15;
+    }
+
     x.domain(dateList);
-    y.domain([0, ymaxdomain + 5]);
+
+    y.domain([0, ymaxdomain]);
 
     var x1 = d3
       .scaleBand()
@@ -180,7 +191,7 @@ export default class ReportBarPlot extends React.Component {
       .enter()
       .append("rect")
       .attr("x", function(d, i) {
-        //This is shite, but its the only way to add custom spacing between certain blocks.
+        //Need to figure out how to add custom spacing between month blocks in a better way
         // if (i > 4 && i <= 9) {
         //   //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
         //   return x1(d.x) + 10;
@@ -216,11 +227,10 @@ export default class ReportBarPlot extends React.Component {
 
     g.append("g")
       .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(10, "s"))
+      .call(d3.axisLeft(y).ticks(yTicks, "s"))
       .append("text")
       .attr("x", 0)
       .attr("y", 0 - margin.top / 2)
-      // y(y.ticks().pop()) + -5
       .attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
