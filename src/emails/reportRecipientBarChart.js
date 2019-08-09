@@ -34,9 +34,12 @@ export default class IndividualReportBarPlot extends React.Component {
     Traec.fetchRequired.bind(this)();
     this.DrawBarChart(this.state.recipient);
   }
-  DrawBarChart(recipient) {
-    // debugger
+  componentWillUnmount() {
+    d3.select(".barChart").selectAll("*").remove;
+    // svg.selectAll("*").remove()
+  }
 
+  DrawBarChart(recipient) {
     //Function to get nested values within object
     Object.byString = function(o, s) {
       if (s === undefined) {
@@ -220,21 +223,21 @@ export default class IndividualReportBarPlot extends React.Component {
       .enter()
       .append("rect")
       .attr("x", function(d, i) {
-        //This is shite, but its the only way to add custom spacing between certain blocks.
-        if (i > 4 && i <= 9) {
-          //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
-          return x1(d.x) + 10;
-        } else if (i > 9 && i <= 14) {
-          return x1(d.x) + 20;
-        } else if (i > 14 && i <= 19) {
-          return x1(d.x) + 30;
-        } else if (i > 19 && i <= 24) {
-          return x1(d.x) + 40;
-        } else if (i > 24 && i <= 29) {
-          return x1(d.x) + 50;
-        } else {
-          return x1(d.x);
-        }
+        // //This is shite, but its the only way to add custom spacing between certain blocks.
+        // if (i > 4 && i <= 9) {
+        //   //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
+        //   return x1(d.x) + 10;
+        // } else if (i > 9 && i <= 14) {
+        //   return x1(d.x) + 20;
+        // } else if (i > 14 && i <= 19) {
+        //   return x1(d.x) + 30;
+        // } else if (i > 19 && i <= 24) {
+        //   return x1(d.x) + 40;
+        // } else if (i > 24 && i <= 29) {
+        //   return x1(d.x) + 50;
+        // } else {
+        return x1(d.x);
+        // }
       })
       .attr("y", function(d) {
         return y(d.y);
@@ -268,53 +271,57 @@ export default class IndividualReportBarPlot extends React.Component {
       .attr("class", "d3-tip")
       .offset([-10, 0])
       .html(function(d) {
-        return "<strong>" + d.y + "</strong>";
+        return "<strong>" + emailTypeList[d.x] + ": " + d.y + "</strong>";
       });
 
     svg.call(tip);
 
     bars.on("mouseover", tip.show).on("mouseout", tip.hide);
 
-    var legend = svg
-      .append("g")
-      .attr("class", "legend")
-      //.attr("x", w - 65)
-      //.attr("y", 50)
-      .attr("height", 100)
-      .attr("width", 100)
-      .attr("transform", "translate(200,50)");
+    //LEGEND
+    //Disabled because it does not coordinate with the colours on the graph if not all email types are present.
 
-    svg
-      .selectAll("legend")
-      .data(LEGEND)
-      .enter()
-      .append("circle")
-      .attr("cx", 10)
-      .attr("cy", function(d, i) {
-        return 100 + i * 25;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("r", 7)
-      .style("fill", function(d) {
-        return colorLegend(d);
-      });
+    // var legend = svg
+    //   .append("g")
+    //   .attr("class", "legend")
+    //   //.attr("x", w - 65)
+    //   //.attr("y", 50)
+    //   .attr("height", 100)
+    //   .attr("width", 100)
+    //   .attr("transform", "translate(200,50)");
 
-    svg
-      .selectAll("legend")
-      .data(LEGEND)
-      .enter()
-      .append("text")
-      .attr("x", 30)
-      .attr("y", function(d, i) {
-        return 100 + i * 25;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .style("fill", function(d) {
-        return colorLegend(d);
-      })
-      .text(function(d) {
-        return d;
-      })
-      .attr("text-anchor", "left")
-      .style("alignment-baseline", "middle");
+    // svg
+    //   .selectAll("legend")
+    //   .data(LEGEND)
+    //   .enter()
+    //   .append("circle")
+    //   .attr("cx", 10)
+    //   .attr("cy", function(d, i) {
+    //     return 100 + i * 25;
+    //   }) // 100 is where the first dot appears. 25 is the distance between dots
+    //   .attr("r", 7)
+    //   .style("fill", function(d) {
+    //     return colorLegend(d);
+    //   });
+
+    // svg
+    //   .selectAll("legend")
+    //   .data(LEGEND)
+    //   .enter()
+    //   .append("text")
+    //   .attr("x", 30)
+    //   .attr("y", function(d, i) {
+    //     return 100 + i * 25;
+    //   }) // 100 is where the first dot appears. 25 is the distance between dots
+    //   .style("fill", function(d) {
+    //     return colorLegend(d);
+    //   })
+    //   .text(function(d) {
+    //     return d;
+    //   })
+    //   .attr("text-anchor", "left")
+    //   .style("alignment-baseline", "middle");
+
     // return <svg width="1500" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
 
