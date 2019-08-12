@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "d3": "^5.9.7",
+    "d3-tip": "^0.9.1",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "node": "^10.15.3",

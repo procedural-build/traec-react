@@ -30,14 +30,15 @@ export default class IndividualReportBarPlot extends React.Component {
     Traec.fetchRequired.bind(this)();
     this.DrawBarChart(this.state.recipient);
   }
-  componentWillMount() {
-    Traec.fetchRequired.bind(this)();
-    this.DrawBarChart(this.state.recipient);
-  }
-  DrawBarChart(recipient) {
-    // debugger
 
-    //Function to get nested values within object
+  componentWillUnmount() {
+    d3.select(".barChart").selectAll("*").remove;
+  }
+
+  DrawBarChart(recipient) {
+    d3.select(".barChart").selectAll("*").remove;
+
+    //Function to get nested values within object, perhaps this can be replaced with Immutable syntax?
     Object.byString = function(o, s) {
       if (s === undefined) {
         s = "0";
@@ -97,7 +98,6 @@ export default class IndividualReportBarPlot extends React.Component {
           if (dateValue.slice(5, 6) == 0) {
             dateValue = dateValue.slice(6, 7);
             monthDateList.push(month[dateValue - 1]);
-            // console.log(monthDateList)
           } else {
             dateValue = dateValue.slice(5, 7);
             monthDateList.push(month[dateValue - 1]);
@@ -109,14 +109,6 @@ export default class IndividualReportBarPlot extends React.Component {
         Object.assign(currentDateTypeMap, { [typeValue]: (currentDateTypeMap[typeValue] || 0) + 1 });
       }
     }
-
-    /*if (dateTypeMap.hasOwnProperty(dateValue)) {
-            let currentDateTypeMap = dateTypeMap[dateValue]
-            let currentTotal = currentDateTypeMap[typeValue] || 0
-            Object.assign(currentDateTypeMap, {[typeValue]: currentTotal+1})
-          } else {
-            dateTypeMap[dateValue] = {[typeValue]: 1}
-          }*/
 
     for (let v = 0; v < emailTypeList.length; v++) {
       //Push email types into the legend
@@ -140,17 +132,25 @@ export default class IndividualReportBarPlot extends React.Component {
         yValueArray.push(Object.byString(dateTypeMap, valueToBeStringified));
       }
     }
-    for (let i = 0; i < yValueArray.length; i++) {
-      if (yValueArray[i] === undefined) {
-        yValueArray[i] = 0;
-      }
-    }
 
-    var duplicateFactor = emailTypeList.length;
+    /*  replace non existing email types with 0 (removed for now for better spacing on graphs) */
+    // for (let i = 0; i < yValueArray.length; i++) {
+    //   if (yValueArray[i] === undefined) {
+    //   yValueArray[i] = 0;
+    //   }
+    // }
 
-    for (let i = 0; i < duplicateFactor; i++) {
-      emailTypeList.push(emailTypeList[i]);
-    }
+    yValueArray = yValueArray.filter(d => {
+      return d != null;
+    });
+
+    /* Potentially need this in the future */
+
+    // var duplicateFactor = emailTypeList.length;
+
+    // for (let i = 0; i < duplicateFactor; i++) {
+    //   emailTypeList.push(emailTypeList[i]);
+    // }
 
     var svg = d3.select(".barChart");
     var margin = {
@@ -186,9 +186,20 @@ export default class IndividualReportBarPlot extends React.Component {
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var ymaxdomain = d3.max(yValueArray);
+    let yTicks = 5;
+
+    if (ymaxdomain <= 5) {
+      yTicks = ymaxdomain++;
+    } else if (ymaxdomain > 5 && ymaxdomain < 21) {
+      yTicks = ymaxdomain;
+      ymaxdomain += 4;
+    } else if (ymaxdomain >= 21) {
+      ymaxdomain += 5;
+      yTicks = 15;
+    }
 
     x.domain(monthDateList);
-    y.domain([0, ymaxdomain + 3]);
+    y.domain([0, ymaxdomain]);
 
     for (let i = 0; i < yValueArray.length; i++) {
       barplotCoordinateObject[i] = yValueArray[i];
@@ -220,21 +231,21 @@ export default class IndividualReportBarPlot extends React.Component {
       .enter()
       .append("rect")
       .attr("x", function(d, i) {
-        //This is shite, but its the only way to add custom spacing between certain blocks.
-        if (i > 4 && i <= 9) {
-          //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
-          return x1(d.x) + 10;
-        } else if (i > 9 && i <= 14) {
-          return x1(d.x) + 20;
-        } else if (i > 14 && i <= 19) {
-          return x1(d.x) + 30;
-        } else if (i > 19 && i <= 24) {
-          return x1(d.x) + 40;
-        } else if (i > 24 && i <= 29) {
-          return x1(d.x) + 50;
-        } else {
-          return x1(d.x);
-        }
+        //Need to figure out how to add custom spacing between month blocks in a better way
+        // if (i > 4 && i <= 9) {
+        //   //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
+        //   return x1(d.x) + 10;
+        // } else if (i > 9 && i <= 14) {
+        //   return x1(d.x) + 20;
+        // } else if (i > 14 && i <= 19) {
+        //   return x1(d.x) + 30;
+        // } else if (i > 19 && i <= 24) {
+        //   return x1(d.x) + 40;
+        // } else if (i > 24 && i <= 29) {
+        //   return x1(d.x) + 50;
+        // } else {
+        return x1(d.x);
+        // }
       })
       .attr("y", function(d) {
         return y(d.y);
@@ -254,7 +265,7 @@ export default class IndividualReportBarPlot extends React.Component {
 
     g.append("g")
       .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(10, "s"))
+      .call(d3.axisLeft(y).ticks(yTicks, "s"))
       .append("text")
       .attr("x", 0)
       .attr("y", 0 - margin.top / 2)
@@ -268,53 +279,57 @@ export default class IndividualReportBarPlot extends React.Component {
       .attr("class", "d3-tip")
       .offset([-10, 0])
       .html(function(d) {
-        return "<strong>" + d.y + "</strong>";
+        return "<strong>" + emailTypeList[d.x] + ": " + d.y + "</strong>";
       });
 
     svg.call(tip);
 
     bars.on("mouseover", tip.show).on("mouseout", tip.hide);
 
-    var legend = svg
-      .append("g")
-      .attr("class", "legend")
-      //.attr("x", w - 65)
-      //.attr("y", 50)
-      .attr("height", 100)
-      .attr("width", 100)
-      .attr("transform", "translate(200,50)");
+    //LEGEND
+    //Disabled because it does not coordinate with the colours on the graph if not all email types are present.
 
-    svg
-      .selectAll("legend")
-      .data(LEGEND)
-      .enter()
-      .append("circle")
-      .attr("cx", 10)
-      .attr("cy", function(d, i) {
-        return 100 + i * 25;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("r", 7)
-      .style("fill", function(d) {
-        return colorLegend(d);
-      });
+    // var legend = svg
+    //   .append("g")
+    //   .attr("class", "legend")
+    //   //.attr("x", w - 65)
+    //   //.attr("y", 50)
+    //   .attr("height", 100)
+    //   .attr("width", 100)
+    //   .attr("transform", "translate(200,50)");
 
-    svg
-      .selectAll("legend")
-      .data(LEGEND)
-      .enter()
-      .append("text")
-      .attr("x", 30)
-      .attr("y", function(d, i) {
-        return 100 + i * 25;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .style("fill", function(d) {
-        return colorLegend(d);
-      })
-      .text(function(d) {
-        return d;
-      })
-      .attr("text-anchor", "left")
-      .style("alignment-baseline", "middle");
+    // svg
+    //   .selectAll("legend")
+    //   .data(LEGEND)
+    //   .enter()
+    //   .append("circle")
+    //   .attr("cx", 10)
+    //   .attr("cy", function(d, i) {
+    //     return 100 + i * 25;
+    //   }) // 100 is where the first dot appears. 25 is the distance between dots
+    //   .attr("r", 7)
+    //   .style("fill", function(d) {
+    //     return colorLegend(d);
+    //   });
+
+    // svg
+    //   .selectAll("legend")
+    //   .data(LEGEND)
+    //   .enter()
+    //   .append("text")
+    //   .attr("x", 30)
+    //   .attr("y", function(d, i) {
+    //     return 100 + i * 25;
+    //   }) // 100 is where the first dot appears. 25 is the distance between dots
+    //   .style("fill", function(d) {
+    //     return colorLegend(d);
+    //   })
+    //   .text(function(d) {
+    //     return d;
+    //   })
+    //   .attr("text-anchor", "left")
+    //   .style("alignment-baseline", "middle");
+
     // return <svg width="1500" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
 

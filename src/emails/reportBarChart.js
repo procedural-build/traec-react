@@ -7,6 +7,7 @@ import { scaleLinear, scaleBand } from "d3-scale";
 import { max } from "d3-array";
 import { select } from "d3-selection";
 import { cluster, stratify } from "d3-hierarchy";
+import { fromJS } from "immutable";
 import d3Tip from "d3-tip";
 
 export default class ReportBarPlot extends React.Component {
@@ -20,7 +21,8 @@ export default class ReportBarPlot extends React.Component {
 
     this.requiredFetches = [
       new Traec.Fetch("project_email", "list"),
-      new Traec.Fetch("project_email_recipient", "list")
+      new Traec.Fetch("project_email_recipient", "list"),
+      new Traec.Fetch("company_email", "list")
     ];
 
     // action bindings
@@ -33,10 +35,14 @@ export default class ReportBarPlot extends React.Component {
 
   componentDidUpdate() {
     Traec.fetchRequired.bind(this)();
-    this.DrawBarChart(this.state.emails);
+  }
+
+  componentWillUnmount() {
+    d3.select(".barChart").selectAll("*").remove;
   }
 
   DrawBarChart(emails) {
+    d3.select(".barChart").selectAll("*").remove;
     if (!emails) {
       return null;
     }
@@ -47,14 +53,8 @@ export default class ReportBarPlot extends React.Component {
     let barplotCoordinateObject = {}; // Holds the x and y data for d3 to display data.
 
     var LEGEND = ["undefined", "company_invite", "project_invite", "overdue", "project_ref_submitted"];
-    //Todo, make LEGEND above dynamic using something simple like this
-    /*
-            for (let v = 0; v < emailTypeList.length; v++) {
-    
-              //Push email types into the legend
-              LEGEND.push(emailTypeList[v]);
-            }
-    */
+    //Todo, make LEGEND above dynamic
+
     const month = [
       "January",
       "February",
@@ -69,6 +69,7 @@ export default class ReportBarPlot extends React.Component {
       "November",
       "December"
     ];
+
     for (var mail of emails.toList()) {
       let minDate = mail.get("min_date").slice(0, 7);
       let maxDate = mail.get("max_date").slice(0, 10);
@@ -97,26 +98,30 @@ export default class ReportBarPlot extends React.Component {
     for (let i = 0; i < emailDataMapped.length; i++) {
       var currentData = Object.values(emailDataMapped[i]); //Get the emailTypes with their values
       currentData = Object.keys(currentData[1]); //Update the currentData with the emailType object
-
       for (let j = 0; j < LEGEND.length; j++) {
         let currentEmailTypeString = LEGEND[j]; //Different email types to iterate the array
-        currentEmailTypeString = '"' + currentEmailTypeString + '"'; //Concatenate into a string with " "
+        currentEmailTypeString = currentEmailTypeString.toString();
         let currentStringLength = currentEmailTypeString.length; //Get Length of string of each email type
         if (currentData[0].includes(currentEmailTypeString)) {
+          emailTypeList.push(currentEmailTypeString);
           let beginningSliceValue = currentData[0].indexOf(currentEmailTypeString); //Find beginning index to slice the emailcount of each type
           let yValue = currentData[0].slice(
             currentStringLength + beginningSliceValue,
             currentStringLength + beginningSliceValue + 7
-          ); //Can only handle 4 digit numbers(+5 for 2 digit, +6 for 3 digit, +7 for 4 digit, etc.)
+          ); //Can only handle 4 digit numbers on y axis for now(+5 for 2 digit, +6 for 3 digit, +7 for 4 digit, etc.)
           yValue = yValue.replace(/\D/g, ""); //Remove non integer values from the string
           yValueArray.push(parseInt(yValue));
         }
       }
     }
+    yValueArray = yValueArray.filter(d => {
+      return d != 0;
+    });
 
     for (let i = 0; i < yValueArray.length; i++) {
       barplotCoordinateObject[i] = yValueArray[i];
     }
+
     let data = Object.entries(barplotCoordinateObject).map(([key, value]) => ({
       x: key,
       y: value
@@ -132,11 +137,12 @@ export default class ReportBarPlot extends React.Component {
     var colorLegend = d3
       .scaleOrdinal()
       .domain(LEGEND)
+      // .range(["black"]);
       .range(["red", "orange", "gold", "green", "blue"]);
 
     var width = 1800;
     var height = 500 + margin.top + margin.bottom + 20;
-
+    let yTicks = 5; //default number of yaxis ticks is 5, which is increased depending on number of emails
     var color = d3.scaleOrdinal(["red", "orange", "gold", "green", "blue"]);
 
     var x = d3
@@ -146,9 +152,22 @@ export default class ReportBarPlot extends React.Component {
       y = d3.scaleLinear().rangeRound([height, 0]);
 
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     var ymaxdomain = d3.max(yValueArray);
+
+    if (ymaxdomain <= 5) {
+      yTicks = ymaxdomain++;
+    } else if (ymaxdomain > 5 && ymaxdomain < 21) {
+      yTicks = ymaxdomain;
+      ymaxdomain += 4;
+    } else if (ymaxdomain >= 21) {
+      ymaxdomain += 5;
+      yTicks = 15;
+    }
+
     x.domain(dateList);
-    y.domain([0, ymaxdomain + 5]);
+
+    y.domain([0, ymaxdomain]);
 
     var x1 = d3
       .scaleBand()
@@ -172,23 +191,23 @@ export default class ReportBarPlot extends React.Component {
       .enter()
       .append("rect")
       .attr("x", function(d, i) {
-        //This is shite, but its the only way to add custom spacing between certain blocks.
-        if (i > 4 && i <= 9) {
-          //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
-          return x1(d.x) + 10;
-        } else if (i > 9 && i <= 14) {
-          return x1(d.x) + 20;
-        } else if (i > 14 && i <= 19) {
-          return x1(d.x) + 30;
-        } else if (i > 19 && i <= 24) {
-          return x1(d.x) + 40;
-        } else if (i > 24 && i <= 29) {
-          return x1(d.x) + 50;
-        } else if (i > 29 && i <= 34) {
-          return x1(d.x) + 60;
-        } else {
-          return x1(d.x);
-        }
+        //Need to figure out how to add custom spacing between month blocks in a better way
+        // if (i > 4 && i <= 9) {
+        //   //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
+        //   return x1(d.x) + 10;
+        // } else if (i > 9 && i <= 14) {
+        //   return x1(d.x) + 20;
+        // } else if (i > 14 && i <= 19) {
+        //   return x1(d.x) + 30;
+        // } else if (i > 19 && i <= 24) {
+        //   return x1(d.x) + 40;
+        // } else if (i > 24 && i <= 29) {
+        //   return x1(d.x) + 50;
+        // } else if (i > 29 && i <= 34) {
+        //   return x1(d.x) + 60;
+        // } else {
+        return x1(d.x);
+        // }
       })
       .attr("y", function(d) {
         return y(d.y);
@@ -208,11 +227,10 @@ export default class ReportBarPlot extends React.Component {
 
     g.append("g")
       .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(10, "s"))
+      .call(d3.axisLeft(y).ticks(yTicks, "s"))
       .append("text")
       .attr("x", 0)
       .attr("y", 0 - margin.top / 2)
-      // y(y.ticks().pop()) + -5
       .attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
@@ -223,54 +241,60 @@ export default class ReportBarPlot extends React.Component {
       .attr("class", "d3-tip")
       .offset([-10, 0])
       .html(function(d) {
-        return "<strong>" + d.y + "</strong>";
+        return "<strong>" + emailTypeList[d.x] + ": " + d.y + "</strong>";
       });
 
     svg.call(tip);
 
     bars.on("mouseover", tip.show).on("mouseout", tip.hide);
-    let size = 18;
-    var legend = svg
-      .append("g")
-      .attr("class", "legend")
-      //.attr("x", w - 65)
-      //.attr("y", 50)
-      .attr("height", 100)
-      .attr("width", 100)
-      .attr("transform", "translate(200,0)");
 
-    svg
-      .selectAll("legend")
-      .data(LEGEND)
-      .enter()
-      .append("rect")
-      .attr("x", 10)
-      .attr("y", function(d, i) {
-        return 100 + i * (size + 5);
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("width", size)
-      .attr("height", size)
-      .style("fill", function(d) {
-        return color(d);
-      });
+    //LEGEND
+    //Disabled because it does not coordinate with the colours on the graph if not all email types are present.
 
-    svg
-      .selectAll("legend")
-      .data(LEGEND)
-      .enter()
-      .append("text")
-      .attr("x", 30)
-      .attr("y", function(d, i) {
-        return 100 + i * (size + 5) + size / 2;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .style("fill", function(d) {
-        return colorLegend(d);
-      })
-      .text(function(d) {
-        return d;
-      })
-      .attr("text-anchor", "left")
-      .style("alignment-baseline", "middle");
+    // let size = 18;
+    // var legend = svg
+    //   .append("g")
+    //   .attr("class", "legend")
+    //   //.attr("x", w - 65)
+    //   //.attr("y", 50)
+    //   .attr("height", 100)
+    //   .attr("width", 100)
+    //   .attr("transform", "translate(200,0)");
+
+    // svg
+    //   .selectAll("legend")
+    //   // .data(LEGEND)
+    //   .data(emailTypeList)
+    //   .enter()
+    //   .append("rect")
+    //   .attr("x", 10)
+    //   .attr("y", function(d, i) {
+    //     return 100 + i * (size + 5);
+    //   }) // 100 is where the first dot appears. 25 is the distance between dots
+    //   .attr("width", size)
+    //   .attr("height", size)
+    //   .style("fill", function(d) {
+    //     return color(d);
+    //   });
+
+    // svg
+    //   .selectAll("legend")
+    //   // .data(LEGEND)
+    //   .data(emailTypeList)
+    //   .enter()
+    //   .append("text")
+    //   .attr("x", 30)
+    //   .attr("y", function(d, i) {
+    //     return 100 + i * (size + 5) + size / 2;
+    //   }) // 100 is where the first dot appears. 25 is the distance between dots
+    //   .style("fill", function(d) {
+    //     return colorLegend(d);
+    //   })
+    //   .text(function(d) {
+    //     return d;
+    //   })
+    //   .attr("text-anchor", "left")
+    //   .style("alignment-baseline", "middle");
 
     // return <svg width="1800" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
