@@ -22,6 +22,7 @@ export default class ReportBarPlot extends React.Component {
     this.requiredFetches = [
       new Traec.Fetch("project_email", "list"),
       new Traec.Fetch("project_email_recipient", "list"),
+      new Traec.Fetch("company_email_recipient", "list"),
       new Traec.Fetch("company_email", "list")
     ];
 
