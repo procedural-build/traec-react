@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
 
-import { EMAIL_TYPE_HEADERS, EMAIL_TYPES } from "./report";
+import { EMAIL_TYPE_HEADERS, EMAIL_TYPES } from "traec-react/emails/report";
 
 const EMAIL_DEFAULT_FREQS = {
   project_invite: 7,
