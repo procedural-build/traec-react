@@ -65,7 +65,7 @@ class DropDownItem extends React.Component {
         >
           {label}
         </a>
-        <div className={`dropdown-menu ${extraDropdownClass}`} aria-labelledby="navbarDropdown">
+        <div className={`dropdown-menu dropdown-menu-right ${extraDropdownClass}`} aria-labelledby="navbarDropdown">
           {this.renderItems()}
         </div>
       </li>
