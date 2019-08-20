@@ -66,6 +66,13 @@ export class BSBtnDropdown extends React.Component {
     return links.length == 0 || links.size == 0 ? false : true;
   }
 
+  buttonSize() {
+    if (!this.props.size) {
+      return "";
+    } else {
+      return this.props.size;
+    }
+  }
   render_items(links) {
     if (!this.hasItems(links)) {
       return "";
@@ -88,7 +95,7 @@ export class BSBtnDropdown extends React.Component {
     }
 
     return (
-      <div className={`btn-group ${this.floatStyle()}`} role="group" aria-label="proj-admin-menu">
+      <div className={`btn-group ${this.floatStyle()} ${this.buttonSize()}`} role="group" aria-label="proj-admin-menu">
         <a
           className={this.getClass(links)}
           id="btnDropdown"

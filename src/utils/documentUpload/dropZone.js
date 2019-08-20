@@ -155,7 +155,7 @@ export class DropzoneField extends React.Component {
   render() {
     let selectAreaText = this.props.selectAreaText || "Click here to select a file";
     return (
-      <div>
+      <div id="dropzone">
         <Dropzone onDrop={this.props.onDrop} onFileDialogCancel={this.onCancel.bind(this)}>
           {({ getRootProps, getInputProps }) => {
             if (this.props.selectedFiles.length) {

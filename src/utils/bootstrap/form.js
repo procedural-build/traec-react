@@ -1,12 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom";
-
 import { camelCaseToSentence } from "traec/utils/index";
 import TinyMCE from "react-tinymce";
 import DatePicker from "react-date-picker";
 import Crypto from "crypto";
-import Moment from 'moment';
-
+import Moment from "moment";
 
 export class BSForm extends React.Component {
   constructor(props) {
@@ -179,10 +176,10 @@ export class BSForm extends React.Component {
           <br />
           <DatePicker
             className="form-control datepicker-fullwidth"
-            onChange={value => 
+            onChange={value =>
               this.handleChange({
                 target: {
-                  value: Moment.utc(Moment(value).format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+                  value: Moment.utc(Moment(value).format("YYYY-MM-DDTHH:mm:ss")).toDate(),
                   name: item.name
                 }
               })
@@ -206,7 +203,7 @@ export class BSForm extends React.Component {
     const extraClass = details.class || "col";
     const rowBreakDiv = details.endRow ? <div className="w-100" /> : "";
     const labelBlock = details.label === "" ? "" : <label>{label}</label>;
-    var id = Crypto.randomBytes(4).toString("hex");
+    let id = Crypto.randomBytes(4).toString("hex");
     return (
       <React.Fragment key={keyIndex}>
         <div className={`${extraClass} align-middle`}>
