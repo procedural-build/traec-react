@@ -1,13 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 import Traec from "traec";
-import Moment from "moment";
-import * as d3 from "d3";
-import { scaleLinear, scaleBand } from "d3-scale";
-import { max } from "d3-array";
-import { select } from "d3-selection";
-import { cluster, stratify } from "d3-hierarchy";
+//import * as d3 from "d3";
+//import { scaleLinear, scaleBand } from "d3-scale";
+//import { max } from "d3-array";
+//import { select } from "d3-selection";
+//import { cluster, stratify } from "d3-hierarchy";
 import d3Tip from "d3-tip";
 
 export default class IndividualReportBarPlot extends React.Component {
@@ -231,21 +228,7 @@ export default class IndividualReportBarPlot extends React.Component {
       .enter()
       .append("rect")
       .attr("x", function(d, i) {
-        //Need to figure out how to add custom spacing between month blocks in a better way
-        // if (i > 4 && i <= 9) {
-        //   //I will leave it for now, but it can be upgraded in the future so that the charts are actually dynamic
-        //   return x1(d.x) + 10;
-        // } else if (i > 9 && i <= 14) {
-        //   return x1(d.x) + 20;
-        // } else if (i > 14 && i <= 19) {
-        //   return x1(d.x) + 30;
-        // } else if (i > 19 && i <= 24) {
-        //   return x1(d.x) + 40;
-        // } else if (i > 24 && i <= 29) {
-        //   return x1(d.x) + 50;
-        // } else {
         return x1(d.x);
-        // }
       })
       .attr("y", function(d) {
         return y(d.y);
@@ -285,52 +268,6 @@ export default class IndividualReportBarPlot extends React.Component {
     svg.call(tip);
 
     bars.on("mouseover", tip.show).on("mouseout", tip.hide);
-
-    //LEGEND
-    //Disabled because it does not coordinate with the colours on the graph if not all email types are present.
-
-    // var legend = svg
-    //   .append("g")
-    //   .attr("class", "legend")
-    //   //.attr("x", w - 65)
-    //   //.attr("y", 50)
-    //   .attr("height", 100)
-    //   .attr("width", 100)
-    //   .attr("transform", "translate(200,50)");
-
-    // svg
-    //   .selectAll("legend")
-    //   .data(LEGEND)
-    //   .enter()
-    //   .append("circle")
-    //   .attr("cx", 10)
-    //   .attr("cy", function(d, i) {
-    //     return 100 + i * 25;
-    //   }) // 100 is where the first dot appears. 25 is the distance between dots
-    //   .attr("r", 7)
-    //   .style("fill", function(d) {
-    //     return colorLegend(d);
-    //   });
-
-    // svg
-    //   .selectAll("legend")
-    //   .data(LEGEND)
-    //   .enter()
-    //   .append("text")
-    //   .attr("x", 30)
-    //   .attr("y", function(d, i) {
-    //     return 100 + i * 25;
-    //   }) // 100 is where the first dot appears. 25 is the distance between dots
-    //   .style("fill", function(d) {
-    //     return colorLegend(d);
-    //   })
-    //   .text(function(d) {
-    //     return d;
-    //   })
-    //   .attr("text-anchor", "left")
-    //   .style("alignment-baseline", "middle");
-
-    // return <svg width="1500" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
 
   render() {

@@ -1,6 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 import Traec from "traec";
 import * as d3 from "d3";
 import { scaleLinear, scaleBand } from "d3-scale";
@@ -76,9 +74,9 @@ export default class ReportBarPlot extends React.Component {
       let maxDate = mail.get("max_date").slice(0, 10);
       let emailTypes = mail.getInPath(`email_types`);
 
-      if (minDate.slice(0, 4) == 2019) {
+      if (minDate.slice(0, 4) === 2019) {
         //Only analyze emails with 2019 date for now, todo in the future: add dropdown to select year
-        if (minDate.slice(5, 6) == 0) {
+        if (minDate.slice(5, 6) === 0) {
           minDate = minDate.slice(6, 7);
           dateList.push(month[minDate - 1]);
         } else {
@@ -248,56 +246,6 @@ export default class ReportBarPlot extends React.Component {
     svg.call(tip);
 
     bars.on("mouseover", tip.show).on("mouseout", tip.hide);
-
-    //LEGEND
-    //Disabled because it does not coordinate with the colours on the graph if not all email types are present.
-
-    // let size = 18;
-    // var legend = svg
-    //   .append("g")
-    //   .attr("class", "legend")
-    //   //.attr("x", w - 65)
-    //   //.attr("y", 50)
-    //   .attr("height", 100)
-    //   .attr("width", 100)
-    //   .attr("transform", "translate(200,0)");
-
-    // svg
-    //   .selectAll("legend")
-    //   // .data(LEGEND)
-    //   .data(emailTypeList)
-    //   .enter()
-    //   .append("rect")
-    //   .attr("x", 10)
-    //   .attr("y", function(d, i) {
-    //     return 100 + i * (size + 5);
-    //   }) // 100 is where the first dot appears. 25 is the distance between dots
-    //   .attr("width", size)
-    //   .attr("height", size)
-    //   .style("fill", function(d) {
-    //     return color(d);
-    //   });
-
-    // svg
-    //   .selectAll("legend")
-    //   // .data(LEGEND)
-    //   .data(emailTypeList)
-    //   .enter()
-    //   .append("text")
-    //   .attr("x", 30)
-    //   .attr("y", function(d, i) {
-    //     return 100 + i * (size + 5) + size / 2;
-    //   }) // 100 is where the first dot appears. 25 is the distance between dots
-    //   .style("fill", function(d) {
-    //     return colorLegend(d);
-    //   })
-    //   .text(function(d) {
-    //     return d;
-    //   })
-    //   .attr("text-anchor", "left")
-    //   .style("alignment-baseline", "middle");
-
-    // return <svg width="1800" height="700" className="barChart" style={{ paddingTop: 5 + "em" }} />;
   }
 
   render() {
