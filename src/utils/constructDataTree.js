@@ -9,23 +9,47 @@ export const getBranches = function(state, commitId) {
   }
 };
 
-export const getMasterRef = function(data, commitBranchId) {
-  let refId = data
-    .get("children")
-    .filter(branch => {
-      if (branch.get("branchId") === commitBranchId) {
-        return branch.get("masterRefId");
-      }
-    })
-    .first();
-
-  refId = refId ? refId.get("masterRefId") : null;
+export const getMasterRef = function(data, commitBranchId, parent) {
+  let refId = null;
+  if (!parent) {
+    refId = data
+      .get("children")
+      .filter(branch => {
+        if (branch.get("branchId") === commitBranchId) {
+          return branch.get("masterRefId");
+        }
+      })
+      .first();
+    refId = refId ? refId.get("masterRefId") : null;
+  } else if (parent) {
+    refId = data
+      .get("children")
+      .filter(branch => {
+        if (branch.get("branchId") === parent.commitBranchId) {
+          return branch;
+        }
+      })
+      .first()
+      .get("children")
+      .filter(subBranch => {
+        if (subBranch.refId === parent.refId) {
+          return subBranch;
+        }
+      })
+      .first()
+      .children.filter(branch => {
+        if (branch.get("branchId") === commitBranchId) {
+          return branch.get("masterRefId");
+        }
+      })
+      .first()
+      .get("masterRefId");
+  }
 
   return refId ? refId : null;
 };
 
 export const constructDataTree = function(state, rootMasterId, rootCommitId, allCommitIds) {
-  let refId = "";
   let level = 1;
   let branches = getBranches(state, rootCommitId);
   if (!branches) {
@@ -33,34 +57,56 @@ export const constructDataTree = function(state, rootMasterId, rootCommitId, all
   }
 
   let data = createData(state, branches, level, rootMasterId, allCommitIds);
+  let result = constructChildTree(state, data, branches, allCommitIds, level);
 
+  return result.data;
+};
+
+const constructChildTree = function(state, data, branches, allCommitIds, level, parent = null) {
+  let refId = "";
   let [...commitBranchIds] = branches.keys();
   for (let commitBranchId of commitBranchIds) {
     let subBranches = getBranches(state, commitBranchId);
     if (subBranches) {
-      refId = getMasterRef(data, commitBranchId);
+      refId = getMasterRef(data, commitBranchId, parent);
+      console.log("REF", refId, "commit Id", commitBranchId);
       allCommitIds.add(commitBranchId);
 
       if (refId) {
-        //debugger;
         let subBranchData = createData(state, subBranches, level + 2, refId, allCommitIds);
 
+        /*
         let index = getIndex(data, commitBranchId, refId);
         data = data.setIn(
           ["children", index.commitIndex, "children", index.refIndex, "children"],
           subBranchData.get("children")
         );
+
+         */
+        let newData = setData(data, commitBranchId, refId, subBranchData.get("children"), parent);
+        data = newData.data;
+        let index = newData.index;
+        let res = constructChildTree(state, data, subBranches, allCommitIds, level + 2, {
+          commitBranchId,
+          refId,
+          index
+        });
+        data = res.data;
+        allCommitIds = res.allCommitIds;
       }
     }
   }
-
-  return data;
+  return { data, allCommitIds };
 };
 
-const getIndex = function(data, commitBranchId, refId) {
+const getIndex = function(data, commitBranchId, refId, parent) {
   let dataList = data.get("children").toJS();
   let refIndex = null;
   let commitIndex = null;
+
+  if (parent) {
+    dataList = data.getIn(["children", parent.index.commitIndex, "children", parent.index.refIndex, "children"]).toJS();
+  }
   for (let index in dataList) {
     if (dataList[index].branchId === commitBranchId) {
       commitIndex = index;
@@ -77,12 +123,37 @@ const getIndex = function(data, commitBranchId, refId) {
   return { commitIndex, refIndex };
 };
 
+const setData = function(data, commitBranchId, refId, children, parent = null) {
+  let index = getIndex(data, commitBranchId, refId, parent);
+
+  if (!parent) {
+    data = data.setIn(["children", index.commitIndex, "children", index.refIndex, "children"], children);
+  } else {
+    data = data.setIn(
+      [
+        "children",
+        parent.index.commitIndex,
+        "children",
+        parent.index.refIndex,
+        "children",
+        index.commitIndex,
+        "children",
+        index.refIndex,
+        "children"
+      ],
+      children
+    );
+  }
+  return { data, index };
+};
+
 export const createData = function(state, branches, level, refId, allCommitIds) {
   let topName = state.getInPath(`entities.refs.byId.${refId}.name`);
   let data = Im.fromJS({ name: topName, refId, children: [] });
   let [...branchIds] = branches.keys();
 
   for (let branchId of branchIds) {
+    console.log("COMMIT ID", branchId);
     allCommitIds.add(branchId);
     let name = "";
     let masterRefId = "";
@@ -98,6 +169,7 @@ export const createData = function(state, branches, level, refId, allCommitIds) 
 
     let [...subBranchIds] = branches.getIn([branchId, "byId"]).keys();
     for (let subBranchId of subBranchIds) {
+      console.log("SUBBRANCH", subBranchId);
       subData = createSubData(state, branches, branchId, subBranchId, subData, allCommitIds, level);
     }
     data = data.setIn(["children", data.get("children").size], subData);
@@ -120,6 +192,7 @@ export const createSubData = function(state, branches, branchId, subBranchId, su
         .first();
       let description = state.getInPath(`entities.descriptions.byId.${descriptionId}`);
       subData = subData.set("name", description.get("title"));
+      console.log("NAME", description.get("title"));
       subData = subData.set("masterRefId", subRefId);
     }
   }
