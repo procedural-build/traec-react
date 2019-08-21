@@ -69,20 +69,10 @@ const constructChildTree = function(state, data, branches, allCommitIds, level, 
     let subBranches = getBranches(state, commitBranchId);
     if (subBranches) {
       refId = getMasterRef(data, commitBranchId, parent);
-      console.log("REF", refId, "commit Id", commitBranchId);
       allCommitIds.add(commitBranchId);
 
       if (refId) {
         let subBranchData = createData(state, subBranches, level + 2, refId, allCommitIds);
-
-        /*
-        let index = getIndex(data, commitBranchId, refId);
-        data = data.setIn(
-          ["children", index.commitIndex, "children", index.refIndex, "children"],
-          subBranchData.get("children")
-        );
-
-         */
         let newData = setData(data, commitBranchId, refId, subBranchData.get("children"), parent);
         data = newData.data;
         let index = newData.index;
@@ -153,7 +143,6 @@ export const createData = function(state, branches, level, refId, allCommitIds) 
   let [...branchIds] = branches.keys();
 
   for (let branchId of branchIds) {
-    console.log("COMMIT ID", branchId);
     allCommitIds.add(branchId);
     let name = "";
     let masterRefId = "";
@@ -169,7 +158,6 @@ export const createData = function(state, branches, level, refId, allCommitIds) 
 
     let [...subBranchIds] = branches.getIn([branchId, "byId"]).keys();
     for (let subBranchId of subBranchIds) {
-      console.log("SUBBRANCH", subBranchId);
       subData = createSubData(state, branches, branchId, subBranchId, subData, allCommitIds, level);
     }
     data = data.setIn(["children", data.get("children").size], subData);
@@ -187,13 +175,14 @@ export const createSubData = function(state, branches, branchId, subBranchId, su
     allCommitIds.add(latestCommitId);
 
     if (treeId && state.getInPath(`entities.commitEdges.byId.${latestCommitId}`)) {
-      let descriptionId = state
-        .getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeId}.descriptions`)
-        .first();
-      let description = state.getInPath(`entities.descriptions.byId.${descriptionId}`);
-      subData = subData.set("name", description.get("title"));
-      console.log("NAME", description.get("title"));
-      subData = subData.set("masterRefId", subRefId);
+      let descriptionId = state.getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeId}.descriptions`);
+      if (descriptionId) {
+        descriptionId = descriptionId.first();
+        let description = state.getInPath(`entities.descriptions.byId.${descriptionId}`);
+        subData = subData.set("name", description.get("title"));
+        //console.log("NAME", description.get("title"));
+        subData = subData.set("masterRefId", subRefId);
+      }
     }
   }
 
