@@ -32,18 +32,19 @@ export const getMasterRef = function(data, commitBranchId, parent) {
       .first()
       .get("children")
       .filter(subBranch => {
-        if (subBranch.refId === parent.refId) {
+        if (subBranch.get("refId") === parent.refId) {
           return subBranch;
         }
       })
       .first()
-      .children.filter(branch => {
+      .get("children")
+      .filter(branch => {
         if (branch.get("branchId") === commitBranchId) {
           return branch.get("masterRefId");
         }
       })
-      .first()
-      .get("masterRefId");
+      .first();
+    refId = refId ? refId.get("masterRefId") : null;
   }
 
   return refId ? refId : null;
@@ -188,12 +189,15 @@ export const createSubData = function(state, branches, branchId, subBranchId, su
 
   // Set the data for the current level
   let name = state.getInPath(`entities.refs.byId.${subRefId}.name`);
-  return subData.setIn(["children", subData.get("children").size], {
-    name,
-    branchId: subBranchId,
-    refId: subRefId,
-    colname: `level${level + 1}`,
-    isMaster,
-    children: Im.List()
-  });
+  return subData.setIn(
+    ["children", subData.get("children").size],
+    Im.Map({
+      name,
+      branchId: subBranchId,
+      refId: subRefId,
+      colname: `level${level + 1}`,
+      isMaster,
+      children: Im.List()
+    })
+  );
 };
