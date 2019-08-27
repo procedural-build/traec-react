@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 export const authGroupFields = {
   name: { value: "", class: "col col-sm-11 mb-1", label: "", placeholder: "Name" },
@@ -73,6 +72,7 @@ export default class CompanyAuthGroupForm extends React.Component {
     fetchHandler.update({ companyId, authGroupId: this.state.uid });
     fetchHandler.updateFetchParams({ body: data });
     fetchHandler.dispatch();
+    this.props.showFormHandler(e, false);
   }
 
   render_actions_table_rows() {

@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 import CompanyAuthGroupForm from "./companyForm";
 
@@ -41,5 +40,6 @@ export class ProjectAuthGroupForm extends CompanyAuthGroupForm {
     fetchHandler.update({ projectId, authGroupId: this.state.uid });
     fetchHandler.updateFetchParams({ body: data });
     fetchHandler.dispatch();
+    this.props.showFormHandler(e, false);
   }
 }
