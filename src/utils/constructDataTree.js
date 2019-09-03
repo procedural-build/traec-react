@@ -176,9 +176,10 @@ export const createSubData = function(state, branches, branchId, subBranchId, su
     allCommitIds.add(latestCommitId);
 
     if (treeId && state.getInPath(`entities.commitEdges.byId.${latestCommitId}`)) {
-      let treeTreeId = state.getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeId}.trees`).first();
+      let treeTree = state.getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeId}.trees`);
 
-      if (treeTreeId) {
+      if (treeTree) {
+        let treeTreeId = treeTree.first();
         let metricScoreId = state
           .getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeTreeId}.metricScores`)
           .first();
