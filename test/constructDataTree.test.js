@@ -4839,16 +4839,16 @@ export const TestStateC = Im.fromJS({
         "5f2401b4-5a76-49eb-9938-f675d81c3c67": {
           uid: "5f2401b4-5a76-49eb-9938-f675d81c3c67",
           unit: "Number",
-          category: null,
+          category: "ECO",
           parentmetric: null,
-          name: "T",
+          name: "ECO",
           description: "",
           fuel: ""
         },
         "b72a40cf-e1ce-4b26-a679-4ff4fcd1ce18": {
           uid: "b72a40cf-e1ce-4b26-a679-4ff4fcd1ce18",
           unit: "Number",
-          category: "Test",
+          category: "ECO 2",
           parentmetric: null,
           name: "Test 2",
           description: "",
@@ -4857,7 +4857,7 @@ export const TestStateC = Im.fromJS({
         "1854eaba-60dd-40f6-9cec-4a205a55417b": {
           uid: "1854eaba-60dd-40f6-9cec-4a205a55417b",
           unit: "Number",
-          category: null,
+          category: "ECO 1",
           parentmetric: null,
           name: "T1",
           description: "",
@@ -4866,7 +4866,7 @@ export const TestStateC = Im.fromJS({
         "b11c7281-40f1-4f7c-9696-bd8eaa1abf67": {
           uid: "b11c7281-40f1-4f7c-9696-bd8eaa1abf67",
           unit: "Number",
-          category: "Test",
+          category: "ECO 1.2",
           parentmetric: null,
           name: "T1.2",
           description: "",
@@ -4875,7 +4875,7 @@ export const TestStateC = Im.fromJS({
         "6297dc32-6002-4247-baab-f13bd25c8ff6": {
           uid: "6297dc32-6002-4247-baab-f13bd25c8ff6",
           unit: "Number",
-          category: "Test",
+          category: "ECO 1.1",
           parentmetric: null,
           name: "T1.1",
           description: "",
@@ -4884,7 +4884,7 @@ export const TestStateC = Im.fromJS({
         "8edd0df6-80ff-48f3-bc8f-f1decba111b2": {
           uid: "8edd0df6-80ff-48f3-bc8f-f1decba111b2",
           unit: "Number",
-          category: "Test",
+          category: "ECO 2.1",
           parentmetric: null,
           name: "T2.1",
           description: "",
@@ -5564,7 +5564,7 @@ const resultStateC = {
   refId: "72384461-e033-44d0-a57e-366ed1b11ad0",
   children: [
     {
-      name: "T",
+      name: "ECO",
       masterRefId: "d9d374fb-5800-4501-8ea2-4fc78c05e7b6",
       branchId: "4a357f85-1bc3-4fbb-afb7-c815713177ee",
       colname: "level1",
@@ -5577,7 +5577,7 @@ const resultStateC = {
           isMaster: true,
           children: [
             {
-              name: "T1",
+              name: "ECO 1",
               masterRefId: "e541ab44-abfb-4b4d-9eef-83597ffb6da2",
               branchId: "384f965f-a05a-4b02-9891-0f9828584f26",
               colname: "level3",
@@ -5590,7 +5590,7 @@ const resultStateC = {
                   isMaster: true,
                   children: [
                     {
-                      name: "T1.2",
+                      name: "ECO 1.2",
                       masterRefId: "982a9a0d-6a97-4138-a792-300e54f23040",
                       branchId: "a8e82cc5-4b94-48ca-8147-aa9e91edc6e7",
                       colname: "level5",
@@ -5607,7 +5607,7 @@ const resultStateC = {
                       isMaster: true
                     },
                     {
-                      name: "T1.1",
+                      name: "ECO 1.1",
                       masterRefId: "3acc072f-9239-48f7-8d27-2f9d922821a1",
                       branchId: "b9f29a6c-8873-4dbe-aed3-37bfd172fe70",
                       colname: "level5",
@@ -5629,7 +5629,7 @@ const resultStateC = {
               isMaster: true
             },
             {
-              name: "Test 2",
+              name: "ECO 2",
               masterRefId: "11420889-98c9-44c7-be33-c9c272dab84f",
               branchId: "11e9ab7b-569c-41f9-af74-e7104138987a",
               colname: "level3",
@@ -5642,7 +5642,7 @@ const resultStateC = {
                   isMaster: true,
                   children: [
                     {
-                      name: "T2.1",
+                      name: "ECO 2.1",
                       masterRefId: "f03b8adb-a5c4-458e-b120-4df079060d7c",
                       branchId: "4ab23472-f005-4fac-8f06-d68a4477f365",
                       colname: "level5",

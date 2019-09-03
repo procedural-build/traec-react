@@ -176,12 +176,15 @@ export const createSubData = function(state, branches, branchId, subBranchId, su
     allCommitIds.add(latestCommitId);
 
     if (treeId && state.getInPath(`entities.commitEdges.byId.${latestCommitId}`)) {
-      let descriptionId = state.getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeId}.descriptions`);
-      if (descriptionId) {
-        descriptionId = descriptionId.first();
-        let description = state.getInPath(`entities.descriptions.byId.${descriptionId}`);
-        subData = subData.set("name", description.get("title"));
-        //console.log("NAME", description.get("title"));
+      let treeTreeId = state.getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeId}.trees`).first();
+
+      if (treeTreeId) {
+        let metricScoreId = state
+          .getInPath(`entities.commitEdges.byId.${latestCommitId}.trees.${treeTreeId}.metricScores`)
+          .first();
+        let baseMetricId = state.getInPath(`entities.metricScores.byId.${metricScoreId}.metric`);
+        let category = state.getInPath(`entities.baseMetrics.byId.${baseMetricId}.category`);
+        subData = subData.set("name", category);
         subData = subData.set("masterRefId", subRefId);
       }
     }
