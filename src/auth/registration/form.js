@@ -77,7 +77,7 @@ class RegistrationForm extends React.Component {
   render_item(attr, placeholder, help_block, fieldType = "text") {
     // Get the validity and error message of this field
     const errors = this.props.errors;
-    const validClass = errors && errors.hasOwnProperty(attr) ? "is-invalid" : "";
+    const validClass = errors && errors.has(attr) ? "is-invalid" : "";
     const error = validClass ? <div className="invalid-feedback">{errors.get(attr).join(" ")}</div> : null;
     // Render
     return (
@@ -100,7 +100,7 @@ class RegistrationForm extends React.Component {
   render_non_field_errors() {
     const attr = "non_field_errors";
     const errors = this.props.errors;
-    if (errors && errors.hasOwnProperty(attr)) {
+    if (errors && errors.has(attr)) {
       //console.log("NON_FIELD_ERRORS", errors);
       return <div className="alert alert-danger form-control-sm">{this.modifyErrorMessage(errors.get(attr))}</div>;
     }

@@ -49,8 +49,8 @@ export class LoginForm extends React.Component {
   renderNonFieldErrors() {
     const attr = "non_field_errors";
     const errors = this.props.errors;
-    if (errors && errors.hasOwnProperty(attr)) {
-      //console.log("NON_FIELD_ERRORS", errors)
+    if (errors && errors.has(attr)) {
+      //console.log("NON_FIELD_ERRORS", errors);
       return <div className="alert alert-danger form-control-sm">{errors.get(attr)}</div>;
     }
     return "";
@@ -135,7 +135,7 @@ export const LoginField = function(props) {
   let { attribute, placeholder, helpBlock, fieldType = "text", onChange, value, errors } = props;
 
   // Get the validity and error message of this field
-  const validClass = errors && errors.hasOwnProperty(attribute) ? "is-invalid" : "";
+  const validClass = errors && errors.has(attribute) ? "is-invalid" : "";
   const error = validClass ? <div className="invalid-feedback">{errors.get(attribute).join(" ")}</div> : null;
 
   // Render
