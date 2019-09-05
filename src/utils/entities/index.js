@@ -21,15 +21,15 @@ export class Spinner extends React.Component {
     clearInterval(this.interval);
   }
 
-  render_title() {
+  renderTitle() {
     let { title } = this.props;
-    if (title) {
+    if (title && this.state.showSpinner) {
       return <h5>{title}</h5>;
     }
     return null;
   }
 
-  render_explanation() {
+  renderExplanation() {
     let { explanation } = this.props;
     if (explanation) {
       return <p>{explanation}</p>;
@@ -37,7 +37,15 @@ export class Spinner extends React.Component {
     return null;
   }
 
-  render_spinner() {
+  renderTimedOutComment() {
+    let { timedOutComment } = this.props;
+    if (this.state.showSpinner || !timedOutComment) {
+      return null;
+    }
+    return <p>{timedOutComment}</p>;
+  }
+
+  renderSpinner() {
     if (!this.state.showSpinner) {
       return null;
     }
@@ -47,9 +55,10 @@ export class Spinner extends React.Component {
   render() {
     return (
       <div className="text-center">
-        {this.render_title()}
-        {this.render_explanation()}
-        {this.render_spinner()}
+        {this.renderTitle()}
+        {this.renderExplanation()}
+        {this.renderSpinner()}
+        {this.renderTimedOutComment()}
       </div>
     );
   }
