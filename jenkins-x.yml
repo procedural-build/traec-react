@@ -1,6 +1,4 @@
-#buildPack: none
-agent:
-  image: "node:10.14-slim"
+buildPack: none
 pipelineConfig:
   pipelines:
     release:
