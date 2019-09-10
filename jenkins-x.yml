@@ -2,32 +2,27 @@ buildPack: none
 pipelineConfig:
   pipelines:
     release:
-      build:
-        replace: true
-        steps:
-          - command: npm run build
-      postBuild:
-        replace: true
-        steps:
-          - command: npm publish ./dist
-      preBuild:
-        replace: true
-        steps:
-          - command: npm test -- --ci --coverage --testResultsProcessor="jest-junit"
-          - command: junit 'jest-test-results.xml'
-      promote:
-        replace: true
-        steps:
-          - command: 'slackSend(message: "SUCCESS\nJob: ${env.JOB_NAME} \nBuild ${env.BUILD_DISPLAY_NAME}
-              \n URL: ${env.RUN_DISPLAY_URL} \n Master Test Coverage Report: https://docs.procedural.build/traec-react/coverage/",
-              color: ''good'', token: "${SLACK}", baseUrl: ''https://traecker.slack.com/services/hooks/jenkins-ci/'',
-              channel: ''#jenkins-ci'')'
-      setVersion:
-        replace: true
-        steps:
-          - command: echo $SECRET && echo "//registry.npmjs.org/:_authToken=${SECRET}"
-              > ~/.npmrc && npm run matchversion && npm run patchversion
-      setup:
-        replace: true
-        steps:
-          - command: npm install
+      pipeline:
+        agent:
+          image: node:10-slim
+        stages:
+          - name: NPM INSTALL
+            steps:
+              - command: npm install
+          - name: TEST
+            steps:
+              - command: npm test -- --ci --coverage --testResultsProcessor="jest-junit"
+          - name: Release to NPM
+            steps:
+              - command: echo $SECRET && echo "//registry.npmjs.org/:_authToken=${SECRET}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
+    pullRequest:
+      pipeline:
+        agent:
+          image: node:10-slim
+        stages:
+          - name: NPM INSTALL
+            steps:
+              - command: npm install
+          - name: TEST
+            steps:
+              - command: npm test -- --ci --coverage --testResultsProcessor="jest-junit"
