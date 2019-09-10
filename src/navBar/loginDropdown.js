@@ -26,12 +26,24 @@ export class DropdownLogin extends React.Component {
   }
 
   userDropDownItems() {
-    return Im.fromJS([
+    let {user} = this.props
+    let menu = [
       { label: this.getUserLabel(), to: "#" },
       { label: "My Profile", to: "/accounts/profile", octicon: "home" },
+    ]
+    // Superuser-related menus
+    if (user && user.get('is_tenant_superuser')) {
+      menu = menu.concat([
+        { label: null },
+        { label: "Tenacy admin", to: "/tenant/admin/", octicon: "gear" }
+      ])
+    }
+    // Logout menu
+    menu = menu.concat([
       { label: null },
       { label: "Logout", onClick: this.logoutClicked, octicon: "sign-out" }
-    ]);
+    ])
+    return Im.fromJS(menu);
   }
 
   render() {
@@ -69,7 +81,8 @@ LoginForm.propTypes = {
 const mapStateToProps = state => {
   let isAuthenticated = state.getInPath("auth.isAuthenticated");
   let tokenData = state.getInPath("auth.decoded_token");
-  return { isAuthenticated, tokenData };
+  let user = state.getInPath("auth.user");
+  return { isAuthenticated, tokenData, user };
 };
 
 export default connect(
