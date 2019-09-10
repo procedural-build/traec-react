@@ -26,23 +26,17 @@ export class DropdownLogin extends React.Component {
   }
 
   userDropDownItems() {
-    let {user} = this.props
+    let { user } = this.props;
     let menu = [
       { label: this.getUserLabel(), to: "#" },
-      { label: "My Profile", to: "/accounts/profile", octicon: "home" },
-    ]
+      { label: "My Profile", to: "/accounts/profile", octicon: "home" }
+    ];
     // Superuser-related menus
-    if (user && user.get('is_tenant_superuser')) {
-      menu = menu.concat([
-        { label: null },
-        { label: "Tenacy admin", to: "/tenant/admin/", octicon: "gear" }
-      ])
+    if (user && user.get("is_tenant_superuser")) {
+      menu = menu.concat([{ label: null }, { label: "Tenacy admin", to: "/tenant/admin/", octicon: "gear" }]);
     }
     // Logout menu
-    menu = menu.concat([
-      { label: null },
-      { label: "Logout", onClick: this.logoutClicked, octicon: "sign-out" }
-    ])
+    menu = menu.concat([{ label: null }, { label: "Logout", onClick: this.logoutClicked, octicon: "sign-out" }]);
     return Im.fromJS(menu);
   }
 

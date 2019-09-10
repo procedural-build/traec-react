@@ -1,1 +1,35 @@
-buildPack: javascript
+#buildPack: none
+agent:
+  image: "node:10.14-slim"
+pipelineConfig:
+  pipelines:
+    release:
+      build:
+        replace: true
+        steps:
+          - command: npm run build
+      postBuild:
+        replace: true
+        steps:
+          - command: npm publish ./dist
+      preBuild:
+        replace: true
+        steps:
+          - command: npm test -- --ci --coverage --testResultsProcessor="jest-junit"
+          - command: junit 'jest-test-results.xml'
+      promote:
+        replace: true
+        steps:
+          - command: 'slackSend(message: "SUCCESS\nJob: ${env.JOB_NAME} \nBuild ${env.BUILD_DISPLAY_NAME}
+              \n URL: ${env.RUN_DISPLAY_URL} \n Master Test Coverage Report: https://docs.procedural.build/traec-react/coverage/",
+              color: ''good'', token: "${SLACK}", baseUrl: ''https://traecker.slack.com/services/hooks/jenkins-ci/'',
+              channel: ''#jenkins-ci'')'
+      setVersion:
+        replace: true
+        steps:
+          - command: echo $SECRET && echo "//registry.npmjs.org/:_authToken=${SECRET}"
+              > ~/.npmrc && npm run matchversion && npm run patchversion
+      setup:
+        replace: true
+        steps:
+          - command: npm install
