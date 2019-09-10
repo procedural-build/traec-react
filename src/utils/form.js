@@ -65,6 +65,7 @@ class BaseForm extends React.Component {
       let non_field_errors = (errors.get("non_field_errors") || Im.List()).concat(errorMsgs);
       errors = errors.setIn(["non_field_errors"], non_field_errors);
 
+      console.log("errors", errors);
       // Errors in the form - save errors to state
       //this.setState({formErrors: errors.toJS()})
       Object.assign(newState, { formErrors: errors.toJS() });
@@ -85,7 +86,7 @@ class BaseForm extends React.Component {
     let formFields = Object.assign({}, stateFormFields, {
       [e.target.name]: Object.assign({}, stateFormFields[e.target.name], { value: e.target.value })
     });
-    this.setState({ formFields });
+    this.setState({ formFields }, () => console.log("FORM", this.state.formFields));
   }
 
   onSubmit(e) {
