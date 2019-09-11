@@ -14,7 +14,11 @@ pipelineConfig:
               - command: npm test -- --ci --coverage --testResultsProcessor="jest-junit"
           - name: Release to NPM
             steps:
-              - command: echo $SECRET && echo "//registry.npmjs.org/:_authToken=${SECRET}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
+              - command: echo $SECRET
+              - command: echo "//registry.npmjs.org/:_authToken=${SECRET}" > ~/.npmrc
+              - command: npm run matchversion
+              - command: npm run patchversion
+              - command: npm run pub
     pullRequest:
       pipeline:
         agent:
