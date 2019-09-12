@@ -13,9 +13,15 @@ pipelineConfig:
             steps:
               - command: npm test -- --ci --coverage --testResultsProcessor="jest-junit"
           - name: Release to NPM
+            environment:
+              - name: NPM_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: secret/pipeline/npm
+                    key: token
             steps:
-              - command: echo $SECRET
-              - command: echo "//registry.npmjs.org/:_authToken=${SECRET}" > ~/.npmrc
+              - command: echo $NPM_TOKEN
+              - command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
               - command: npm run matchversion
               - command: npm run patchversion
               - command: npm run pub
