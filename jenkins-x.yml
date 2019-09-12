@@ -1,1 +1,17 @@
 buildPack: javascript
+pipelineConfig:
+  env:
+    - name: NPM_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: secret/pipeline/npm
+          key: token
+  pipelines:
+    release:
+      promote:
+        steps:
+          - command: echo $NPM_TOKEN
+          - command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          - command: npm run matchversion
+          - command: npm run patchversion
+          - command: npm run pub
