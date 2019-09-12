@@ -4,10 +4,13 @@ pipelineConfig:
     - name: NPM_TOKEN
       valueFrom:
         secretKeyRef:
-          name: secret/pipeline/npm
           key: token
+          name: secret/pipeline/npm
   pipelines:
     release:
+      build:
+        steps:
+          - command: echo "YEAH"
       promote:
         steps:
           - command: echo $NPM_TOKEN
