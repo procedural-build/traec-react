@@ -1,0 +1,38 @@
+buildPack: javascript
+pipelineConfig:
+  pipelines:
+    release:
+      pipeline:
+        agent:
+          image: node:10-slim
+        stages:
+          - name: NPM Install
+            steps:
+              - command: npm install
+          - name: Test
+            steps:
+              - command: npm test -- --ci --coverage"
+          - name: Release to NPM
+            environment:
+              - name: NPM_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: secret/pipeline/npm
+                    key: token
+            steps:
+              - command: echo $NPM_TOKEN
+              - command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+              - command: npm run matchversion
+              - command: npm run patchversion
+              - command: npm run pub
+    pullRequest:
+      pipeline:
+        agent:
+          image: node:10-slim
+        stages:
+          - name: NPM INSTALL
+            steps:
+              - command: npm install
+          - name: TEST
+            steps:
+              - command: npm test -- --ci --coverage --testResultsProcessor="jest-junit"
