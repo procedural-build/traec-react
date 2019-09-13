@@ -38,7 +38,8 @@ export default class MemberItem extends React.Component {
       } member ${memberName}.  Are you sure you would like to proceed?`,
       onConfirm: () => {
         new Traec.Fetch(`${projectId ? "project" : "company"}_member`, "delete", {
-          ID,
+          projectId: ID,
+          companyId: ID,
           memberId: member.get("uid")
         }).dispatch();
       }
