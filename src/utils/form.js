@@ -86,7 +86,7 @@ class BaseForm extends React.Component {
     let formFields = Object.assign({}, stateFormFields, {
       [e.target.name]: Object.assign({}, stateFormFields[e.target.name], { value: e.target.value })
     });
-    this.setState({ formFields }, () => console.log("FORM", this.state.formFields));
+    this.setState({ formFields });
   }
 
   onSubmit(e) {

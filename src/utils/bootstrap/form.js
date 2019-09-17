@@ -119,7 +119,7 @@ export class BSForm extends React.Component {
           {labelBlock}
           <TinyMCE
             name={item.name}
-            content={details.initialContent || ""}
+            content={details.initialContent || value}
             config={details.config}
             onChange={e => this.handleTinyMceChange(e, item.name)}
           />
