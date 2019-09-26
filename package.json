@@ -1,6 +1,6 @@
 {
   "name": "traec-react",
-  "version": "0.1.20",
+  "version": "0.1.55",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -22,8 +22,8 @@
     "react-router-dom": "^5.0.0",
     "react-style-proptype": "^3.2.2",
     "react-tinymce": "^0.7.0",
-    "sweetalert2": "^8.9.0",
-    "traec": "^1.1.10"
+    "sweetalert2": "^8.17.1",
+    "traec": "^1.1.58"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -71,7 +71,7 @@
     "matchversion": "npm --no-git-tag-version --allow-same-version version $(npm view traec-react version)",
     "patchversion": "npm --no-git-tag-version version patch",
     "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json && cd ./src && find ./ -type f ! -name \"*.js\" -exec cp -v --parents \\{\\} ../dist \\;",
-    "pub": "npm run build && npm publish ./dist"
+    "pub": "npm run matchversion && npm run patchversion && npm run build && npm publish ./dist"
   },
   "repository": {
     "type": "git",

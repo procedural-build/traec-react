@@ -5,7 +5,7 @@ import Traec from "traec";
 import { BSCard, BSBtn, BSBtnDropdown } from "traec-react/utils/bootstrap";
 
 import { objToList } from "traec-react/utils";
-import InviteForm, {companyInviteFields, projectInviteFields} from "./form";
+import InviteForm, { companyInviteFields, projectInviteFields } from "./form";
 import { companyPermissionRender } from "traec/utils/permissions/company";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 import MemberItem from "./item";
@@ -49,7 +49,7 @@ export class MemberList extends React.Component {
 
   onClick(e) {
     e.preventDefault();
-    console.log("FDSAFDSA", this.fetch.params)
+    console.log("FDSAFDSA", this.fetch.params);
     this.fetch.toggleForm();
   }
 
@@ -63,16 +63,11 @@ export class MemberList extends React.Component {
         <MemberItem key={i} index={i} dispatch={dispatch} member={member} companyId={companyId} projectId={projectId} />
       ));
 
-    let permObjId = projectId ? projectId : companyId
-    let permRenderFunc = projectId ? projectPermissionRender : companyPermissionRender
-    let inviteFields = projectId ? projectInviteFields : companyInviteFields
+    let permObjId = projectId ? projectId : companyId;
+    let permRenderFunc = projectId ? projectPermissionRender : companyPermissionRender;
+    let inviteFields = projectId ? projectInviteFields : companyInviteFields;
 
-    let permissionRender = permRenderFunc(
-      permObjId, 
-      true, 
-      [],
-      (<BSBtn onClick={this.onClick} text="Send Invite" />)
-    )
+    let permissionRender = permRenderFunc(permObjId, true, [], <BSBtn onClick={this.onClick} text="Send Invite" />);
 
     return (
       <div className="row">

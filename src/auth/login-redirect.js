@@ -17,20 +17,19 @@ class LoginRedirect extends React.Component {
     let { isAuthenticated, authStatus } = this.props;
     const nextUrl = this.props.location.pathname;
     if (!isAuthenticated) {
-      if (!authStatus || authStatus == "pending") {
+      if (!authStatus || authStatus === "pending") {
         return this.render_spinner();
-      } else if (authStatus == "failed") {
+      } else if (authStatus === "failed") {
         // Redirect the user to login if they are not Authenticated
         if (
           !(
-            nextUrl == "/" ||
+            nextUrl === "/" ||
             nextUrl.startsWith("/accounts/login") ||
             nextUrl.startsWith("/accounts/password/reset") ||
             nextUrl.startsWith("/accounts/activate") ||
             nextUrl.startsWith("/accounts/register")
           )
         ) {
-          //console.log("REDIRECTING TO LOGIN", nextUrl)
           return (
             <Redirect
               to={{
@@ -44,7 +43,7 @@ class LoginRedirect extends React.Component {
         //pass through to render_routes below
       }
     } else {
-      if (authStatus == "confirmed" && nextUrl == "/") {
+      if (authStatus === "confirmed" && nextUrl === "/") {
         return <Redirect to={`/accounts/profile/`} />;
       }
     }

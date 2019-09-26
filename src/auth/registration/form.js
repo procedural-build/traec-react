@@ -44,6 +44,8 @@ class RegistrationForm extends React.Component {
       errors: null,
       gRecaptchaResponse: "123"
     };
+
+    // Bound methods
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.verifyRecaptchaCallback = this.verifyRecaptchaCallback.bind(this);
@@ -61,14 +63,17 @@ class RegistrationForm extends React.Component {
   }
 
   onSubmit(e) {
-    console.log("Registration form submitted");
     e.preventDefault();
 
+    let gRecaptchaSiteKey = getRecaptchaSiteKey();
     const post = {
       ...this.state,
       name: "",
-      gRecaptchaSiteKey: getRecaptchaSiteKey()
+      gRecaptchaSiteKey
     };
+
+    // Log the post (for debugging registration issues)
+    console.log("Registration form submitted", post);
 
     // Call action when form submitted
     this.props.dispatch(postRegistration(post));
@@ -117,7 +122,9 @@ class RegistrationForm extends React.Component {
     });
     return errorMessages;
   }
+
   verifyRecaptchaCallback(response) {
+    console.log("Verifying Re-captcha response", response);
     this.setState({ gRecaptchaResponse: response });
   }
 
@@ -138,16 +145,23 @@ class RegistrationForm extends React.Component {
         <Recaptcha
           ref={e => (recaptchaInstance = e)}
           sitekey={getRecaptchaSiteKey()}
-          verifyCallback={this.verifyRecaptchaCallback}
+          verifyCallback={response => this.verifyRecaptchaCallback(response)}
         />
-        <div className="btn btn-sm btn-secondary mt-2 mb-2" onClick={() => recaptchaInstance.reset()}>
-          {" "}
-          Reset reCAPTCHA{" "}
-        </div>
         <div className="form-group">
           <button className="btn btn-sm btn-primary btn-block" type="submit">
             Register
           </button>
+        </div>
+        <div className="m-0 p-0 float-right">
+          <a
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              console.log("Reloading Recaptcha");
+              recaptchaInstance.reset();
+            }}
+          >
+            Reload reCaptcha
+          </a>
         </div>
       </form>
     );

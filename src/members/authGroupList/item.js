@@ -38,7 +38,7 @@ export default class AuthGroupItem extends React.Component {
 
   editItem(e) {
     e.preventDefault();
-    this.setState({ showForm: !this.state.showForm });
+    this.setState({ showForm: !this.state.showForm }, () => console.log("STATE", this.state));
   }
 
   dropDownLinks() {
@@ -54,9 +54,9 @@ export default class AuthGroupItem extends React.Component {
       return (
         <div className="row">
           <div className="col-sm-12">
-            <CompanyAuthGroupForm
+            <ProjectAuthGroupForm
               item={this.props.item}
-              companyId={this.props.companyId}
+              projectId={this.props.projectId}
               showFormHandler={this.showFormHandler}
               fetchHandler={this.fetch}
               dispatch={this.props.dispatch}
@@ -70,9 +70,9 @@ export default class AuthGroupItem extends React.Component {
   companyAuthForm() {
     if (this.props.companyId) {
       return (
-        <ProjectAuthGroupForm
+        <CompanyAuthGroupForm
           item={this.props.item}
-          projectId={this.props.projectId}
+          companyId={this.props.companyId}
           showFormHandler={this.showFormHandler}
           fetchHandler={this.fetch}
           dispatch={this.props.dispatch}

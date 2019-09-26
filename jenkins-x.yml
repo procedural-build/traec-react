@@ -1,0 +1,13 @@
+buildPack: javascript
+pipelineConfig:
+  env:
+    - name: BROKEN_TOKEN
+      value: vault:secret/pipelines/npm:token
+  pipelines:
+    release:
+      promote:
+        steps:
+          - command: export NPM_TOKEN=$(eval $(jx get vault-config) && /builder/home/.jx/bin/vault kv get secret/pipelines/npm | grep -P -o "[0-9]{3}\w{2}[0-9]{3}-.{5,}") && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          - command: npm run matchversion
+          - command: npm run patchversion
+          - command: npm run pub

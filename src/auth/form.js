@@ -50,7 +50,7 @@ export class LoginForm extends React.Component {
     const attr = "non_field_errors";
     const errors = this.props.errors;
     if (errors && errors.has(attr)) {
-      //console.log("NON_FIELD_ERRORS", errors)
+      //console.log("NON_FIELD_ERRORS", errors);
       return <div className="alert alert-danger form-control-sm">{errors.get(attr)}</div>;
     }
     return "";

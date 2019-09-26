@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { BSCard } from "traec-react/utils/bootstrap";
 import { postPasswordResetConfirm } from "../_redux/actionCreators";
 import LoginForm from "../form";
+import { renderItem, renderNonFieldErrors } from "./utils";
 
 class PasswordResetConfirmPage extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class PasswordResetConfirmPage extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.renderItem = renderItem.bind(this);
   }
 
   componentWillMount() {
@@ -34,44 +36,12 @@ class PasswordResetConfirmPage extends React.Component {
     this.props.dispatch(postPasswordResetConfirm(post));
   }
 
-  render_non_field_errors() {
-    const attr = "non_field_errors";
-    const errors = this.props.errors;
-    if (errors && errors.has(attr)) {
-      //console.log("NON_FIELD_ERRORS", errors)
-      return <div className="alert alert-danger form-control-sm">{errors.get(attr)}</div>;
-    }
-    return "";
-  }
-
-  render_item(attr, placeholder, help_block, fieldType = "text") {
-    // Get the validity and error message of this field
-    const errors = this.props.errors;
-    const validClass = errors && errors.has(attr) ? "is-invalid" : "";
-    const error = validClass ? <div className="invalid-feedback">{errors.get(attr).join(" ")}</div> : null;
-    // Render
-    return (
-      <div className="form-group">
-        <input
-          className={`form-control form-control-sm ${validClass}`}
-          placeholder={placeholder}
-          type={fieldType}
-          name={attr}
-          onChange={this.onChange}
-          value={this.state[attr]}
-        />
-        {error}
-        {help_block}
-      </div>
-    );
-  }
-
-  render_body() {
+  renderBody() {
     return (
       <form className="form" onSubmit={this.onSubmit}>
-        {this.render_non_field_errors()}
-        {this.render_item("new_password1", "New Password", "", "password")}
-        {this.render_item("new_password2", "New Password (again)", "", "password")}
+        {renderNonFieldErrors(this.props.errors)}
+        {this.renderItem("new_password1", "New Password", "", "password")}
+        {this.renderItem("new_password2", "New Password (again)", "", "password")}
 
         <div className="form-group">
           <button className="btn btn-sm btn-primary btn-block" type="submit">
@@ -82,7 +52,7 @@ class PasswordResetConfirmPage extends React.Component {
     );
   }
 
-  render_done() {
+  renderDone() {
     return (
       <React.Fragment>
         <p>Your password reset is complete. You may now log in with your new password.</p>
@@ -93,14 +63,16 @@ class PasswordResetConfirmPage extends React.Component {
 
   render() {
     let { status } = this.props;
-    //console.log("STATUS", status)
+
     let title = "Enter a new password";
-    let body = this.render_body();
+    let body = this.renderBody();
+
     // If we have submitted the form then show a confirmation
-    if (status == "confirmed") {
+    if (status === "confirmed") {
       title = "Password reset Complete";
-      body = this.render_done();
+      body = this.renderDone();
     }
+
     return (
       <div className="container">
         <div className="col-sm-8 offset-sm-2">

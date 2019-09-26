@@ -85,7 +85,7 @@ export class AuthGroupList extends React.Component {
   }
 
   render() {
-    let { authGroups, projectId, dispatch } = this.props;
+    let { authGroups, projectId, companyId, dispatch } = this.props;
     if (!authGroups) {
       return null;
     }
@@ -93,7 +93,9 @@ export class AuthGroupList extends React.Component {
     let itemList = authGroups
       .toList()
       .sortBy((obj, i) => obj.get("name"))
-      .map((item, i) => <AuthGroupItem key={i} index={i} item={item} projectId={projectId} dispatch={dispatch} />);
+      .map((item, i) => (
+        <AuthGroupItem key={i} index={i} item={item} projectId={projectId} companyId={companyId} dispatch={dispatch} />
+      ));
 
     return (
       <div className="row">
