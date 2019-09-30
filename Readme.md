@@ -23,14 +23,12 @@ The traec library makes use of an Immutable Redux store. So you should attach a 
 
 ### Development
 
-If you are developing the Traec library at the same time as another application then you should use `npm link` to link the dist folder to your `/usr/lib/node_modules` folder and then `npm link traec` into the project you are working on. Like this:
+If you are developing the Traec library at the same time as another application then you should use a symbolic link to link the src folder to your `/<project>/lib` folder. Like this:
 
 ```
-npm run build
-cd dist
-sudo npm link && rm -rvf node_modules
-cd <your-project-folder>
-npm link traec
+/traec-react$ npm install
+/traec-react$ cd <your-project-folder>/lib
+/<your-project-folder>/lib$ ln -s /traec/src ./traec-react
 ```
 
 ## Publishing to npm
