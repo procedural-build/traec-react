@@ -5,7 +5,7 @@ import Octicon from "react-octicon";
 
 export const renderOps = (ops, baseMetrics) => {
   for (let op of ops) {
-    let metricIds = op.metricList.match(/[0-9a-f-]{36}/g) || [];
+    let metricIds = op.metricList ? op.metricList.match(/[0-9a-f-]{36}/g) || [] : [];
     let renderedMetrics = metricIds
       .map(id => baseMetrics.get(id))
       .filter(i => i != null)
