@@ -54,6 +54,7 @@ class TraecUserTrackers extends React.Component {
 
   render() {
     let itemsAsArray = objToList(this.props.items).sortBy((obj, i) => obj.get("created"));
+    // let itemsAsArray = this.props.items.sortBy((obj, i) => obj.get("created"));
 
     const itemList = itemsAsArray.map((tracker, i) => <TrackerItem key={i} index={i} tracker={tracker} />);
 
