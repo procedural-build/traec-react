@@ -10,6 +10,7 @@ import CompanyInvites from "../userCompanies/companyInvite";
 import UserCompanies from "../userCompanies/company";
 import ProjectInvites from "../userProjects/projectInvite";
 import UserProjects from "../userProjects/project";
+import UserDocuments from "../userDocuments";
 
 export class TraecUserParticipation extends React.Component {
   constructor(props) {
@@ -34,6 +35,9 @@ export class TraecUserParticipation extends React.Component {
               responsibility for.
             </p>
           </div>
+        </div>
+        <div className="row">
+          <UserDocuments />
         </div>
         <div className="row">
           <CompanyInvites />
