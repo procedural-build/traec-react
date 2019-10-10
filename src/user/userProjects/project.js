@@ -55,7 +55,9 @@ class UserProjects extends React.Component {
     let projectList = projects
       .toList()
       .sortBy((obj, i) => obj.get("name"))
-      .map((item, i) => <ProjectItem key={i} index={i} project={item} dispatch={this.props.dispatch} />);
+      .map((item, i) => (
+        <ProjectItem key={i} index={i} project={item} dispatch={this.props.dispatch} showTrackers={false} />
+      ));
 
     // Reset the row counter
     counter.row = 0;
@@ -65,7 +67,6 @@ class UserProjects extends React.Component {
         widthOffset="col-sm-12"
         title="My Projects"
         body={projectList}
-        //body={<p>List of Projects that this User is contributing to</p>}
         form={
           <BaseFormConnected
             stateParams={this.state.formParams.stateParams}
