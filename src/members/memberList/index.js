@@ -49,7 +49,6 @@ export class MemberList extends React.Component {
 
   onClick(e) {
     e.preventDefault();
-    console.log("FDSAFDSA", this.fetch.params);
     this.fetch.toggleForm();
   }
 
