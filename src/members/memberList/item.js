@@ -12,6 +12,8 @@ export default class MemberItem extends React.Component {
 
     this.editMember = this.editMember.bind(this);
     this.deleteMember = this.deleteMember.bind(this);
+    this.seeAssignments = this.seeAssignments.bind(this);
+
   }
 
   stateParams() {
@@ -45,13 +47,26 @@ export default class MemberItem extends React.Component {
       }
     });
   }
+  seeAssignments(){
+
+  }
 
   dropDownLinks() {
-    return [
-      //{ name: "Edit", onClick: this.editMember },
-      { name: "Delete", onClick: this.deleteMember }
-    ];
-  }
+    let {dgnb} = this.props
+    if(!dgnb){
+      return [
+        //{ name: "Edit", onClick: this.editMember },
+        { name: "Delete", onClick: this.deleteMember }
+      ];
+    }else if(dgnb){
+      return [
+        //{ name: "Edit", onClick: this.editMember },
+        { name: "Delete", onClick: this.deleteMember },
+        { name: "See assignments", onClick: this.seeAssignments}
+      ];
+    }
+    }
+
 
   get_member_name() {
     let { member: item } = this.props;
