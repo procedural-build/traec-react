@@ -20,6 +20,10 @@ const colorScale = chroma.scale([
 ]);
 
 export default class ProjectItem extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   renderRelatedCommits(project) {
     let commits = project.get("related_commits");
     if (!commits) {
@@ -141,7 +145,7 @@ export default class ProjectItem extends React.Component {
   }
 
   renderTrackerList(trackers) {
-    if (!trackers) {
+    if (!trackers || !this.props.showTrackers) {
       return null;
     }
     let rowNum = counter.row++;
