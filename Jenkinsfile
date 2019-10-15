@@ -6,6 +6,11 @@ pipeline {
 
   }
 
+  environment {
+    SLACK = credentials('slack')
+    NPM_TOKEN = credentials('npm_token')
+  }
+
   stages {
     stage('NPM Install') {
       steps {
@@ -31,7 +36,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        sh 'echo $SECRET && echo "//registry.npmjs.org/:_authToken=${SECRET}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
+        sh 'echo $NPM_TOKEN && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
         ftpPublisher paramPublish: null, masterNodeName: '', alwaysPublishFromMaster: true, continueOnError: false, failOnError: true, publishers: [
                                 [configName: 'Docs', transfers: [
                                         [asciiMode: false, cleanRemote: false, excludes: '', flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "/traec-react/coverage", remoteDirectorySDF: false, removePrefix: 'coverage/lcov-report', sourceFiles: 'coverage/lcov-report/**']
@@ -40,10 +45,7 @@ pipeline {
       }
     }
   }
-  environment {
-    SLACK = credentials('slack')
-    SECRET = credentials('TOKEN2')
-  }
+
   post {
     success {
       slackSend(message: "SUCCESS\nJob: ${env.JOB_NAME} \nBuild ${env.BUILD_DISPLAY_NAME} \n URL: ${env.RUN_DISPLAY_URL} \n Master Test Coverage Report: https://docs.procedural.build/traec-react/coverage/", color: 'good', token: "${SLACK}", baseUrl: 'https://traecker.slack.com/services/hooks/jenkins-ci/', channel: '#jenkins-ci')
