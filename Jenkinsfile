@@ -9,6 +9,7 @@ pipeline {
   environment {
     SLACK = credentials('slack')
     NPM_TOKEN = credentials('npm_token')
+    HOME = '.'
   }
 
   stages {
