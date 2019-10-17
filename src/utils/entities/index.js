@@ -42,7 +42,7 @@ export class Spinner extends React.Component {
     if (this.state.showSpinner || !timedOutComment) {
       return null;
     }
-    return <p>{timedOutComment}</p>;
+    return <div>{timedOutComment}</div>;
   }
 
   renderSpinner() {
