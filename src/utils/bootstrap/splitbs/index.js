@@ -50,12 +50,13 @@ class BootstrapSplitPane extends React.Component {
     this.onTouchMove = this.onTouchMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
     this.collapseSidebar = this.collapseSidebar.bind(this);
+    this.handleSidebarCollapse = this.handleSidebarCollapse.bind(this);
 
     // order of setting panel sizes.
     // 1. size
     // 2. getDefaultSize(defaultSize, minsize, maxSize)
 
-    const { size, defaultSize, minSize, maxSize, primary, localStorageKey } = props;
+    const { size, defaultSize, minSize, maxSize, primary, localStorageKey, collapsed } = props;
 
     let defaultColSize = props.defaultColSize || 3;
     if (localStorageKey) {
@@ -71,9 +72,9 @@ class BootstrapSplitPane extends React.Component {
       pane2Size: primary === "second" ? initialSize : undefined,
       splitGridNum: defaultColSize,
       pane1ClassName: `col-sm-${defaultColSize}`,
-      pane2ClassName: `col-sm-${12 - defaultColSize}`,
-      collapsed: true,
-      collapseButtonIndex: 0,
+      pane2ClassName: collapsed ? "container-fluid" : `col-sm-${12 - defaultColSize}`,
+      collapsed: collapsed,
+      collapseButtonIndex: collapsed ? 1 : 0,
       collapseButtonImgList: [jiraExpand, jiraCollapse],
       // these are props that are needed in static functions. ie: gDSFP
       instanceProps: {
@@ -256,12 +257,18 @@ class BootstrapSplitPane extends React.Component {
   }
 
   getPaneClasses(splitGridNum = null) {
+    let pane2ClassName;
     if (splitGridNum == null) {
       splitGridNum = this.state.splitGridNum;
     }
+    if (this.state.collapsed) {
+      pane2ClassName = "container-fluid";
+    } else {
+      pane2ClassName = `col-sm-${12 - splitGridNum}`;
+    }
     return {
       pane1ClassName: `col-sm-${splitGridNum}`,
-      pane2ClassName: `col-sm-${12 - splitGridNum}`
+      pane2ClassName
     };
   }
 
@@ -282,19 +289,23 @@ class BootstrapSplitPane extends React.Component {
   }
 
   collapseSidebar() {
+    let collapseButtonIndex;
     if (this.state.collapseButtonIndex == 0) {
-      this.setState({
-        collapseButtonIndex: 1
-      });
+      collapseButtonIndex = 1;
     } else {
-      this.setState({
-        collapseButtonIndex: 0
-      });
+      collapseButtonIndex = 0;
     }
 
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
+    this.setState(
+      {
+        collapseButtonIndex,
+        collapsed: !this.state.collapsed
+      },
+      () => this.handleSidebarCollapse()
+    );
+  }
+
+  handleSidebarCollapse() {
     if (this.state.collapsed == true) {
       this.setState({
         pane1Size: 0,
