@@ -9,7 +9,7 @@ import InviteForm, { companyInviteFields, projectInviteFields } from "./form";
 import { companyPermissionRender } from "traec/utils/permissions/company";
 import { projectPermissionRender } from "traec/utils/permissions/project";
 import MemberItem from "./item";
-
+import { getProjectProps } from "../../project/utils";
 export class MemberList extends React.Component {
   constructor(props) {
     super(props);
@@ -18,27 +18,31 @@ export class MemberList extends React.Component {
       const companyId = props.companyId;
       this.fetch = new Traec.Fetch("company_invite", "post", { companyId });
       this.requiredFetches = [
-        new Traec.Fetch("company_member", "list"),
-        new Traec.Fetch("tracker_commit_document_object", "list")
+        new Traec.Fetch("company_member", "list")
+        // new Traec.Fetch("tracker_commit_document_object", "list")
       ];
     } else if (props.projectId) {
       const projectId = props.projectId;
       this.fetch = new Traec.Fetch("project_invite", "post", { projectId });
       this.requiredFetches = [
+        new Traec.Fetch("project_member", "list"),
         new Traec.Fetch("project_discipline", "list"),
-        new Traec.Fetch("tracker_commit_document_object", "list"),
-        new Traec.Fetch("project_member", "list")
+        new Traec.Fetch("project_tracker", "list"),
+        new Traec.Fetch("tracker", "read"),
+        new Traec.Fetch("tracker_commit_edge", "read"),
+        new Traec.Fetch("tracker_commit_value", "list"),
+        new Traec.Fetch("tracker_ref_commit", "list"),
+        new Traec.Fetch("tracker_commit_target", "list")
+
+        // new Traec.Fetch("tracker_commit_document_object", "list"),
+
+        // new Traec.Fetch("tracker_commit_tree_document", "list")
+        // new Traec.Fetch("tracker_ref_document", "list"),
+        // new Traec.Fetch("tracker_commit_document", "list"),
+        // new Traec.Fetch("tracker_ref_document", "list"),
       ];
     }
     let { fetchParams, stateParams } = this.fetch.params;
-
-    this.requiredFetches = [
-      new Traec.Fetch("project_discipline", "list"),
-      new Traec.Fetch("tracker_commit_document_object", "list"),
-      new Traec.Fetch("project_member", "list"),
-      new Traec.Fetch("tracker_commit_edge", "read"),
-      new Traec.Fetch("tracker_commit_value", "list")
-    ];
     this.state = {
       formParams: {
         fetchParams,
@@ -69,7 +73,18 @@ export class MemberList extends React.Component {
   /* RENDERING */
 
   render() {
-    let { companyId, projectId, members, dispatch } = this.props;
+    let {
+      companyId,
+      projectId,
+      members,
+      dispatch,
+      disciplineList,
+      trackerId,
+      crefId,
+      commitId,
+      commit,
+      rootTreeId
+    } = this.props;
 
     let itemList = objToList(members)
       .sortBy(i => i.getIn(["user", "first_name"]))
@@ -82,6 +97,12 @@ export class MemberList extends React.Component {
           companyId={companyId}
           projectId={projectId}
           seeAssignments={true}
+          disciplineList={disciplineList}
+          trackerId={trackerId}
+          crefId={crefId}
+          commitId={commitId}
+          commit={commit}
+          treeId={rootTreeId}
         />
       ));
 
@@ -114,13 +135,38 @@ export class MemberList extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   let { companyId, projectId } = ownProps;
+
+  let { tracker, trackerId, cref, crefId } = getProjectProps(state, projectId);
+
+  const commitId = cref ? cref.getInPath("latest_commit.uid") : null;
+  const commit = cref ? cref.get("latest_commit") : null;
+
+  // Get the root tree (used to determine if we should re-fetch)
+  const rootTreeId = commit ? commit.getInPath("tree_root.uid") : null;
+  const rootTree = rootTreeId ? state.getInPath(`entities.trees.byId.${rootTreeId}`) : null;
+
   let project = null;
   let company = null;
   let members = null;
+  let disciplines = null;
+  let disciplineList = null;
 
   if (projectId) {
+    disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
     project = state.getInPath(`entities.projects.byId.${projectId}`);
     members = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
+    disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Traec.Im.Map();
+
+    disciplineList = disciplines.toList().map(disciplineID => {
+      const disciplineUid = disciplineID.getInPath(`uid`);
+      const disciplineBaseUid = disciplineID.getInPath(`base_uid`);
+      const disciplineName = disciplineID.getInPath(`name`);
+      return {
+        disciplineUid,
+        disciplineBaseUid,
+        disciplineName
+      };
+    });
   } else if (companyId) {
     company = state.getInPath(`entities.companies.byId.${companyId}`);
     members = state.getInPath(`entities.companyObjects.byId.${companyId}.members`);
@@ -145,6 +191,14 @@ const mapStateToProps = (state, ownProps) => {
     company,
     project,
     members,
+    rootTree,
+    rootTreeId,
+    trackerId,
+    crefId,
+    commitId,
+    commit,
+
+    disciplineList,
     isAuthenticated: state.getInPath("auth.isAuthorized")
   };
 };

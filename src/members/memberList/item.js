@@ -10,9 +10,15 @@ export default class MemberItem extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      showAssignments: false
+    };
+
+    this.emailRef = React.createRef();
     this.editMember = this.editMember.bind(this);
     this.deleteMember = this.deleteMember.bind(this);
     this.seeAssignments = this.seeAssignments.bind(this);
+    this.toggleAssignments = this.toggleAssignments.bind(this);
   }
 
   stateParams() {
@@ -46,7 +52,30 @@ export default class MemberItem extends React.Component {
       }
     });
   }
-  seeAssignments() {}
+
+  toggleAssignments() {
+    let currentState = this.state.showAssignments;
+    this.setState({ showAssignments: !currentState });
+  }
+
+  seeAssignments() {
+    let { member, disciplineList, trackerId, crefId, commitId, commit, treeId } = this.props;
+    // console.log("member", member)
+    // console.log("disciplineList", disciplineList)
+
+    // Get the selected user to see Assignments
+    let userToDisplay = this.emailRef.current.innerText;
+    console.log("trackerId", trackerId);
+    console.log("crefId", crefId);
+    console.log("commitId", commitId);
+    console.log("treeId", treeId);
+    // Toggle dropdown under username
+    this.toggleAssignments();
+
+    // Get Task and documents of selected user
+
+    // Render in DOM
+  }
 
   dropDownLinks() {
     let { seeAssignments } = this.props;
@@ -92,14 +121,35 @@ export default class MemberItem extends React.Component {
   }
 
   render() {
-    let { projectId, companyId, member: item, index: i } = this.props;
+    let { projectId, companyId, member: item, index: i, task: task } = this.props;
 
-    return (
-      <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
-        <div className="col-sm-4">{this.get_member_name()}</div>
-        <div className="col-sm-4">{item.getIn(["user", "email"])}</div>
-        {projectId ? this.renderProject(projectId, item) : this.renderCompany(companyId, item)}
-      </div>
-    );
+    if (this.state.showAssignments) {
+      return (
+        <div>
+          <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
+            <div className="col-sm-4">{this.get_member_name()}</div>
+            <div className="col-sm-4" ref={this.emailRef}>
+              {item.getIn(["user", "email"])}
+            </div>
+            {projectId ? this.renderProject(projectId, item) : this.renderCompany(companyId, item)}
+          </div>
+
+          <div className="row" style={{ backgroundColor: i % 2 ? "#ddd" : "" }}>
+            <div className="col-sm-4"></div>
+            <div className="col-sm-4">DATA HERE {item.getIn(["user", "email"])}</div>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
+          <div className="col-sm-4">{this.get_member_name()}</div>
+          <div className="col-sm-4" ref={this.emailRef}>
+            {item.getIn(["user", "email"])}
+          </div>
+          {projectId ? this.renderProject(projectId, item) : this.renderCompany(companyId, item)}
+        </div>
+      );
+    }
   }
 }
