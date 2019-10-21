@@ -23,7 +23,7 @@
     "react-style-proptype": "^3.2.2",
     "react-tinymce": "^0.7.0",
     "sweetalert2": "^8.17.1",
-    "traec": "^1.1.68"
+    "traec": "^1.1.81"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
