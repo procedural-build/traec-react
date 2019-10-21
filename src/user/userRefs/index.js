@@ -15,11 +15,8 @@ class UserRefs extends React.Component {
 
   componentWillUpdate() {
     getTrackers(this.props.projectIds);
-    this.getRefs();
-  }
-
-  getRefs() {
-    new Traec.Fetch("tracker_ref_all", "list", { isResponsible: true }).dispatch();
+    getRefs();
+    getCommitEdges(this.props.userRefs);
   }
 
   renderRefs() {
@@ -29,7 +26,7 @@ class UserRefs extends React.Component {
       return <Spinner explanation="Loading Tasks" timedOutComment="No Tasks Found" />;
     }
 
-    return userRefs.map((ref, index) => <UserRefItem key={index} ref={ref} index={index} />);
+    return userRefs.map((cref, index) => <UserRefItem key={index} cref={cref} index={index} />);
   }
   render() {
     return <BSCard id="user-refs" widthOffset="col-sm-12" title="My Tasks" body={this.renderRefs()} />;
@@ -44,15 +41,42 @@ export const getRefsFromState = function(state) {
       let ref = state.getInPath(`entities.refs.byId.${refId[0]}`);
       let trackerId = ref.get("tracker");
       let { project, company } = getCompanyProjectFromTracker(state, trackerId);
+
       return {
-        title: ref.get("name"),
+        title: getCardName(state, ref),
         status: ref.getIn(["latest_commit", "status"]),
         project,
-        company
+        company,
+        trackerId,
+        commitId: ref.getIn(["latest_commit", "uid"])
       };
     });
   }
   return refs;
+};
+
+export const getCardName = function(state, ref) {
+  let treeId = ref.getIn(["latest_commit", "tree_root", "uid"]);
+  let commitId = ref.getIn(["latest_commit", "uid"]);
+
+  try {
+    let descriptionId = state.getInPath(`entities.commitEdges.byId.${commitId}.trees.${treeId}.descriptions`).last();
+    return state.getInPath(`entities.descriptions.byId.${descriptionId}.title`);
+  } catch (e) {
+    return null;
+  }
+};
+
+export const getRefs = function() {
+  new Traec.Fetch("tracker_ref_all", "list", { isResponsible: true }).dispatch();
+};
+
+export const getCommitEdges = function(userRefs) {
+  userRefs.map(ref => {
+    if (ref.trackerId && ref.commitId) {
+      new Traec.Fetch("tracker_commit_edge", "read", { trackerId: ref.trackerId, commitId: ref.commitId }).dispatch();
+    }
+  });
 };
 
 export const mapStateToProps = state => {
