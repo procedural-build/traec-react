@@ -13,16 +13,8 @@ class Index extends React.Component {
   componentDidMount() {}
 
   componentDidUpdate() {
-    this.getTrackers();
+    getTrackers(this.props.projectIds);
     this.getDocuments();
-  }
-
-  getTrackers() {
-    let { projectIds } = this.props;
-
-    if (projectIds) {
-      projectIds.map(projectId => new Traec.Fetch("project_tracker", "list", { projectId }).dispatch());
-    }
   }
 
   getDocuments() {
@@ -96,3 +88,9 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Index);
+
+export const getTrackers = function(projectIds) {
+  if (projectIds) {
+    projectIds.map(projectId => new Traec.Fetch("project_tracker", "list", { projectId }).dispatch());
+  }
+};
