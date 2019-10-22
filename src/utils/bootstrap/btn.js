@@ -21,6 +21,7 @@ export class BSBtn extends React.Component {
         onClick={this.handleClick}
         className={`btn btn-sm ${primaryOff} ${floatStr} ${extra_className}`}
         disabled={this.props.disabled ? true : false}
+        title={this.props.title}
       >
         {this.props.text}
       </button>
