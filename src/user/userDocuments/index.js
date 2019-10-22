@@ -12,7 +12,7 @@ class Index extends React.Component {
 
   componentDidMount() {}
 
-  componentWillUpdate() {
+  componentDidUpdate() {
     this.getTrackers();
     this.getDocuments();
   }

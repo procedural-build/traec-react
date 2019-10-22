@@ -21,7 +21,7 @@ class PasswordResetConfirmPage extends React.Component {
     this.renderItem = renderItem.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let { uid, token } = this.props.match.params;
     this.setState({ uid, token });
   }

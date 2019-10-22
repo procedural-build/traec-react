@@ -35,7 +35,7 @@ export class LoginForm extends React.Component {
     this.props.postLogin(post);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // verifyToken checks if there is an existing token in localStorage and verifies it
     if (!this.props.isAuthenticated) {
       // Or use this dispatch if using mapDispatchToProps below
