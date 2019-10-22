@@ -59,7 +59,7 @@ class BootstrapSplitPane extends React.Component {
     const { size, defaultSize, minSize, maxSize, primary, localStorageKey, collapsed } = props;
 
     let defaultColSize = props.defaultColSize || 3;
-    if (localStorageKey) {
+    if (localStorageKey && !collapsed) {
       defaultColSize = localStorage.getItem(localStorageKey) || defaultColSize;
     }
 
