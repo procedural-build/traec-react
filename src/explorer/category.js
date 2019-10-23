@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
-import TreeRow from "AppSrc/tracker/tree";
+import TreeRow from "./treerow";
 
 class CategoryRow extends React.Component {
   constructor(props) {
