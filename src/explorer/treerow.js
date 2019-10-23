@@ -11,7 +11,7 @@ import { confirmDelete } from "traec-react/utils/sweetalert";
 import DocumentRow from "./docrow";
 import CategoryRow from "./category";
 import Octicon from "react-octicon";
-import { titleDescriptionFields } from "./form";
+import { nameFormFields, titleDescriptionFields } from "./form";
 
 /*
 Functional components
@@ -131,15 +131,22 @@ class TreeRow extends React.Component {
     });
     fetch.updateFetchParams({
       preFetchHook: body => {
-        return {
-          name: Crypto.createHash("sha1")
+        let name =
+          body.name ||
+          Crypto.createHash("sha1")
             .update(body.title)
-            .digest("hex"),
-          description: {
-            title: body.title,
-            text: body.description
-          }
-        };
+            .digest("hex");
+        let newBody = { name };
+        if (body.title) {
+          newBody = {
+            ...newBody,
+            description: {
+              title: body.title,
+              text: body.description
+            }
+          };
+        }
+        return newBody;
       }
     });
     this.setState({ nameFormParams: fetch.params });
@@ -193,15 +200,22 @@ class TreeRow extends React.Component {
     });
     fetch.updateFetchParams({
       preFetchHook: body => {
-        return {
-          name: Crypto.createHash("sha1")
+        let name =
+          body.name ||
+          Crypto.createHash("sha1")
             .update(body.title)
-            .digest("hex"),
-          description: {
-            title: body.title,
-            text: body.description
-          }
-        };
+            .digest("hex");
+        let newBody = { name };
+        if (body.title) {
+          newBody = {
+            ...newBody,
+            description: {
+              title: body.title,
+              text: body.description
+            }
+          };
+        }
+        return newBody;
       }
     });
     this.setState({ nameFormParams: fetch.params });
@@ -281,10 +295,16 @@ class TreeRow extends React.Component {
   }
 
   get_tree_name(tree) {
+    // Render a name if passed in through props
+    if (this.props.renderName) {
+      return this.props.renderName;
+    }
+    // Try to get the title from the descriptions
     let descriptions = tree.get("descriptions");
     if (descriptions.size) {
       return descriptions.first().get("title");
     }
+    // Otherwise just return the tree name
     return tree.get("name");
   }
 
@@ -300,10 +320,7 @@ class TreeRow extends React.Component {
   }
 
   render_row() {
-    let { isRoot, tree, renderRow = true } = this.props;
-    if (!renderRow) {
-      return null;
-    }
+    let { isRoot, tree } = this.props;
     const name = this.get_tree_name(tree);
     const bgColor = this.get_bgColor();
     return (
@@ -318,7 +335,7 @@ class TreeRow extends React.Component {
               <b>{name}</b>
             ) : (
               <React.Fragment>
-                <Octicon name="primitive-dot" />
+                {/*<Octicon name="primitive-dot" />*/}
                 {name}
               </React.Fragment>
             )}
@@ -336,7 +353,7 @@ class TreeRow extends React.Component {
   }
 
   render() {
-    let { tree, tracker, isRoot, extraRowClass } = this.props;
+    let { tree, tracker, isRoot, extraRowClass, addWithDescriptions } = this.props;
 
     //console.log("Rendering tree", this.props.treeId)
     if (!tree) {
@@ -354,9 +371,8 @@ class TreeRow extends React.Component {
         {this.render_row()}
         {/* Render the form for simple name input */}
         <BaseFormConnected
-          stateParams={this.state.nameFormParams.stateParams}
-          fetchParams={this.state.nameFormParams.fetchParams}
-          fields={titleDescriptionFields}
+          params={this.state.nameFormParams}
+          fields={addWithDescriptions ? titleDescriptionFields : nameFormFields}
         />
         {/* Render the sub-elements */}
         <SubTreeList {...this.props} />

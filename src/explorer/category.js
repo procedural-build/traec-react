@@ -101,9 +101,12 @@ class CategoryRow extends React.Component {
       parentCommitId,
       headCommitId,
       extraRowClass,
-      renderRow = true,
+      renderRootTree = true,
+      rootTreeName = null,
+      addWithDescriptions,
       isRoot = false
     } = this.props;
+
     if (!cref) {
       return null;
     }
@@ -115,7 +118,6 @@ class CategoryRow extends React.Component {
     return (
       <TreeRow
         isRoot={true}
-        renderRow={renderRow}
         extraRowClass={extraRowClass}
         treeId={rootTreeId}
         cref={cref}
@@ -123,6 +125,10 @@ class CategoryRow extends React.Component {
         headCommitId={headCommitId}
         extraContent={null}
         extraDropDowns={this.dropDownLinks()}
+        //
+        renderRootTree={renderRootTree}
+        renderName={rootTreeName}
+        addWithDescriptions={addWithDescriptions}
         // Using a generic single-input field "nameForm"
         nameFormParams={this.state.nameFormParams}
       />

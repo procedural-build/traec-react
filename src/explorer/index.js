@@ -1,11 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
-import { BSBtnDropdown } from "../utils/bootstrap";
-import BaseFormConnected from "../utils/form";
 import CategoryRow from "./category";
-import { nameFormFields } from "./form";
-import Octicon from "react-octicon";
 
 class TrackerTree extends React.Component {
   constructor(props) {
@@ -49,28 +45,24 @@ class TrackerTree extends React.Component {
 
   render() {
     const { tracker, trackerId, refId, commitId } = this.props;
+
     if (!tracker) {
       return null;
     }
 
     return (
       <React.Fragment>
-        <h6>
-          {tracker.get("name")}
-          <BSBtnDropdown id={"addCategoryBtn"} header={<Octicon name="gear" />} links={this.dropDownLinks()} />
-        </h6>
-        <div style={{ clear: "both" }} />
-        <BaseFormConnected params={this.state.formParams.params} fields={nameFormFields} />
-        <hr />
         <CategoryRow
           isRoot={true}
-          renderRow={false}
           extraRowClass={"ml-0"}
           tracker={tracker}
           trackerId={trackerId}
           commitId={commitId}
           branchId={null}
           refId={refId}
+          renderRootTree={true}
+          rootTreeName={tracker.get("name")}
+          addWithDescriptions={false}
         />
       </React.Fragment>
     );

@@ -1,5 +1,5 @@
 export const nameFormFields = {
-  name: { value: "", class: "col", endRow: true }
+  name: { label: "", value: "", class: "col", endRow: true }
 };
 
 export const titleDescriptionFields = {
