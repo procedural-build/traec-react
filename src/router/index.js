@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import LoginRedirect from "traec-react/router/login-redirect";
 import AccountsRouter from "../auth/router";
-import UserProfile from "../user/userParticipation";
+import UserProfile from "../user/userProfile";
 import NavBar from "../navBar";
 
 export default class AppRouter extends React.Component {

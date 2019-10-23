@@ -9,7 +9,6 @@ import Traec from "traec";
 import BaseFormConnected from "traec-react/utils/form";
 import { TrackerItem } from "./trackerItem";
 import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
-import { objToList } from "traec/utils";
 
 export const counter = { row: 0 };
 
@@ -19,13 +18,8 @@ class TraecUserTrackers extends React.Component {
 
     const projectId = props.projectId;
     this.fetch = new Traec.Fetch("tracker", "post", { projectId });
-    let { fetchParams, stateParams } = fetch;
     this.state = {
-      formParams: {
-        fetchParams,
-        stateParams,
-        initFields: {}
-      }
+      formParams: this.fetch.params
     };
 
     this.requiredFetches = [new Traec.Fetch("project_tracker", "list")];
@@ -52,27 +46,26 @@ class TraecUserTrackers extends React.Component {
     return this.props.addButtonText ? this.props.addButtonText : "Add a Tracker";
   }
 
+  render_tracker_list() {
+    let { trackers } = this.props;
+    if (!trackers || trackers.size == 0) {
+      return <p className="text-center">No trackers. Add a Tracker to get started</p>;
+    }
+    return trackers
+      .toList()
+      .sortBy((obj, i) => obj.get("created"))
+      .map((tracker, i) => <TrackerItem key={i} index={i} tracker={tracker} />);
+  }
+
   render() {
-    let itemsAsArray = objToList(this.props.items).sortBy((obj, i) => obj.get("created"));
-
-    const itemList = itemsAsArray.map((tracker, i) => <TrackerItem key={i} index={i} tracker={tracker} />);
-
     return (
-      <div className="row">
-        <BSCard
-          widthOffset="col-sm-12"
-          title={this.title()}
-          button={<BSBtn onClick={this.onClick} text={this.addButtonText()} />}
-          body={itemList}
-          form={
-            <BaseFormConnected
-              stateParams={this.state.formParams.stateParams}
-              fetchParams={this.state.formParams.fetchParams}
-              fields={trackerFields}
-            />
-          }
-        />
-      </div>
+      <BSCard
+        widthOffset="col-sm-12"
+        title={this.title()}
+        button={<BSBtn onClick={this.onClick} text={this.addButtonText()} />}
+        body={this.render_tracker_list()}
+        form={<BaseFormConnected params={this.state.formParams} fields={trackerFields} />}
+      />
     );
   }
 }
@@ -84,26 +77,19 @@ const trackerFields = {
 const mapStateToProps = (state, ownProps) => {
   let { projectId } = ownProps;
   let project = state.getInPath(`entities.projects.byId.${projectId}`);
-
   let trackers = state.getInPath(`entities.trackers.byId`);
-
   if (trackers) {
     trackers = trackers.toList().filter(i => i.getInPath("project.uid") === projectId);
   }
 
   return {
     project,
-    items: trackers,
-    newItem: state.getInPath(`entities.trackers.newItem`) || [],
+    trackers,
     isAuthenticated: state.getInPath("auth.isAuthorized")
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   mapStateToProps,

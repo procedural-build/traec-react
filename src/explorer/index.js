@@ -17,7 +17,17 @@ class TrackerTree extends React.Component {
       }
     };
 
+    this.requiredFetches = [new Traec.Fetch("tracker", "read")];
+
     this.addRootCategory = this.addRootCategory.bind(this);
+  }
+
+  componentDidMount() {
+    Traec.fetchRequired.bind(this)();
+  }
+
+  componentDidUpdate() {
+    Traec.fetchRequired.bind(this)();
   }
 
   dropDownLinks() {
