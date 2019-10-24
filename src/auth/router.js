@@ -11,6 +11,7 @@ import PasswordResetConfirmPage from "./password/confirm";
 class AccountsRouter extends React.Component {
   render() {
     const baseUrl = this.props.match.url;
+    let { UserProfile } = this.props;
     return (
       <React.Fragment>
         <Switch>
@@ -20,7 +21,7 @@ class AccountsRouter extends React.Component {
 
           {/* Login and profile pages */}
           <Route exact path={`${baseUrl}/login`} component={LoginPage} />
-          <Route exact path={`${baseUrl}/profile`} component={this.props.UserProfile} />
+          <Route exact path={`${baseUrl}/profile`} component={UserProfile} />
 
           {/* Password reset pages */}
           <Route exact path={`${baseUrl}/password/reset`} component={PasswordResetPage} />

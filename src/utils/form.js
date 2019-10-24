@@ -18,6 +18,12 @@ class BaseForm extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentDidUpdate(prevPros) {
+    if (!prevPros.showForm && this.props.showForm) {
+      this.setState({ formFields: this.initialiseFormFields(this.props.fields, this.props.initFields) });
+    }
+  }
+
   initialiseFormFields(fields, initFields) {
     // If there are no initialFields then just return projectFields
     if (!initFields) {
@@ -59,7 +65,7 @@ class BaseForm extends React.Component {
         return a;
       }, {});
       let errorMsgs = Im.List(errors.keys())
-        .filter(key => !fields[key] && key != "non_field_errors")
+        .filter(key => !fields[key] && key !== "non_field_errors")
         .map(key => `${key}: ${errors.get(key).toJS()}`);
       // Get existing non-field errors
       let non_field_errors = (errors.get("non_field_errors") || Im.List()).concat(errorMsgs);
@@ -139,7 +145,7 @@ class BaseForm extends React.Component {
 
     return (
       <div className="col-sm-12 ">
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={e => this.onSubmit(e)}>
           <BSForm items={formFields} formErrors={this.state.formErrors} onChange={this.onChange} />
           {this.render_close()}
           <button type="submit" className="btn btn-sm btn-primary float-right">

@@ -50,15 +50,16 @@ class BootstrapSplitPane extends React.Component {
     this.onTouchMove = this.onTouchMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
     this.collapseSidebar = this.collapseSidebar.bind(this);
+    this.handleSidebarCollapse = this.handleSidebarCollapse.bind(this);
 
     // order of setting panel sizes.
     // 1. size
     // 2. getDefaultSize(defaultSize, minsize, maxSize)
 
-    const { size, defaultSize, minSize, maxSize, primary, localStorageKey } = props;
+    const { size, defaultSize, minSize, maxSize, primary, localStorageKey, collapsed } = props;
 
     let defaultColSize = props.defaultColSize || 3;
-    if (localStorageKey) {
+    if (localStorageKey && !collapsed) {
       defaultColSize = localStorage.getItem(localStorageKey) || defaultColSize;
     }
 
@@ -71,9 +72,9 @@ class BootstrapSplitPane extends React.Component {
       pane2Size: primary === "second" ? initialSize : undefined,
       splitGridNum: defaultColSize,
       pane1ClassName: `col-sm-${defaultColSize}`,
-      pane2ClassName: `col-sm-${12 - defaultColSize}`,
-      collapsed: true,
-      collapseButtonIndex: 0,
+      pane2ClassName: collapsed ? "container-fluid" : `col-sm-${12 - defaultColSize}`,
+      collapsed: collapsed,
+      collapseButtonIndex: collapsed ? 1 : 0,
       collapseButtonImgList: [jiraExpand, jiraCollapse],
       // these are props that are needed in static functions. ie: gDSFP
       instanceProps: {
@@ -95,6 +96,10 @@ class BootstrapSplitPane extends React.Component {
     document.removeEventListener("touchmove", this.onTouchMove);
   }
 
+  /*
+   * Mouse related events
+   */
+
   onMouseDown(event) {
     const eventWithTouches = Object.assign({}, event, {
       touches: [{ clientX: event.clientX, clientY: event.clientY }]
@@ -102,9 +107,45 @@ class BootstrapSplitPane extends React.Component {
     this.onTouchStart(eventWithTouches);
   }
 
+  onMouseMove(event) {
+    if (!this.state.collapsed) {
+      // Dont allow resize if collapsed
+      const eventWithTouches = Object.assign({}, event, {
+        touches: [{ clientX: event.clientX, clientY: event.clientY }]
+      });
+      this.onTouchMove(eventWithTouches);
+    }
+  }
+
+  onMouseUp() {
+    const { allowResize, onDragFinished } = this.props;
+    const { active, draggedSize } = this.state;
+    if (allowResize && active && !this.state.collapsed) {
+      if (typeof onDragFinished === "function") {
+        onDragFinished(draggedSize);
+      }
+      // Round size down to 12ths
+      let totalWidth = this.pane1.clientWidth + this.pane2.clientWidth;
+      let gridNum = Math.min(Math.max(Math.round((12 * this.pane1.clientWidth) / totalWidth), 1), 11);
+      let snappedSize = (gridNum / 12) * totalWidth;
+      const isPrimaryFirst = this.props.primary === "first";
+
+      this.setState({
+        active: false,
+        draggedSize: snappedSize,
+        [isPrimaryFirst ? "pane1Size" : "pane2Size"]: snappedSize,
+        ...this.getPaneClasses()
+      });
+    }
+  }
+
+  /*
+   * Touch events
+   */
+
   onTouchStart(event) {
     const { allowResize, onDragStarted, split } = this.props;
-    if (allowResize && this.state.collapsed) {
+    if (allowResize && !this.state.collapsed) {
       unFocus(document, window);
       const position = split === "vertical" ? event.touches[0].clientX : event.touches[0].clientY;
 
@@ -121,20 +162,11 @@ class BootstrapSplitPane extends React.Component {
     }
   }
 
-  onMouseMove(event) {
-    if (this.state.collapsed == true) {
-      // Dont allow resize if collapsed
-      const eventWithTouches = Object.assign({}, event, {
-        touches: [{ clientX: event.clientX, clientY: event.clientY }]
-      });
-      this.onTouchMove(eventWithTouches);
-    }
-  }
   onTouchMove(event) {
     const { allowResize, maxSize, minSize, onChange, localStorageKey, split, step } = this.props;
     const { active, position } = this.state;
 
-    if (allowResize && active && this.state.collapsed) {
+    if (allowResize && active && !this.state.collapsed) {
       unFocus(document, window);
       const isPrimaryFirst = this.props.primary === "first";
       const ref = isPrimaryFirst ? this.pane1 : this.pane2;
@@ -207,28 +239,6 @@ class BootstrapSplitPane extends React.Component {
     }
   }
 
-  onMouseUp() {
-    const { allowResize, onDragFinished } = this.props;
-    const { active, draggedSize } = this.state;
-    if (allowResize && active && this.state.collapsed) {
-      if (typeof onDragFinished === "function") {
-        onDragFinished(draggedSize);
-      }
-      // Round size down to 12ths
-      let totalWidth = this.pane1.clientWidth + this.pane2.clientWidth;
-      let gridNum = Math.min(Math.max(Math.round((12 * this.pane1.clientWidth) / totalWidth), 1), 11);
-      let snappedSize = (gridNum / 12) * totalWidth;
-      const isPrimaryFirst = this.props.primary === "first";
-
-      this.setState({
-        active: false,
-        draggedSize: snappedSize,
-        [isPrimaryFirst ? "pane1Size" : "pane2Size"]: snappedSize,
-        ...this.getPaneClasses()
-      });
-    }
-  }
-
   // we have to check values since gDSFP is called on every render and more in StrictMode
   static getSizeUpdate(props, state) {
     const newState = {};
@@ -256,12 +266,18 @@ class BootstrapSplitPane extends React.Component {
   }
 
   getPaneClasses(splitGridNum = null) {
+    let pane2ClassName;
     if (splitGridNum == null) {
       splitGridNum = this.state.splitGridNum;
     }
+    if (this.state.collapsed) {
+      pane2ClassName = "container-fluid";
+    } else {
+      pane2ClassName = `col-sm-${12 - splitGridNum}`;
+    }
     return {
       pane1ClassName: `col-sm-${splitGridNum}`,
-      pane2ClassName: `col-sm-${12 - splitGridNum}`
+      pane2ClassName
     };
   }
 
@@ -282,19 +298,23 @@ class BootstrapSplitPane extends React.Component {
   }
 
   collapseSidebar() {
+    let collapseButtonIndex;
     if (this.state.collapseButtonIndex == 0) {
-      this.setState({
-        collapseButtonIndex: 1
-      });
+      collapseButtonIndex = 1;
     } else {
-      this.setState({
-        collapseButtonIndex: 0
-      });
+      collapseButtonIndex = 0;
     }
 
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
+    this.setState(
+      {
+        collapseButtonIndex,
+        collapsed: !this.state.collapsed
+      },
+      () => this.handleSidebarCollapse()
+    );
+  }
+
+  handleSidebarCollapse() {
     if (this.state.collapsed == true) {
       this.setState({
         pane1Size: 0,

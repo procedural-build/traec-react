@@ -34,7 +34,7 @@ export class SideBar extends React.Component {
       return (
         <li className="nav-item" key={keyIndex}>
           <Link className="nav-link" to={to}>
-            {renderIcon(item)} {item.get("label")}
+            {renderIcon(item)} {this.props.isExpanded ? item.get("label") : ""}
           </Link>
         </li>
       );
