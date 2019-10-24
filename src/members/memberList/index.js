@@ -23,24 +23,21 @@ export class MemberList extends React.Component {
       ];
     } else if (props.projectId) {
       const projectId = props.projectId;
+      // const trackerId = props.trackerId
       this.fetch = new Traec.Fetch("project_invite", "post", { projectId });
       this.requiredFetches = [
         new Traec.Fetch("project_member", "list"),
         new Traec.Fetch("project_discipline", "list"),
         new Traec.Fetch("project_tracker", "list"),
-        new Traec.Fetch("tracker", "read"),
-        new Traec.Fetch("tracker_commit_edge", "read"),
-        new Traec.Fetch("tracker_commit_value", "list"),
-        new Traec.Fetch("tracker_ref_commit", "list"),
-        new Traec.Fetch("tracker_commit_target", "list")
-
-        // new Traec.Fetch("tracker_commit_document_object", "list"),
-
-        // new Traec.Fetch("tracker_commit_tree_document", "list")
-        // new Traec.Fetch("tracker_ref_document", "list"),
-        // new Traec.Fetch("tracker_commit_document", "list"),
-        // new Traec.Fetch("tracker_ref_document", "list"),
+        new Traec.Fetch("tracker_commit_target", "list"),
+        // new Traec.Fetch("tracker_documents", "list", {trackerId})
+        new Traec.Fetch("tracker_documents", "list")
       ];
+
+      // new Traec.Fetch("tracker", "read"),
+      // new Traec.Fetch("tracker_commit_edge", "read"),
+      // new Traec.Fetch("tracker_commit_value", "list"),
+      // new Traec.Fetch("tracker_ref_commit", "list"),
     }
     let { fetchParams, stateParams } = this.fetch.params;
     this.state = {
@@ -83,7 +80,9 @@ export class MemberList extends React.Component {
       crefId,
       commitId,
       commit,
-      rootTreeId
+      rootTreeId,
+      docDescriptions,
+      descriptionTitleList
     } = this.props;
 
     let itemList = objToList(members)
@@ -103,6 +102,8 @@ export class MemberList extends React.Component {
           commitId={commitId}
           commit={commit}
           treeId={rootTreeId}
+          docDescriptions={docDescriptions}
+          descriptionTitleList={descriptionTitleList}
         />
       ));
 
@@ -150,6 +151,10 @@ const mapStateToProps = (state, ownProps) => {
   let members = null;
   let disciplines = null;
   let disciplineList = null;
+  let users = null;
+  let docDescriptions = null;
+  let descriptionTitles = null;
+  let descriptionTitleList = null;
 
   if (projectId) {
     disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
@@ -167,25 +172,29 @@ const mapStateToProps = (state, ownProps) => {
         disciplineName
       };
     });
+
+    users = state.getInPath(`entities.user.documents.byId`) || Traec.Im.Map();
+    docDescriptions = users.toList().map(desc => {
+      const descId = desc.getInPath(`description`);
+      const descStatus = desc.getInPath(`status`);
+      return {
+        descId,
+        descStatus
+      };
+    });
+    descriptionTitles = state.getInPath(`entities.descriptions.byId`) || Traec.Im.Map();
+    descriptionTitleList = descriptionTitles.toList().map(title => {
+      const uid = title.getInPath(`uid`);
+      const titleText = title.getInPath(`title`);
+      return {
+        uid,
+        titleText
+      };
+    });
   } else if (companyId) {
     company = state.getInPath(`entities.companies.byId.${companyId}`);
     members = state.getInPath(`entities.companyObjects.byId.${companyId}.members`);
   }
-
-  //Get documents that are assigned to a user/contain a discipline ID
-  // const basePath = `entities.commitEdges.byId.${commitId}.documents.${docId}`;
-  // let docStatusId = state.getInPath(`${basePath}.status`);
-  // const docStatus = state.getInPath(`entities.docStatuses.byId.${docStatusId}`);
-
-  // Check that the document uid matches with the discipline uid and then get the name of that discipline to display on the document.
-  // let assignee = documentAssigneeList.toList().map(item => {
-  //   if (item.getInPath(`base_uid`) === docDisciplineId) {
-  //     const itemName = item.getInPath(`name`);
-  //     return itemName;
-  //   } else {
-  //     return;
-  //   }
-  // });
 
   return {
     company,
@@ -197,7 +206,8 @@ const mapStateToProps = (state, ownProps) => {
     crefId,
     commitId,
     commit,
-
+    docDescriptions,
+    descriptionTitleList,
     disciplineList,
     isAuthenticated: state.getInPath("auth.isAuthorized")
   };

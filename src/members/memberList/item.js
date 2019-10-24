@@ -17,8 +17,8 @@ export default class MemberItem extends React.Component {
     this.emailRef = React.createRef();
     this.editMember = this.editMember.bind(this);
     this.deleteMember = this.deleteMember.bind(this);
-    this.seeAssignments = this.seeAssignments.bind(this);
     this.toggleAssignments = this.toggleAssignments.bind(this);
+    this.renderAssignments = this.renderAssignments.bind(this);
   }
 
   stateParams() {
@@ -58,25 +58,6 @@ export default class MemberItem extends React.Component {
     this.setState({ showAssignments: !currentState });
   }
 
-  seeAssignments() {
-    let { member, disciplineList, trackerId, crefId, commitId, commit, treeId } = this.props;
-    // console.log("member", member)
-    // console.log("disciplineList", disciplineList)
-
-    // Get the selected user to see Assignments
-    let userToDisplay = this.emailRef.current.innerText;
-    console.log("trackerId", trackerId);
-    console.log("crefId", crefId);
-    console.log("commitId", commitId);
-    console.log("treeId", treeId);
-    // Toggle dropdown under username
-    this.toggleAssignments();
-
-    // Get Task and documents of selected user
-
-    // Render in DOM
-  }
-
   dropDownLinks() {
     let { seeAssignments } = this.props;
     if (!seeAssignments) {
@@ -88,7 +69,7 @@ export default class MemberItem extends React.Component {
       return [
         //{ name: "Edit", onClick: this.editMember },
         { name: "Delete", onClick: this.deleteMember },
-        { name: "See assignments", onClick: this.seeAssignments }
+        { name: "See assignments", onClick: this.toggleAssignments }
       ];
     }
   }
@@ -120,8 +101,48 @@ export default class MemberItem extends React.Component {
     );
   }
 
+  renderAssignments(descriptionTitleList, docDescriptions) {
+    let descriptionToDisplay = [];
+    // This list will hold the UID's of the descriptions to display for the selected user, based on the documents they are assigned to.
+    // The descriptions object in redux checks against this list to ensure only the selected user's documents are displayed
+
+    let cleanedList = [];
+    // This list will hold all of the descriptions that have the same UID as the selected user.
+    // This prevents an error in which switching from the tasks panel to the members panel does not update redux correctly,
+    // causing every document in the project to appear under the user.
+
+    docDescriptions.toJS().map(document => {
+      descriptionToDisplay.push(document["descId"]);
+    });
+
+    descriptionTitleList.toJS().map((description, key) => {
+      if (descriptionToDisplay.includes(description["uid"])) {
+        cleanedList.push(
+          <div className="row" key={key} style={{ paddingLeft: "1em" }}>
+            {description["titleText"]}
+          </div>
+        );
+      }
+    });
+
+    return (
+      <div className="col-sm-4">
+        <div className="row">Documents:</div>
+        {cleanedList}
+      </div>
+    );
+  }
+
   render() {
-    let { projectId, companyId, member: item, index: i, task: task } = this.props;
+    let {
+      projectId,
+      companyId,
+      member: item,
+      index: i,
+      task: task,
+      docDescriptions,
+      descriptionTitleList
+    } = this.props;
 
     if (this.state.showAssignments) {
       return (
@@ -136,7 +157,7 @@ export default class MemberItem extends React.Component {
 
           <div className="row" style={{ backgroundColor: i % 2 ? "#ddd" : "" }}>
             <div className="col-sm-4"></div>
-            <div className="col-sm-4">DATA HERE {item.getIn(["user", "email"])}</div>
+            <div className="col-sm-4">{this.renderAssignments(descriptionTitleList, docDescriptions)}</div>
           </div>
         </div>
       );
