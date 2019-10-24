@@ -28,7 +28,7 @@ class ProjectInvites extends React.Component {
     this.requiredFetches = [new Traec.Fetch("project_invite_all", "list")];
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Traec.fetchRequired.bind(this)();
   }
 

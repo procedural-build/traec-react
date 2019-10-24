@@ -9,7 +9,7 @@ import { putActivation } from "../_redux/actionCreators";
 import LoginForm from "../form";
 
 class ActivationPage extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     let data = {
       activation_key: this.props.match.params.activationKey
     };
