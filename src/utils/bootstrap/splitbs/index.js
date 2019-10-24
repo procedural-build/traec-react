@@ -96,6 +96,10 @@ class BootstrapSplitPane extends React.Component {
     document.removeEventListener("touchmove", this.onTouchMove);
   }
 
+  /*
+   * Mouse related events
+   */
+
   onMouseDown(event) {
     const eventWithTouches = Object.assign({}, event, {
       touches: [{ clientX: event.clientX, clientY: event.clientY }]
@@ -103,9 +107,45 @@ class BootstrapSplitPane extends React.Component {
     this.onTouchStart(eventWithTouches);
   }
 
+  onMouseMove(event) {
+    if (!this.state.collapsed) {
+      // Dont allow resize if collapsed
+      const eventWithTouches = Object.assign({}, event, {
+        touches: [{ clientX: event.clientX, clientY: event.clientY }]
+      });
+      this.onTouchMove(eventWithTouches);
+    }
+  }
+
+  onMouseUp() {
+    const { allowResize, onDragFinished } = this.props;
+    const { active, draggedSize } = this.state;
+    if (allowResize && active && !this.state.collapsed) {
+      if (typeof onDragFinished === "function") {
+        onDragFinished(draggedSize);
+      }
+      // Round size down to 12ths
+      let totalWidth = this.pane1.clientWidth + this.pane2.clientWidth;
+      let gridNum = Math.min(Math.max(Math.round((12 * this.pane1.clientWidth) / totalWidth), 1), 11);
+      let snappedSize = (gridNum / 12) * totalWidth;
+      const isPrimaryFirst = this.props.primary === "first";
+
+      this.setState({
+        active: false,
+        draggedSize: snappedSize,
+        [isPrimaryFirst ? "pane1Size" : "pane2Size"]: snappedSize,
+        ...this.getPaneClasses()
+      });
+    }
+  }
+
+  /*
+   * Touch events
+   */
+
   onTouchStart(event) {
     const { allowResize, onDragStarted, split } = this.props;
-    if (allowResize && this.state.collapsed) {
+    if (allowResize && !this.state.collapsed) {
       unFocus(document, window);
       const position = split === "vertical" ? event.touches[0].clientX : event.touches[0].clientY;
 
@@ -122,20 +162,11 @@ class BootstrapSplitPane extends React.Component {
     }
   }
 
-  onMouseMove(event) {
-    if (this.state.collapsed == true) {
-      // Dont allow resize if collapsed
-      const eventWithTouches = Object.assign({}, event, {
-        touches: [{ clientX: event.clientX, clientY: event.clientY }]
-      });
-      this.onTouchMove(eventWithTouches);
-    }
-  }
   onTouchMove(event) {
     const { allowResize, maxSize, minSize, onChange, localStorageKey, split, step } = this.props;
     const { active, position } = this.state;
 
-    if (allowResize && active && this.state.collapsed) {
+    if (allowResize && active && !this.state.collapsed) {
       unFocus(document, window);
       const isPrimaryFirst = this.props.primary === "first";
       const ref = isPrimaryFirst ? this.pane1 : this.pane2;
@@ -205,28 +236,6 @@ class BootstrapSplitPane extends React.Component {
           });
         }
       }
-    }
-  }
-
-  onMouseUp() {
-    const { allowResize, onDragFinished } = this.props;
-    const { active, draggedSize } = this.state;
-    if (allowResize && active && this.state.collapsed) {
-      if (typeof onDragFinished === "function") {
-        onDragFinished(draggedSize);
-      }
-      // Round size down to 12ths
-      let totalWidth = this.pane1.clientWidth + this.pane2.clientWidth;
-      let gridNum = Math.min(Math.max(Math.round((12 * this.pane1.clientWidth) / totalWidth), 1), 11);
-      let snappedSize = (gridNum / 12) * totalWidth;
-      const isPrimaryFirst = this.props.primary === "first";
-
-      this.setState({
-        active: false,
-        draggedSize: snappedSize,
-        [isPrimaryFirst ? "pane1Size" : "pane2Size"]: snappedSize,
-        ...this.getPaneClasses()
-      });
     }
   }
 

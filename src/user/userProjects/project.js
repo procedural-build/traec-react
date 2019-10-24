@@ -42,7 +42,7 @@ class UserProjects extends React.Component {
     ];
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Traec.fetchRequired.bind(this)();
   }
 
