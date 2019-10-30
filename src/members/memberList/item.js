@@ -18,7 +18,7 @@ export default class MemberItem extends React.Component {
     this.editMember = this.editMember.bind(this);
     this.deleteMember = this.deleteMember.bind(this);
     this.toggleAssignments = this.toggleAssignments.bind(this);
-    this.renderAssignments = this.renderAssignments.bind(this);
+    this.renderDocuments = this.renderDocuments.bind(this);
   }
 
   stateParams() {
@@ -101,7 +101,7 @@ export default class MemberItem extends React.Component {
     );
   }
 
-  renderAssignments(descriptionTitleList, docDescriptions) {
+  renderDocuments(descriptionTitleList, docDescriptions, docStatusList, item) {
     let descriptionToDisplay = [];
     // This list will hold the UID's of the descriptions to display for the selected user, based on the documents they are assigned to.
     // The descriptions object in redux checks against this list to ensure only the selected user's documents are displayed
@@ -110,27 +110,44 @@ export default class MemberItem extends React.Component {
     // This list will hold all of the descriptions that have the same UID as the selected user.
     // This prevents an error in which switching from the tasks panel to the members panel does not update redux correctly,
     // causing every document in the project to appear under the user.
+    // console.log(docStatusList.toJS())
 
-    docDescriptions.toJS().map(document => {
-      descriptionToDisplay.push(document["descId"]);
-    });
+    let toDisplayDocuments = false;
 
-    descriptionTitleList.toJS().map((description, key) => {
-      if (descriptionToDisplay.includes(description["uid"])) {
-        cleanedList.push(
-          <div className="row" key={key} style={{ paddingLeft: "1em" }}>
-            {description["titleText"]}
-          </div>
-        );
+    docStatusList.toJS().map(status => {
+      let docID = status["docDisciplineId"];
+
+      let toggledDiscId = item.getIn(["project_discipline", "base_uid"]);
+      if (toggledDiscId == docID) {
+        docDescriptions.toJS().map(document => {
+          descriptionToDisplay.push(document["descId"]);
+        });
+
+        descriptionTitleList.toJS().map((description, key) => {
+          if (descriptionToDisplay.includes(description["uid"])) {
+            cleanedList.push(
+              <div className="row" key={key} style={{ paddingLeft: "1em" }}>
+                {description["titleText"]}
+              </div>
+            );
+            toDisplayDocuments = true;
+          }
+        });
+      } else {
+        return;
       }
     });
-
-    return (
-      <div className="col-sm-4">
-        <div className="row">Documents:</div>
-        {cleanedList}
-      </div>
-    );
+    if (toDisplayDocuments) {
+      return (
+        <div className="col-sm-4">
+          <div className="row">Documents:</div>
+          {cleanedList}
+        </div>
+        //TODO: Duplicate this method for tasks
+      );
+    } else {
+      return <div style={{ paddingBottom: "2em" }}>No Documents</div>;
+    }
   }
 
   render() {
@@ -141,7 +158,8 @@ export default class MemberItem extends React.Component {
       index: i,
       task: task,
       docDescriptions,
-      descriptionTitleList
+      descriptionTitleList,
+      docStatusList
     } = this.props;
 
     if (this.state.showAssignments) {
@@ -157,7 +175,9 @@ export default class MemberItem extends React.Component {
 
           <div className="row" style={{ backgroundColor: i % 2 ? "#ddd" : "" }}>
             <div className="col-sm-4"></div>
-            <div className="col-sm-4">{this.renderAssignments(descriptionTitleList, docDescriptions)}</div>
+            <div className="col-sm-4">
+              {this.renderDocuments(descriptionTitleList, docDescriptions, docStatusList, item)}
+            </div>
           </div>
         </div>
       );

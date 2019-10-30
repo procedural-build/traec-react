@@ -23,8 +23,14 @@ export class ProjectMembers extends React.Component {
           {/*Render the members panel if allowed */}
           <MemberList projectId={projectId} />
 
-          {/*Render the invites panel if allowed */}
+          {/*Render the invites panel if allowed COMMENT THIS OUT*/}
           <InviteList projectId={projectId} />
+
+          {/*Render the discipline panel if allowed  COMMENT THIS OUT*/}
+          <DisciplineList projectId={projectId} />
+
+          {/* Render the authGroup panel if allowed    COMMENT THIS OUT */}
+          {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
         </React.Fragment>
       );
     } else {

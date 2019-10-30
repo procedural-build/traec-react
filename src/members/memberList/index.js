@@ -82,7 +82,8 @@ export class MemberList extends React.Component {
       commit,
       rootTreeId,
       docDescriptions,
-      descriptionTitleList
+      descriptionTitleList,
+      docStatusList
     } = this.props;
 
     let itemList = objToList(members)
@@ -104,6 +105,7 @@ export class MemberList extends React.Component {
           treeId={rootTreeId}
           docDescriptions={docDescriptions}
           descriptionTitleList={descriptionTitleList}
+          docStatusList={docStatusList}
         />
       ));
 
@@ -155,12 +157,15 @@ const mapStateToProps = (state, ownProps) => {
   let docDescriptions = null;
   let descriptionTitles = null;
   let descriptionTitleList = null;
+  let docStatusList = null;
+  let docStatus = null;
 
   if (projectId) {
     disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
     project = state.getInPath(`entities.projects.byId.${projectId}`);
     members = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
     disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Traec.Im.Map();
+    docStatus = state.getInPath(`entities.docStatus.byId`) || Traec.Im.Map();
 
     disciplineList = disciplines.toList().map(disciplineID => {
       const disciplineUid = disciplineID.getInPath(`uid`);
@@ -170,6 +175,14 @@ const mapStateToProps = (state, ownProps) => {
         disciplineUid,
         disciplineBaseUid,
         disciplineName
+      };
+    });
+    docStatusList = docStatus.toList().map(statusId => {
+      const docDisciplineId = statusId.getInPath(`discipline_id`);
+      const docStatusId = statusId.getInPath(`uid`);
+      return {
+        docDisciplineId,
+        docStatusId
       };
     });
 
@@ -209,6 +222,7 @@ const mapStateToProps = (state, ownProps) => {
     docDescriptions,
     descriptionTitleList,
     disciplineList,
+    docStatusList,
     isAuthenticated: state.getInPath("auth.isAuthorized")
   };
 };
