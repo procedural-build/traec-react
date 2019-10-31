@@ -100,7 +100,6 @@ export default class MemberItem extends React.Component {
       </React.Fragment>
     );
   }
-
   renderDocuments(descriptionTitleList, docDescriptions, docStatusList, item) {
     let descriptionToDisplay = [];
     // This list will hold the UID's of the descriptions to display for the selected user, based on the documents they are assigned to.
@@ -109,41 +108,48 @@ export default class MemberItem extends React.Component {
     let cleanedList = [];
     // This list will hold all of the descriptions that have the same UID as the selected user.
     // This prevents an error in which switching from the tasks panel to the members panel does not update redux correctly,
-    // causing every document in the project to appear under the user.
-    // console.log(docStatusList.toJS())
+    // causing every document & task in the project to appear under the user.
 
     let toDisplayDocuments = false;
+    // A boolean value to check whether documents should be displayed once the 'see assignments'
+    // toggle is pressed. There is likely a cleaner solution to this
 
+    let selectedDisciplineId = item.getIn(["project_discipline", "base_uid"]);
+
+    // Appends the docDescription Id's to 'descriptionToDisplay' array for the selected user which is later checked against for displaying the document titles
     docStatusList.toJS().map(status => {
-      let docID = status["docDisciplineId"];
+      let assignedDisciplineId = status["docDisciplineId"];
+      if (assignedDisciplineId === selectedDisciplineId) {
+        let docStatusId = status["docStatusId"];
 
-      let toggledDiscId = item.getIn(["project_discipline", "base_uid"]);
-      if (toggledDiscId == docID) {
         docDescriptions.toJS().map(document => {
-          descriptionToDisplay.push(document["descId"]);
-        });
-
-        descriptionTitleList.toJS().map((description, key) => {
-          if (descriptionToDisplay.includes(description["uid"])) {
-            cleanedList.push(
-              <div className="row" key={key} style={{ paddingLeft: "1em" }}>
-                {description["titleText"]}
-              </div>
-            );
-            toDisplayDocuments = true;
+          if (document["descStatus"] == docStatusId) {
+            descriptionToDisplay.push(document["descId"]);
           }
         });
       } else {
-        return;
+        return null;
       }
     });
+
+    // Uses the 'descriptionToDisplay' array to populate the cleaned list which prevents a bug where all tasks/documents are displayed in members page due to redux states.
+    descriptionTitleList.toJS().map((description, key) => {
+      if (descriptionToDisplay.includes(description["uid"])) {
+        cleanedList.push(
+          <div className="row" key={key} style={{ paddingLeft: "1em" }}>
+            {description["titleText"]}
+          </div>
+        );
+        toDisplayDocuments = true;
+      }
+    });
+
     if (toDisplayDocuments) {
       return (
         <div className="col-sm-4">
-          <div className="row">Documents:</div>
+          <div className="row"> Documents:</div>
           {cleanedList}
         </div>
-        //TODO: Duplicate this method for tasks
       );
     } else {
       return <div style={{ paddingBottom: "2em" }}>No Documents</div>;
@@ -173,7 +179,7 @@ export default class MemberItem extends React.Component {
             {projectId ? this.renderProject(projectId, item) : this.renderCompany(companyId, item)}
           </div>
 
-          <div className="row" style={{ backgroundColor: i % 2 ? "#ddd" : "" }}>
+          <div className="row" style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
             <div className="col-sm-4"></div>
             <div className="col-sm-4">
               {this.renderDocuments(descriptionTitleList, docDescriptions, docStatusList, item)}

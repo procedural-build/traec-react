@@ -17,27 +17,17 @@ export class MemberList extends React.Component {
     if (props.companyId) {
       const companyId = props.companyId;
       this.fetch = new Traec.Fetch("company_invite", "post", { companyId });
-      this.requiredFetches = [
-        new Traec.Fetch("company_member", "list")
-        // new Traec.Fetch("tracker_commit_document_object", "list")
-      ];
+      this.requiredFetches = [new Traec.Fetch("company_member", "list")];
     } else if (props.projectId) {
       const projectId = props.projectId;
-      // const trackerId = props.trackerId
       this.fetch = new Traec.Fetch("project_invite", "post", { projectId });
       this.requiredFetches = [
         new Traec.Fetch("project_member", "list"),
         new Traec.Fetch("project_discipline", "list"),
         new Traec.Fetch("project_tracker", "list"),
         new Traec.Fetch("tracker_commit_target", "list"),
-        // new Traec.Fetch("tracker_documents", "list", {trackerId})
-        new Traec.Fetch("tracker_documents", "list")
+        new Traec.Fetch("tracker_documents", "list", this.props.trackerId)
       ];
-
-      // new Traec.Fetch("tracker", "read"),
-      // new Traec.Fetch("tracker_commit_edge", "read"),
-      // new Traec.Fetch("tracker_commit_value", "list"),
-      // new Traec.Fetch("tracker_ref_commit", "list"),
     }
     let { fetchParams, stateParams } = this.fetch.params;
     this.state = {
