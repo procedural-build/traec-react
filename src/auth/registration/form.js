@@ -42,7 +42,7 @@ class RegistrationForm extends React.Component {
       password1: "",
       password2: "",
       errors: null,
-      gRecaptchaResponse: "123"
+      gRecaptchaResponse: null
     };
 
     // Bound methods
@@ -107,7 +107,7 @@ class RegistrationForm extends React.Component {
     const errors = this.props.errors;
     if (errors && errors.has(attr)) {
       //console.log("NON_FIELD_ERRORS", errors);
-      return <div className="alert alert-danger form-control-sm">{this.modifyErrorMessage(errors.get(attr))}</div>;
+      return <div className="alert alert-danger">{this.modifyErrorMessage(errors.get(attr))}</div>;
     }
     return "";
   }
@@ -130,7 +130,6 @@ class RegistrationForm extends React.Component {
 
   render() {
     let isAuthWarning = this.props.isAuthenticated ? <p>Logged in</p> : "";
-    let recaptchaInstance;
 
     return (
       <form className="form" onSubmit={this.onSubmit}>
@@ -143,12 +142,20 @@ class RegistrationForm extends React.Component {
         {this.render_item("password2", "Password (again)", "", "password")}
 
         <Recaptcha
-          ref={e => (recaptchaInstance = e)}
+          ref={e => {
+            this.recaptchaInstance = e;
+          }}
           sitekey={getRecaptchaSiteKey()}
-          verifyCallback={response => this.verifyRecaptchaCallback(response)}
+          render="explicit"
+          verifyCallback={response => {
+            this.verifyRecaptchaCallback(response);
+          }}
+          onloadCallback={() => {
+            console.log("ONLOAD CALLBACK");
+          }}
         />
         <div className="form-group">
-          <button className="btn btn-sm btn-primary btn-block" type="submit">
+          <button className="btn btn-sm btn-primary btn-block" disabled={!this.state.gRecaptchaResponse} type="submit">
             Register
           </button>
         </div>
@@ -157,7 +164,8 @@ class RegistrationForm extends React.Component {
             style={{ cursor: "pointer" }}
             onClick={() => {
               console.log("Reloading Recaptcha");
-              recaptchaInstance.reset();
+              this.recaptchaInstance.reset();
+              this.setState({ gRecaptchaResponse: null });
             }}
           >
             Reload reCaptcha
