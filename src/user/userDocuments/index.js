@@ -47,8 +47,11 @@ class Index extends React.Component {
       return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
     }
 
-    return documents.map((document, index) => <UserDocumentItem key={index} document={document} index={index} />);
+    return documents.map((document, index) => (
+      <this.props.documentComponent key={index} document={document} index={index} />
+    ));
   }
+
   render() {
     return <BSCard id="user-documents" widthOffset="col-sm-12" title="My Documents" body={this.renderDocuments()} />;
   }
