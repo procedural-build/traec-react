@@ -1,5 +1,5 @@
-import { documentsState } from "../testData/documents";
-import { getDocumentsFromState } from "../../src/user/userDocuments";
+import { documentsState } from "../../testData/documents";
+import { getDocumentsFromState } from "../../../src/user/userDocuments";
 
 describe("get documents from state", () => {
   it("Should give back the documents", () => {

@@ -12,6 +12,7 @@ import ProjectInvites from "../userProjects/projectInvite";
 import UserProjects from "../userProjects/project";
 import UserDocuments from "../userDocuments";
 import UserRefs from "../userRefs";
+import { UserDocumentItem } from "../userDocuments/documentItem";
 
 export class TraecUserParticipation extends React.Component {
   constructor(props) {
@@ -38,7 +39,7 @@ export class TraecUserParticipation extends React.Component {
           </div>
         </div>
         <div className="row">
-          <UserDocuments />
+          <UserDocuments documentComponent={UserDocumentItem} />
         </div>
         <div className="row">
           <UserRefs />
