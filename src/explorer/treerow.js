@@ -17,7 +17,7 @@ import { nameFormFields, titleDescriptionFields } from "./form";
 Functional components
 */
 
-function SubCategoryList({ commitId, commitBranches, tracker }) {
+function SubCategoryList({ commitId, commitBranches, tracker, showTreesWithoutDescriptions = true }) {
   if (!commitBranches) {
     return null;
   }
@@ -28,20 +28,30 @@ function SubCategoryList({ commitId, commitBranches, tracker }) {
         key={i}
         parentCommitId={commitId}
         tracker={tracker}
+        renderRootTree={false}
         commitId={commitBranch.get("commit")}
         branchId={null}
         refId={commitBranch.getInPath("target.ref")}
+        showTreesWithoutDescriptions={showTreesWithoutDescriptions}
       />
     ));
 }
 
-function SubTreeList({ treeIds, commitId, cref }) {
+function SubTreeList({ treeIds, commitId, cref, showTreesWithoutDescriptions = true }) {
   if (!treeIds) {
     return null;
   }
   return treeIds
     .sortBy(treeId => treeId)
-    .map((itemId, i) => <TreeRowConnected key={i} headCommitId={commitId} cref={cref} treeId={itemId} />);
+    .map((itemId, i) => (
+      <TreeRowConnected
+        key={i}
+        headCommitId={commitId}
+        cref={cref}
+        treeId={itemId}
+        showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+      />
+    ));
 }
 
 function SubDocumentList({ treeId, commitId, cref, documentIds }) {
@@ -57,13 +67,21 @@ function SubDocumentList({ treeId, commitId, cref, documentIds }) {
 TreeRow Connected to Redux
 */
 
-class TreeRow extends React.Component {
+class TreeRow extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    // Get the collapsed state from localStorage
+    let isCollapsed = localStorage.getItem(`isCollapsed_tree_${props.treeId}`);
+    // Convert the string to a boolean value
+    isCollapsed = isCollapsed === "false" ? false : true;
+    // Override if forceExpand is provided in the props
+    isCollapsed = props.forceExpand ? false : isCollapsed;
 
     this.state = {
       calledFetch: false,
       showDocs: false,
+      isCollapsed: isCollapsed,
       nameFormParams: {
         stateParams: {},
         fetchParams: {},
@@ -296,6 +314,11 @@ class TreeRow extends React.Component {
     return `(${documentIds.count()})  `;
   }
 
+  has_description(tree) {
+    let descriptions = tree.get("descriptions");
+    return descriptions.size > 0;
+  }
+
   get_tree_name(tree) {
     // Render a name if passed in through props
     if (this.props.renderName) {
@@ -322,7 +345,13 @@ class TreeRow extends React.Component {
   }
 
   render_row() {
-    let { isRoot, tree } = this.props;
+    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
+
+    // Skip rendering if there is no description
+    if (!(isRoot && renderRootTree) && (!showTreesWithoutDescriptions && !this.has_description(tree))) {
+      return null;
+    }
+
     const name = this.get_tree_name(tree);
     const bgColor = this.get_bgColor();
     return (
@@ -334,10 +363,19 @@ class TreeRow extends React.Component {
             onClick={this.clickedName}
           >
             {isRoot ? (
-              <b>{name}</b>
+              <b>
+                <Octicon
+                  name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
+                  onClick={e => {
+                    localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
+                    this.setState({ isCollapsed: !this.state.isCollapsed });
+                  }}
+                />
+                {name}
+              </b>
             ) : (
               <React.Fragment>
-                {/*<Octicon name="primitive-dot" />*/}
+                {/*<Octicon name="triangle-right" />*/}
                 {name}
               </React.Fragment>
             )}
@@ -354,15 +392,25 @@ class TreeRow extends React.Component {
     );
   }
 
+  render_sub_items() {
+    if (this.state.isCollapsed) {
+      return null;
+    }
+    return (
+      <React.Fragment>
+        <SubTreeList {...this.props} />
+        {this.state.showDocs ? <SubDocumentList {...this.props} /> : null}
+        <SubCategoryList {...this.props} extraRowClass={null} />
+      </React.Fragment>
+    );
+  }
+
   render() {
-    let { tree, tracker, isRoot, extraRowClass, addWithDescriptions } = this.props;
+    let { tree, tracker, extraRowClass, addWithDescriptions } = this.props;
 
     //console.log("Rendering tree", this.props.treeId)
-    if (!tree) {
-      return "";
-    }
-    if (!tracker) {
-      return "";
+    if (!tree || !tracker) {
+      return null;
     }
 
     extraRowClass = extraRowClass || "ml-2";
@@ -377,9 +425,7 @@ class TreeRow extends React.Component {
           fields={addWithDescriptions ? titleDescriptionFields : nameFormFields}
         />
         {/* Render the sub-elements */}
-        <SubTreeList {...this.props} />
-        {this.state.showDocs ? <SubDocumentList {...this.props} /> : null}
-        <SubCategoryList {...this.props} extraRowClass={null} />
+        {this.render_sub_items()}
       </div>
     );
   }

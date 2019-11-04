@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import CategoryRow from "./category";
 
-class TrackerTree extends React.Component {
+class TrackerTree extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -13,7 +13,13 @@ class TrackerTree extends React.Component {
       }
     };
 
-    this.requiredFetches = [new Traec.Fetch("tracker", "read")];
+    // Don't include edges in this call because response takes too long
+    this.requiredFetches = [
+      new Traec.Fetch("tracker", "read")
+      /*new Traec.Fetch("tracker_branch", "list", {}, {
+        preUpdateHook: (args) => ({...args, include_edges: true})
+      })*/
+    ];
 
     this.addRootCategory = this.addRootCategory.bind(this);
   }
@@ -44,7 +50,14 @@ class TrackerTree extends React.Component {
   }
 
   render() {
-    const { tracker, trackerId, refId, commitId } = this.props;
+    const {
+      tracker,
+      trackerId,
+      refId,
+      commitId,
+      renderRootTree = true,
+      showTreesWithoutDescriptions = true
+    } = this.props;
 
     if (!tracker) {
       return null;
@@ -60,8 +73,10 @@ class TrackerTree extends React.Component {
           commitId={commitId}
           branchId={null}
           refId={refId}
-          renderRootTree={true}
+          renderRootTree={renderRootTree}
           rootTreeName={tracker.get("name")}
+          showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+          forceExpand={true}
           addWithDescriptions={false}
         />
       </React.Fragment>
@@ -79,11 +94,7 @@ const mapStateToProps = (state, ownProps) => {
   return { trackerId, tracker, refId, ref, commitId, treeId };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   mapStateToProps,
