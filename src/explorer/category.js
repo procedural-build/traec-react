@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import TreeRow from "./treerow";
 
-class CategoryRow extends React.Component {
+class CategoryRow extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -15,7 +15,7 @@ class CategoryRow extends React.Component {
       }
     };
 
-    this.requiredFetches = [new Traec.Fetch("tracker_ref", "read"), new Traec.Fetch("tracker_commit_edge", "read")];
+    this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read")];
 
     this.addBranch = this.addBranch.bind(this);
     this.editBranch = this.editBranch.bind(this);
@@ -104,6 +104,8 @@ class CategoryRow extends React.Component {
       renderRootTree = true,
       rootTreeName = null,
       addWithDescriptions,
+      showTreesWithoutDescriptions = true,
+      forceExpand = false,
       isRoot = false
     } = this.props;
 
@@ -112,6 +114,10 @@ class CategoryRow extends React.Component {
     }
     if (!cref.getInPath("latest_commit.is_staging")) {
       return null;
+    }
+
+    if (cref.get("uid") == "a0f908d3-5a2c-4ac3-9b5d-7ae8d13b1db4") {
+      console.log(`RENDERING REF ${cref.get("uid")}`);
     }
 
     // Return the element
@@ -129,6 +135,8 @@ class CategoryRow extends React.Component {
         renderRootTree={renderRootTree}
         renderName={rootTreeName}
         addWithDescriptions={addWithDescriptions}
+        showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+        forceExpand={forceExpand}
         // Using a generic single-input field "nameForm"
         nameFormParams={this.state.nameFormParams}
       />
@@ -139,17 +147,14 @@ class CategoryRow extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   //console.log("Mapping state to props for category, ", ownProps._id, ownProps.branchId)
   // Get the starting (referring category)
-  let { parentCommitId: commitId, refId } = ownProps;
+  let { parentCommitId: commitId, refId, tracker } = ownProps;
   let cref = state.getInPath(`entities.refs.byId.${refId}`) || Traec.Im.Map();
   let rootTreeId = cref.getInPath("latest_commit.tree_root.uid");
-  return { commitId, cref, rootTreeId };
+  let trackerId = tracker ? tracker.get("uid") : null;
+  return { trackerId, commitId, cref, rootTreeId };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   mapStateToProps,
