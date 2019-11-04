@@ -39,16 +39,18 @@ function SubTreeList({ treeIds, commitId, cref }) {
   if (!treeIds) {
     return null;
   }
-  return treeIds.map((itemId, i) => <TreeRowConnected key={i} headCommitId={commitId} cref={cref} treeId={itemId} />);
+  return treeIds
+    .sortBy(treeId => treeId)
+    .map((itemId, i) => <TreeRowConnected key={i} headCommitId={commitId} cref={cref} treeId={itemId} />);
 }
 
 function SubDocumentList({ treeId, commitId, cref, documentIds }) {
   if (!subDocuments) {
     return null;
   }
-  return documentIds.map((item, i) => (
-    <DocumentRow key={i} headCommitId={commitId} cref={cref} treeId={treeId} docId={item} />
-  ));
+  return documentIds
+    .sortBy(docId => docId)
+    .map((item, i) => <DocumentRow key={i} headCommitId={commitId} cref={cref} treeId={treeId} docId={item} />);
 }
 
 /*
@@ -433,11 +435,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 const TreeRowConnected = connect(
   mapStateToProps,
