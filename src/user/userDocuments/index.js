@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import { UserDocumentItem } from "./documentItem";
 import { Spinner } from "traec-react/utils/entities";
+import Im from "traec/immutable";
 
 class Index extends React.Component {
   constructor(props) {
@@ -13,7 +14,10 @@ class Index extends React.Component {
   componentDidMount() {}
 
   componentDidUpdate() {
-    getTrackers(this.props.projectIds);
+    if (!this.props.singleTracker) {
+      getTrackers(this.props.projectIds);
+    }
+
     this.getDocuments();
   }
 
@@ -67,15 +71,14 @@ export const getCompanyProjectFromTracker = function(state, trackerId) {
   return { project, company: companyName };
 };
 
-const mapStateToProps = state => {
+export const mapStateToProps = (state, ownProps) => {
   let projects = state.getInPath("entities.projects.byId");
   let projectIds = projects ? projects.map(project => project.get("uid")) : null;
 
-  let trackers = state.getInPath("entities.trackers.byId");
-  let trackerIds = trackers ? trackers.map(tracker => tracker.get("uid")) : null;
+  let { trackerIds, singleTracker } = getTrackersInState(state, ownProps);
 
   let documents = getDocumentsFromState(state);
-  return { trackerIds, projectIds, documents };
+  return { trackerIds, projectIds, documents, singleTracker };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -88,6 +91,24 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Index);
+
+const getTrackersInState = function(state, ownProps) {
+  let trackerIds = null;
+  let singleTracker = null;
+
+  try {
+    let { trackerId } = ownProps.match;
+    trackerIds = Im.Map();
+    trackerIds = trackerIds.set(trackerId, trackerId);
+    singleTracker = true;
+  } catch (e) {
+    let trackers = state.getInPath("entities.trackers.byId");
+    trackerIds = trackers ? trackers.map(tracker => tracker.get("uid")) : null;
+    singleTracker = false;
+  }
+
+  return { trackerIds, singleTracker };
+};
 
 export const getTrackers = function(projectIds) {
   if (projectIds) {
