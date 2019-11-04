@@ -2,6 +2,10 @@ export const nameFormFields = {
   name: { label: "", value: "", class: "col", endRow: true }
 };
 
+export const titleFields = {
+  title: { label: "", value: "", class: "col", endRow: true }
+};
+
 export const titleDescriptionFields = {
   title: { value: "", class: "col", endRow: true },
   description: {

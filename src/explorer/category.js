@@ -106,7 +106,8 @@ class CategoryRow extends React.PureComponent {
       addWithDescriptions,
       showTreesWithoutDescriptions = true,
       forceExpand = false,
-      isRoot = false
+      isRoot = false,
+      formFields = null
     } = this.props;
 
     if (!cref) {
@@ -139,6 +140,7 @@ class CategoryRow extends React.PureComponent {
         forceExpand={forceExpand}
         // Using a generic single-input field "nameForm"
         nameFormParams={this.state.nameFormParams}
+        formFields={formFields}
       />
     );
   }
