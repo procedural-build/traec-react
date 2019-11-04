@@ -11,13 +11,19 @@ import { confirmDelete } from "traec-react/utils/sweetalert";
 import DocumentRow from "./docrow";
 import CategoryRow from "./category";
 import Octicon from "react-octicon";
-import { nameFormFields, titleDescriptionFields } from "./form";
+import * as forms from "./form";
 
 /*
 Functional components
 */
 
-function SubCategoryList({ commitId, commitBranches, tracker, showTreesWithoutDescriptions = true }) {
+function SubCategoryList({
+  commitId,
+  commitBranches,
+  tracker,
+  showTreesWithoutDescriptions = true,
+  formFields = null
+}) {
   if (!commitBranches) {
     return null;
   }
@@ -33,11 +39,12 @@ function SubCategoryList({ commitId, commitBranches, tracker, showTreesWithoutDe
         branchId={null}
         refId={commitBranch.getInPath("target.ref")}
         showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+        formFields={formFields}
       />
     ));
 }
 
-function SubTreeList({ treeIds, commitId, cref, showTreesWithoutDescriptions = true }) {
+function SubTreeList({ treeIds, commitId, cref, showTreesWithoutDescriptions = true, formFields = null }) {
   if (!treeIds) {
     return null;
   }
@@ -50,17 +57,20 @@ function SubTreeList({ treeIds, commitId, cref, showTreesWithoutDescriptions = t
         cref={cref}
         treeId={itemId}
         showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+        formFields={formFields}
       />
     ));
 }
 
-function SubDocumentList({ treeId, commitId, cref, documentIds }) {
+function SubDocumentList({ treeId, commitId, cref, documentIds, formFields = null }) {
   if (!subDocuments) {
     return null;
   }
   return documentIds
     .sortBy(docId => docId)
-    .map((item, i) => <DocumentRow key={i} headCommitId={commitId} cref={cref} treeId={treeId} docId={item} />);
+    .map((item, i) => (
+      <DocumentRow key={i} headCommitId={commitId} cref={cref} treeId={treeId} docId={item} formFields={formFields} />
+    ));
 }
 
 /*
@@ -406,7 +416,7 @@ class TreeRow extends React.PureComponent {
   }
 
   render() {
-    let { tree, tracker, extraRowClass, addWithDescriptions } = this.props;
+    let { tree, tracker, extraRowClass, addWithDescriptions, formFields } = this.props;
 
     //console.log("Rendering tree", this.props.treeId)
     if (!tree || !tracker) {
@@ -422,7 +432,10 @@ class TreeRow extends React.PureComponent {
         {/* Render the form for simple name input */}
         <BaseFormConnected
           params={this.state.nameFormParams}
-          fields={addWithDescriptions ? titleDescriptionFields : nameFormFields}
+          //fields = {forms.titleFields}
+          fields={
+            formFields ? forms[formFields] : addWithDescriptions ? forms.titleDescriptionFields : forms.nameFormFields
+          }
         />
         {/* Render the sub-elements */}
         {this.render_sub_items()}

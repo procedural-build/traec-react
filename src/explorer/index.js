@@ -56,7 +56,8 @@ class TrackerTree extends React.PureComponent {
       refId,
       commitId,
       renderRootTree = true,
-      showTreesWithoutDescriptions = true
+      showTreesWithoutDescriptions = true,
+      formFields = null
     } = this.props;
 
     if (!tracker) {
@@ -78,6 +79,7 @@ class TrackerTree extends React.PureComponent {
           showTreesWithoutDescriptions={showTreesWithoutDescriptions}
           forceExpand={true}
           addWithDescriptions={false}
+          formFields={formFields}
         />
       </React.Fragment>
     );
