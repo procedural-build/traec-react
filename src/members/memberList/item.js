@@ -180,7 +180,7 @@ export default class MemberItem extends React.Component {
           </div>
 
           <div className="row" style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
-            <div className="col-sm-4"></div>
+            <div className="col-sm-4" />
             <div className="col-sm-4">
               {this.renderDocuments(descriptionTitleList, docDescriptions, docStatusList, item)}
             </div>

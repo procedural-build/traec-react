@@ -2,7 +2,6 @@ import React from "react";
 import { BSCard } from "traec-react/utils/bootstrap";
 import { connect } from "react-redux";
 import Traec from "traec";
-import { UserDocumentItem } from "./documentItem";
 import { Spinner } from "traec-react/utils/entities";
 import Im from "traec/immutable";
 import { RenderErrorMessage } from "../../errors/handleError";
