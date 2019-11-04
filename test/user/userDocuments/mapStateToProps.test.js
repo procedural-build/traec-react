@@ -67,7 +67,7 @@ describe("mapStateToProps", () => {
   });
 
   it("should only return from one tracker", () => {
-    let ownProps = { match: { trackerId: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02" } };
+    let ownProps = { trackerId: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02" };
     let actualResult = mapStateToProps(myDocumentsState, ownProps);
     let expectedResult = {
       trackerIds: Im.Map({

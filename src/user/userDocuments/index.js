@@ -5,13 +5,17 @@ import Traec from "traec";
 import { UserDocumentItem } from "./documentItem";
 import { Spinner } from "traec-react/utils/entities";
 import Im from "traec/immutable";
+import { RenderErrorMessage } from "../../errors/handleError";
 
 class Index extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { hasError: false };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getDocuments();
+  }
 
   componentDidUpdate() {
     if (!this.props.singleTracker) {
@@ -21,15 +25,22 @@ class Index extends React.Component {
     this.getDocuments();
   }
 
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
   getDocuments() {
     let { trackerIds } = this.props;
-
     if (trackerIds) {
       trackerIds.map(trackerId => new Traec.Fetch("tracker_documents", "list", { trackerId }).dispatch());
     }
   }
 
   renderDocuments() {
+    if (this.state.hasError) {
+      return <RenderErrorMessage error={this.state.error} />;
+    }
+
     let { documents } = this.props;
 
     if (!documents || documents.length === 0) {
@@ -97,7 +108,7 @@ const getTrackersInState = function(state, ownProps) {
   let singleTracker = null;
 
   try {
-    let { trackerId } = ownProps.match;
+    let { trackerId } = ownProps;
     trackerIds = Im.Map();
     trackerIds = trackerIds.set(trackerId, trackerId);
     singleTracker = true;
