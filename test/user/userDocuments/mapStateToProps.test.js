@@ -4,7 +4,8 @@ import Im from "traec/immutable";
 
 describe("mapStateToProps", () => {
   it("should give correct data", () => {
-    let actualResult = mapStateToProps(myDocumentsState);
+    let ownProps = {};
+    let actualResult = mapStateToProps(myDocumentsState, ownProps);
     let expectedResult = {
       trackerIds: Im.Map({
         "537560d0-44a1-4662-993e-94c5795cb64c": "537560d0-44a1-4662-993e-94c5795cb64c",
@@ -124,6 +125,25 @@ describe("mapStateToProps", () => {
         }
       ],
       singleTracker: true
+    };
+    expect(actualResult).toEqual(expectedResult);
+  });
+
+  it("should return empty when no trackers", () => {
+    let ownProps = {};
+    let state = myDocumentsState;
+    state = state.deleteIn(["entities", "trackers"]);
+    state = state.deleteIn(["entities", "user"]);
+    let actualResult = mapStateToProps(state, ownProps);
+    let expectedResult = {
+      trackerIds: Im.Map({}),
+      projectIds: Im.Map({
+        "3a6f1905-2efb-400a-b305-3243f9ff657e": "3a6f1905-2efb-400a-b305-3243f9ff657e",
+        "730c60ce-509c-4909-a360-2841798eab7c": "730c60ce-509c-4909-a360-2841798eab7c",
+        "7c3fc288-9f40-463f-acac-dca47b74de33": "7c3fc288-9f40-463f-acac-dca47b74de33"
+      }),
+      documents: [],
+      singleTracker: false
     };
     expect(actualResult).toEqual(expectedResult);
   });
