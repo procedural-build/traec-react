@@ -22,6 +22,7 @@
     "react-router-dom": "^5.0.0",
     "react-style-proptype": "^3.2.2",
     "react-tinymce": "^0.7.0",
+    "recharts": "^1.8.5",
     "sweetalert2": "^8.17.1",
     "traec": "^1.1.81"
   },
@@ -67,7 +68,8 @@
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/__mocks__/fileMock.js",
-      "\\.(css|sass)$": "<rootDir>/test/__mocks__/styleMock.js"
+      "\\.(css|sass)$": "<rootDir>/test/__mocks__/styleMock.js",
+      "^AppSrc(.*)$": "<rootDir>/src/$1"
     }
   },
   "scripts": {
