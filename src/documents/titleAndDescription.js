@@ -20,9 +20,10 @@ export class TitleAndDescription extends React.Component {
 
   renderTitle(description) {
     return (
-      <div className="row">
+      <div>
         <div className="col-sm-11">
           <h5>{description.get("title")}</h5>
+          <i>Assingee</i>
         </div>
         <div className="col-sm-1">
           <Octicon
@@ -37,8 +38,8 @@ export class TitleAndDescription extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.renderTitle()}
-        {this.renderDescription()}
+        {this.renderTitle(this.props.description)}
+        {this.renderDescription(this.props.description)}
       </React.Fragment>
     );
   }

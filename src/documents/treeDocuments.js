@@ -63,6 +63,7 @@ export class treeDocuments extends React.Component {
 
   renderSubDocuments() {
     let { trackerId, treeId, crefId, commitId, subDocumentIds, selector } = this.props;
+    // console.log(additionalComponents)
     let subDocuments = <p>Select a sub-task</p>;
     if (treeId) {
       subDocuments = subDocumentIds.map((subDocId, i) => (
