@@ -7,11 +7,15 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
 import UploadDocumentButton from "traec-react/utils/documentUpload";
 import { BSBtn } from "traec-react/utils/bootstrap/btn";
 import DatePicker from "react-date-picker";
+import Moment from "moment";
 
 class DocumentCard extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      dueDate: "",
+      action: "Nothing Recieved"
+    };
   }
 
   adminDropDownLinks() {
@@ -23,22 +27,65 @@ class DocumentCard extends Component {
     return items;
   }
 
+  componentDidMount() {
+    if (this.props.docStatus) {
+      this.setState(() => {
+        return {
+          ...this.state,
+          dueDate: convertISODateToDateObject(this.props.docStatus.get("due_date")),
+          action: this.props.docStatus.getInPath("status.name")
+        };
+      });
+    }
+  }
+
+  setAction(name) {
+    this.setState(() => {
+      return {
+        ...this.state,
+        action: name
+      };
+    });
+  }
+
   actionDropDownLinks() {
     let items = [
-      { name: "Nothing Received", onClick: this.deleteIndicator },
-      { name: "Pending Review", onClick: this.toggleSetTargetForm },
-      { name: "Requires Revision", onClick: this.changeRevision },
-      { name: "OK for submission", onClick: this.changeRevision },
-      { name: "Not for submission", onClick: this.changeRevision }
+      { name: "Nothing Received", onClick: (e, name) => this.setAction(name), id: "Nothing Received" },
+      { name: "Pending Review", onClick: (e, name) => this.setAction(name), id: "Pending Review" },
+      { name: "Requires Revision", onClick: (e, name) => this.setAction(name), id: "Requires Revision" },
+      { name: "OK for submission", onClick: (e, name) => this.setAction(name), id: "OK for submission" },
+      { name: "Not for submission", onClick: (e, name) => this.setAction(name), id: "Not for submission" }
     ];
     return items;
+  }
+
+  setDueDate(value) {
+    if (value) value.setHours(1);
+    this.setState(() => {
+      return {
+        ...this.state,
+        dueDate: value ? value : ""
+      };
+    });
+  }
+
+  save() {
+    let { trackerId, refId, commitId, docId } = this.props;
+    let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
+
+    // Add the file object to the form and dispatch
+    let formData = new FormData();
+    formData.append("due_date", this.state.dueDate ? this.state.dueDate.toISOString().split("T")[0] : "");
+    formData.append("status", { name: this.state.action });
+    fetch.updateFetchParams({ body: formData });
+    fetch.dispatch();
   }
 
   rendActionDropDown() {
     if (this.props.renderActionDropDown) {
       return (
         <div className="col-sm-2">
-          <BSBtnDropdown links={this.actionDropDownLinks()} header={"Actions"} />
+          <BSBtnDropdown links={this.actionDropDownLinks()} header={this.state.action} />
         </div>
       );
     }
@@ -48,7 +95,7 @@ class DocumentCard extends Component {
     if (this.props.renderSaveBtn) {
       return (
         <div className="col-sm-1">
-          <BSBtn text={"Save"} />
+          <BSBtn text={"Save"} onClick={() => this.save()} />
         </div>
       );
     }
@@ -62,7 +109,8 @@ class DocumentCard extends Component {
           <div className="col-sm-4">
             <DatePicker
               className="form-control datepicker-fullwidth"
-              onChange={value => this.setDueDate(Moment.utc(Moment(value).format("YYYY-MM-DDTHH:mm:ss")).toDate())}
+              onChange={value => this.setDueDate(value)}
+              value={this.state.dueDate}
             />
           </div>
         </React.Fragment>
@@ -82,7 +130,7 @@ class DocumentCard extends Component {
   }
 
   render() {
-    let { descriptions, commitId, rootTreeId, document, cref } = this.props;
+    let { descriptions } = this.props;
     if (!descriptions) return "";
     let description = descriptions.toList().first() || Traec.Im.Map();
     return (
@@ -112,15 +160,15 @@ const mapStateToProps = (state, ownProps) => {
   let { descriptionId, refId, commitId, docId } = ownProps;
   let document = state.getInPath(`entities.documents.byId.${docId}`);
   let descriptions = getDescriptions(state, commitId, docId);
-  console.log(descriptions);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
-  const treeDoc = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}`);
   let currentDocObject = getCurrentObject(state, commitId, docId);
-  let docStatus = state.getInPath(`entities.docStatuses.byId.${docId}`);
+  let docStatusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
+  let docStatus = state.getInPath(`entities.docStatuses.byId.${docStatusId}`);
   return {
     document,
     descriptions,
     cref,
+    refId,
     currentDocObject,
     docStatus
   };
@@ -149,38 +197,9 @@ const getCurrentObject = (state, commitId, docId) => {
   return state.getInPath(`entities.docObjects.byId.${objId}`);
 };
 
-//   <div className="row border-bottom border-secondary my-2">
-//     <div className="col-md-10">
-//       <b>{description.get("title")}</b>
-//       <br />
-//       <i>Assingee</i>
-//       <div className="float-right">
-//         <BSBtnDropdown links={this.adminDropDownLinks()} header={"Admin"} />
-//       </div>
-
-//       <div className="row">
-//         <div className="col-12" dangerouslySetInnerHTML={{ __html: description.get("text") }} />
-//       </div>
-
-//       <div className="row align-items-center mb-2">
-//         <div className="col-sm-4">
-//           <UploadDocumentButton commitId={commitId} rootTreeId={rootTreeId} subDoc={document} cref={cref} />
-//         </div>
-//         <div className="col-sm-1">Due:</div>
-//         <div className="col-sm-4">
-//           <DatePicker
-//             className="form-control datepicker-fullwidth"
-//             onChange={value => this.setDueDate(Moment.utc(Moment(value).format("YYYY-MM-DDTHH:mm:ss")).toDate())}
-//           />
-//         </div>
-//         <div className="col-sm-2">
-//           <BSBtnDropdown links={this.actionDropDownLinks()} header={"Actions"} />
-//         </div>
-//         <div className="col-sm-1">
-//           <BSBtn text={"Save"} />
-//         </div>
-//       </div>
-//     </div>
-
-//     {this.renderDocStatus()}
-//   </div>
+const convertISODateToDateObject = ISODate => {
+  if (!ISODate) return "";
+  let dateArray = ISODate.split("T")[0].split("-");
+  console.log(dateArray);
+  return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+};

@@ -62,13 +62,14 @@ export class treeDocuments extends React.Component {
   }
 
   renderSubDocuments() {
-    let { trackerId, treeId, crefId, commitId, subDocumentIds, selector } = this.props;
-    // console.log(additionalComponents)
+    let { trackerId, treeId, crefId, commitId, subDocumentIds, selector, refId } = this.props;
+
     let subDocuments = <p>Select a sub-task</p>;
     if (treeId) {
       subDocuments = subDocumentIds.map((subDocId, i) => (
         <this.props.documentComponent
           key={i}
+          refId={refId}
           selector={selector}
           docId={subDocId}
           trackerId={trackerId}
@@ -102,7 +103,6 @@ const mapStateToProps = (state, ownProps) => {
   const basePath = `entities.commitEdges.byId.${commitId}.trees.${treeId}`;
   const subTreeIds = state.getInPath(`${basePath}.trees`) || Traec.Im.List();
   const subDocumentIds = state.getInPath(`${basePath}.documents`) || Traec.Im.Set();
-
   let selected = state.getInPath(`ui.dashboards.${trackerId}.selected.${selector}`) === treeId;
 
   return {
