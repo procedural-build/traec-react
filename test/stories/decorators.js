@@ -23,4 +23,8 @@ export const Column = (storyFn, title, cardType) => {
   );
 };
 
+export const Container = storyFn => {
+  return <div className="container">{storyFn()}</div>;
+};
+
 export const DocumentCard = storyFn => Card(storyFn, "I'm a Document");
