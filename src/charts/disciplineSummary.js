@@ -1,8 +1,16 @@
 import React from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import Im from "traec/immutable";
+import { toggleShowDescription } from "AppSrc/tasks/utils/cardUtils";
 
 export class DisciplineSummary extends React.Component {
+  checkData() {
+    if (!this.props.data || !this.props.data.size) {
+      return [{ name: "No data", "No Data": 0 }];
+    } else {
+      return this.props.data.toJS();
+    }
+  }
   renderBars() {
     let dataCategories = getDataCategories(this.props.data);
     return dataCategories.map((category, i) => {
@@ -11,11 +19,12 @@ export class DisciplineSummary extends React.Component {
   }
 
   render() {
+    let data = this.checkData();
     return (
       <div className="line-chart-wrapper" style={{ width: "100%", height: "500px" }}>
         <ResponsiveContainer>
           <BarChart
-            data={this.props.data.toJS()}
+            data={data}
             margin={{
               top: 20,
               right: 30,
@@ -57,6 +66,9 @@ export const getColorFromCategory = category => {
 };
 
 export const getDataCategories = data => {
+  if (!data) {
+    return ["No Data"];
+  }
   let dataKeys = Im.Set();
   data.map(element => {
     const [...elementKeys] = element.keys();

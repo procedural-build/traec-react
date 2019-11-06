@@ -67,6 +67,10 @@ const data = Im.fromJS([
   }
 ]);
 
-export const withTitle = () => {
+export const withData = () => {
   return <DisciplineSummary data={data} />;
+};
+
+export const withNoData = () => {
+  return <DisciplineSummary data={null} />;
 };
