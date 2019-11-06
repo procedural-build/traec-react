@@ -76,7 +76,7 @@ class DocumentCard extends Component {
     // Add the file object to the form and dispatch
     let formData = new FormData();
     formData.append("due_date", this.state.dueDate ? this.state.dueDate.toISOString().split("T")[0] : "");
-    formData.append("status", { name: this.state.action });
+    formData.append("name", this.state.action);
     fetch.updateFetchParams({ body: formData });
     fetch.dispatch();
   }
