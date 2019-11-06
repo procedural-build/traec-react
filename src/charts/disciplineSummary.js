@@ -1,7 +1,6 @@
 import React from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import Im from "traec/immutable";
-import { toggleShowDescription } from "AppSrc/tasks/utils/cardUtils";
 
 export class DisciplineSummary extends React.Component {
   checkData() {

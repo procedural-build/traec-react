@@ -2,7 +2,6 @@ import React from "react";
 import { TitleAndDescription } from "../../../src/documents/titleAndDescription";
 import Im from "traec/immutable";
 import { Card } from "../decorators";
-import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Title and Description",
