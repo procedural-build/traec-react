@@ -2,7 +2,6 @@ import React from "react";
 import { BSCard } from "traec-react/utils/bootstrap";
 import { connect } from "react-redux";
 import Traec from "traec";
-import { UserDocumentItem } from "./documentItem";
 import { Spinner } from "traec-react/utils/entities";
 import Im from "traec/immutable";
 import { RenderErrorMessage } from "../../errors/handleError";
@@ -109,18 +108,17 @@ export default connect(
 const getTrackersInState = function(state, ownProps) {
   let trackerIds = null;
   let singleTracker = null;
+  let { trackerId } = ownProps;
 
-  try {
-    let { trackerId } = ownProps;
+  if (trackerId) {
     trackerIds = Im.Map();
     trackerIds = trackerIds.set(trackerId, trackerId);
     singleTracker = true;
-  } catch (e) {
+  } else {
     let trackers = state.getInPath("entities.trackers.byId");
-    trackerIds = trackers ? trackers.map(tracker => tracker.get("uid")) : null;
+    trackerIds = trackers ? trackers.map(tracker => tracker.get("uid")) : Im.Map({});
     singleTracker = false;
   }
-
   return { trackerIds, singleTracker };
 };
 
