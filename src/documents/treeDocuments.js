@@ -8,7 +8,7 @@ import * as eventHandlers from "traec/eventHandlers";
 
 import { BSBtn } from "traec-react/utils/bootstrap/btn";
 
-export class treeDocuments extends React.Component {
+export class TreacDocuments extends React.Component {
   constructor(props) {
     super(props);
 
@@ -114,7 +114,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default treeDocuments = connect(
+export default TreacDocuments = connect(
   mapStateToProps,
   mapDispatchToProps
-)(treeDocuments);
+)(TreacDocuments);
