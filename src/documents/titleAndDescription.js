@@ -23,13 +23,8 @@ export class TitleAndDescription extends React.Component {
       <div>
         <div className="col-sm-11">
           <h5>{description.get("title")}</h5>
-          <i>Assingee</i>
-        </div>
-        <div className="col-sm-1">
-          <Octicon
-            name={this.state.showDescription ? "chevron-up" : "chevron-down"}
-            onClick={this.toggleShowDescription}
-          />
+          <i>{this.props.Assingee}</i>
+          <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />
         </div>
       </div>
     );

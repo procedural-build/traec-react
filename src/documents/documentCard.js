@@ -1,20 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { TitleAndDescription } from "./titleAndDescription";
-import { DocumentStatus } from "./documentStatus";
 import Traec from "traec";
-import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
-import UploadDocumentButton from "traec-react/utils/documentUpload";
-import { BSBtn } from "traec-react/utils/bootstrap/btn";
-import DatePicker from "react-date-picker";
-import Moment from "moment";
+import { DocumentCardView } from "./documentCardView";
+import Dropzone from "react-dropzone";
 
 class DocumentCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dueDate: "",
-      action: "Nothing Recieved"
+      action: "Nothing Recieved",
+      selectedFiles: []
     };
   }
 
@@ -48,15 +44,16 @@ class DocumentCard extends Component {
     });
   }
 
-  actionDropDownLinks() {
-    let items = [
-      { name: "Nothing Received", onClick: (e, name) => this.setAction(name), id: "Nothing Received" },
-      { name: "Pending Review", onClick: (e, name) => this.setAction(name), id: "Pending Review" },
-      { name: "Requires Revision", onClick: (e, name) => this.setAction(name), id: "Requires Revision" },
-      { name: "OK for submission", onClick: (e, name) => this.setAction(name), id: "OK for submission" },
-      { name: "Not for submission", onClick: (e, name) => this.setAction(name), id: "Not for submission" }
-    ];
-    return items;
+  deleteDocument() {
+    throw "Not implemented";
+  }
+
+  editDocument() {
+    throw "Not implemented";
+  }
+
+  copyDocument() {
+    throw "Not implemented";
   }
 
   setDueDate(value) {
@@ -69,108 +66,79 @@ class DocumentCard extends Component {
     });
   }
 
+  onDrop(files) {
+    console.log(files);
+    this.setState({ selectedFiles: files });
+  }
+
+  onCancelUpload() {
+    this.setState({ selectedFiles: [] });
+  }
+
+  getFiles() {
+    return this.state.selectedFiles.map(file => file.name + " (" + (file.size / 1000000).toFixed(1) + "Mb" + ")");
+  }
+
   save() {
     let { trackerId, refId, commitId, docId } = this.props;
-    let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
-
-    // Add the file object to the form and dispatch
     let formData = new FormData();
-    formData.append("due_date", this.state.dueDate ? this.state.dueDate.toISOString().split("T")[0] : "");
+    formData.append("due_date", this.state.dueDate ? this.state.dueDate.toISOString() : "");
     formData.append("name", this.state.action);
+    let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
     fetch.updateFetchParams({ body: formData });
     fetch.dispatch();
   }
 
-  rendActionDropDown() {
-    if (this.props.renderActionDropDown) {
-      return (
-        <div className="col-sm-2">
-          <BSBtnDropdown links={this.actionDropDownLinks()} header={this.state.action} />
-        </div>
-      );
-    }
-  }
-
-  rendSaveBtn() {
-    if (this.props.renderSaveBtn) {
-      return (
-        <div className="col-sm-1">
-          <BSBtn text={"Save"} onClick={() => this.save()} />
-        </div>
-      );
-    }
-  }
-
-  rendDatePicker() {
-    if (this.props.renderDatePicker) {
-      return (
-        <React.Fragment>
-          <div className="col-sm-1">Due:</div>
-          <div className="col-sm-4">
-            <DatePicker
-              className="form-control datepicker-fullwidth"
-              onChange={value => this.setDueDate(value)}
-              value={this.state.dueDate}
-            />
-          </div>
-        </React.Fragment>
-      );
-    }
-  }
-
-  rendFileUpload() {
-    let { commitId, rootTreeId, document, cref } = this.props;
-    if (this.props.renderFileUpload) {
-      return (
-        <div className="col-sm-4">
-          <UploadDocumentButton commitId={commitId} rootTreeId={rootTreeId} subDoc={document} cref={cref} />
-        </div>
-      );
-    }
-  }
-
   render() {
-    let { descriptions } = this.props;
+    let { descriptions, assignee, docStatus, renderProps } = this.props;
+    const files = this.getFiles();
     if (!descriptions) return "";
     let description = descriptions.toList().first() || Traec.Im.Map();
     return (
-      <div className="row border-bottom border-secondary my-2">
-        <div className="col-md-10">
-          <div className="float-right">
-            <BSBtnDropdown links={this.adminDropDownLinks()} header={"Admin"} />
-          </div>
-
-          <TitleAndDescription description={description}></TitleAndDescription>
-
-          <div className="row align-items-center mb-2">
-            {this.rendFileUpload()}
-            {this.rendDatePicker()}
-            {this.rendActionDropDown()}
-            {this.rendSaveBtn()}
-          </div>
-        </div>
-
-        <DocumentStatus docStatus={this.props.docStatus}></DocumentStatus>
-      </div>
+      <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
+        {({ getRootProps, getInputProps }) => {
+          return (
+            <div {...getRootProps()} className="border border-dark">
+              <input {...getInputProps()}></input>
+              <DocumentCardView
+                description={description}
+                assignee={assignee}
+                docStatus={docStatus}
+                setDueDate={this.setDueDate.bind(this)}
+                setAction={this.setAction.bind(this)}
+                deleteDocument={this.deleteDocument}
+                editDocument={this.editDocument}
+                copyDocument={this.copyDocument}
+                renderProps={renderProps}
+                dropzoneRef={this.dropzoneRef}
+                selectedFiles={files}
+              ></DocumentCardView>
+            </div>
+          );
+        }}
+      </Dropzone>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { descriptionId, refId, commitId, docId } = ownProps;
+  let { descriptionId, refId, commitId, docId, trackerId } = ownProps;
   let document = state.getInPath(`entities.documents.byId.${docId}`);
   let descriptions = getDescriptions(state, commitId, docId);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
   let currentDocObject = getCurrentObject(state, commitId, docId);
   let docStatusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
   let docStatus = state.getInPath(`entities.docStatuses.byId.${docStatusId}`);
+  let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
+  let assignee = getDocumentAssignee(state, docId, commitId, projectId);
   return {
     document,
     descriptions,
     cref,
     refId,
     currentDocObject,
-    docStatus
+    docStatus,
+    assignee
   };
 };
 
@@ -200,6 +168,22 @@ const getCurrentObject = (state, commitId, docId) => {
 const convertISODateToDateObject = ISODate => {
   if (!ISODate) return "";
   let dateArray = ISODate.split("T")[0].split("-");
-  console.log(dateArray);
   return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+};
+
+export const getDocumentAssignee = function(state, docId, commitId, projectId) {
+  // Get states in Redux to determine the available disciplines and ensure the discipline names match with the docs
+  const basePath = `entities.commitEdges.byId.${commitId}.documents.${docId}`;
+  let docStatusId = state.getInPath(`${basePath}.status`);
+  let docDisciplineId = state.getInPath(`entities.docStatuses.byId.${docStatusId}.discipline_id`);
+  let documentAssigneeList = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Traec.Im.Map();
+
+  // Check that the document uid matches with the discipline uid and then get the name of that discipline to display on the document.
+  let assignee = documentAssigneeList.toList().map(item => {
+    if (item.getInPath(`base_uid`) === docDisciplineId) {
+      return item.getInPath(`name`);
+    }
+  });
+
+  return { assignee };
 };

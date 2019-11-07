@@ -17,7 +17,7 @@ export class DocumentStatus extends Component {
     }
     return (
       <div className="col-md-2 text-center" style={style}>
-        {name}
+        <span className="abs-center h6">{name}</span>
       </div>
     );
   }
