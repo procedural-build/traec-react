@@ -1,0 +1,250 @@
+body {
+  min-height: 100px;
+  margin-bottom: 25px;
+
+  font-family: "Open Sans";
+  font-size: 10pt;
+  color: #333;
+}
+
+a {
+  color: #333 !important;
+}
+
+h2,
+.h2 {
+  font-size: 1.45rem;
+}
+
+h3,
+.h3 {
+  font-size: 1.3rem;
+}
+
+h4,
+.h4 {
+  font-size: 1.2rem;
+}
+
+h5,
+.h5 {
+  font-size: 1.1rem;
+}
+
+#asterSVG {
+  left: 25%;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+
+.bg-primary {
+  background-color: #c3daef !important;
+  color: #333;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.card-title {
+  margin: 0;
+  padding: 0;
+}
+
+.card-header {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.navbar-area {
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.navbar-light {
+  background-color: #f8f8f8 !important;
+  border-color: #e7e7e7 !important;
+}
+
+.navbar-light a {
+  color: #333 !important;
+}
+
+.navbar-light .btn-outline-secondary {
+  color: #333 !important;
+  border-color: #333 !important;
+}
+
+.dropdown-menu a {
+  color: #333 !important;
+}
+
+.dropdown-login-form {
+  min-width: 20rem;
+}
+
+.page-sidebar {
+  background-color: #2081c5;
+  color: #fff;
+}
+
+.page-sidebar a {
+  color: #fff !important;
+}
+
+.footer {
+  padding: 8px 20px 5px 20px;
+  background-color: #2081c5;
+  color: #fff;
+}
+
+/* D3 styles - Dendrogram */
+.node circle {
+  fill: #999;
+}
+.list-group.col-sm-1.float-right {
+  margin-right: 2%;
+}
+
+.node text {
+  font: 10px sans-serif;
+}
+
+.node--internal circle {
+  fill: #333;
+}
+
+.node--internal text {
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+.node-link {
+  fill: none;
+  stroke: #333;
+  stroke-opacity: 0.4;
+  stroke-width: 1.5px;
+}
+
+.node-link-bold {
+  fill: none;
+  stroke: #222;
+  stroke-opacity: 0.8;
+  stroke-width: 3px;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #333;
+  border-color: #333 transparent #333 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* PURE css solution for rotating carets based on expanded section */
+a[aria-expanded="true"] > .expand_caret {
+  transform-origin: center left;
+  transform: rotate(90deg);
+}
+
+/* Another method for adding carets after any collapsable item using FontAwesome
+[data-toggle="collapse"]:after {
+display: inline-block;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  content: "\f054";
+  transform: rotate(90deg) ;
+  transition: all linear 0.25s;
+  }   
+[data-toggle="collapse"].collapsed:after {
+  transform: rotate(0deg) ;
+}*/
+
+/* Shift dropdown menu items to the left*/
+.transform-calendar-left {
+  transform: translate3d(-200px, 18px, 0px);
+}
+
+.datepicker-fullwidth {
+  display: inline-block !important;
+}
+
+.react-date-picker__wrapper {
+  border: none !important;
+}
+
+/* https://github.com/tomkp/react-split-pane */
+.Resizer {
+  background: #000;
+  opacity: 0.2;
+  z-index: 1;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+}
+
+.Resizer:hover {
+  -webkit-transition: all 2s ease;
+  transition: all 2s ease;
+}
+
+.Resizer.horizontal {
+  height: 11px;
+  margin: -5px 0;
+  border-top: 5px solid rgba(255, 255, 255, 0);
+  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  cursor: row-resize;
+  width: 100%;
+}
+
+.Resizer.horizontal:hover {
+  border-top: 5px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.Resizer.vertical {
+  width: 11px;
+  margin: 0 -5px;
+  border-left: 5px solid rgba(255, 255, 255, 0);
+  border-right: 5px solid rgba(255, 255, 255, 0);
+  cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+  border-left: 5px solid rgba(0, 0, 0, 0.5);
+  border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+.Resizer.disabled {
+  cursor: not-allowed;
+}
+.Resizer.disabled:hover {
+  border-color: transparent;
+}
