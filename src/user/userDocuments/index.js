@@ -51,11 +51,7 @@ class UserDocuments extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <BSCard id="user-documents" widthOffset="col-sm-12" title="My Documents" body={this.renderDocuments()} />
-      </div>
-    );
+    return <BSCard id="user-documents" widthOffset="col-sm-12" title="My Documents" body={this.renderDocuments()} />;
   }
 }
 
