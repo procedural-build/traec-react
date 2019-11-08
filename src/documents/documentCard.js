@@ -79,8 +79,7 @@ class DocumentCard extends Component {
   save() {
     let { trackerId, refId, commitId, docId } = this.props;
     let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
-    if (this.state.selectedFiles) {
-      console.log("Upload file");
+    if (this.state.selectedFiles.length) {
       let formData = new FormData();
       formData.append("fileobj", this.state.selectedFiles[0]);
       fetch.updateFetchParams({ body: formData });

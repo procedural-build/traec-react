@@ -91,7 +91,7 @@ export class DocumentCardView extends Component {
 
           <div className="row align-items-center my-2 justify-content-between ">
             <div className="col-md-3">
-              <button className="btn-sm btn-secondary cursor-pointer p-0" onClick={dropzoneRef.open}>
+              <button className="btn-sm btn-secondary cursor-pointer px-1 py-0" onClick={dropzoneRef.open}>
                 Upload File
               </button>
               {this.renderSelectedFile()}
@@ -104,7 +104,9 @@ export class DocumentCardView extends Component {
             </div>
 
             <div className="col-md-1">
-              <BSBtn text={"Save"} onClick={() => this.props.save()} extra_className="p-0" />
+              <button className="btn-sm btn-primary cursor-pointer px-1 py-0 float-right" onClick={this.props.save}>
+                Save
+              </button>
             </div>
           </div>
         </div>
