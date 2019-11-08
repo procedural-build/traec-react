@@ -5,6 +5,7 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
 import UploadDocumentButton from "traec-react/utils/documentUpload";
 import { BSBtn } from "traec-react/utils/bootstrap/btn";
 import DatePicker from "react-date-picker";
+import moment from "moment";
 
 export class DocumentCardView extends Component {
   constructor(props) {
@@ -37,50 +38,46 @@ export class DocumentCardView extends Component {
     return items;
   }
 
-  rendActionDropDown() {
+  renderActionDropDown() {
     if (this.props.renderProps.actionDropDown) {
       return (
-        <div className="col-sm-2 h-100">
-          <BSBtnDropdown links={this.actionDropDownLinks()} header={this.state.action} />
+        <div className="col-sm-auto BS-btn-sm-text">
+          <BSBtnDropdown links={this.actionDropDownLinks()} header={this.props.action} />
         </div>
       );
     }
   }
 
-  rendSaveBtn() {
-    if (this.props.renderProps.saveBtn) {
-      return (
-        <div className="col-sm-1 h-100">
-          <BSBtn text={"Save"} onClick={() => this.save()} />
-        </div>
-      );
-    }
-  }
-
-  rendDatePicker() {
+  renderDatePicker() {
     if (this.props.renderProps.datePicker) {
       return (
-        <React.Fragment>
-          <div className="col-sm-1 h-100">Due:</div>
-          <div className="col-sm-4 h-100">
-            <DatePicker
-              className="form-control datepicker-fullwidth"
-              onChange={value => this.props.setDueDate(value)}
-              value={this.state.dueDate}
-            />
+        <div className="col-auto">
+          <div className="row align-items-center justify-content-center">
+            <div className="col-auto BS-btn-sm-text">Due:</div>
+            <div className="col-auto">
+              <DatePicker
+                className="form-control btn-sm datepicker-fullwidth"
+                onChange={value => this.props.setDueDate(value)}
+                value={this.props.dueDate}
+              />
+            </div>
           </div>
-        </React.Fragment>
+        </div>
       );
     }
   }
 
-  rendFileUpload() {
-    let { commitId, rootTreeId, document, cref } = this.props;
-    if (this.props.renderProps.fileUpload) {
+  renderUploadedFile() {
+    let { currentDocObject } = this.props;
+    if (currentDocObject) {
       return (
-        <div className="col-sm-4 h-100">
-          <UploadDocumentButton commitId={commitId} rootTreeId={rootTreeId} subDoc={document} cref={cref} />
-        </div>
+        <span className="BS-btn-sm-text">
+          Currently: <a href={currentDocObject.get("url")}>{currentDocObject.get("filename")}</a>,{" "}
+          <i>
+            Uploaded by: {currentDocObject.getInPath("creator.username")},{" "}
+            {moment(currentDocObject.get("created")).format("lll")}
+          </i>
+        </span>
       );
     }
   }
@@ -88,9 +85,9 @@ export class DocumentCardView extends Component {
   renderSelectedFile() {
     if (this.props.selectedFiles.length) {
       return (
-        <div className="badge badge-primary m-1">
-          <a className="h6 text-white">{this.props.selectedFiles}</a>
-        </div>
+        <span className="badge badge-primary m-1">
+          <a className="BS-btn-sm-text text-white">{this.props.selectedFiles}</a>
+        </span>
       );
     }
   }
@@ -98,9 +95,8 @@ export class DocumentCardView extends Component {
   render() {
     let { description, assignee, renderProps, dropzoneRef } = this.props;
     if (!renderProps || !dropzoneRef) return "";
-    console.log(dropzoneRef);
     return (
-      <div className="row border-bottom border-grey my-2">
+      <div className="row mb-4 mt-2">
         <div className="col-md-10">
           <div className="float-right">
             <BSBtnDropdown links={this.adminDropDownLinks()} header={"Admin"} />
@@ -108,14 +104,19 @@ export class DocumentCardView extends Component {
 
           <TitleAndDescription description={description} assignee={assignee}></TitleAndDescription>
 
-          <div className="row align-items-center mb-2 border border-danger ">
-            <button className="btn-sm btn-secondary" onClick={dropzoneRef.open}>
-              Upload File
-            </button>
-            {this.renderSelectedFile()}
-            {this.rendDatePicker()}
-            {this.rendActionDropDown()}
-            {this.rendSaveBtn()}
+          {this.renderUploadedFile()}
+          <div className="row align-items-center my-2 justify-content-between ">
+            <div className="col-auto">
+              <button className="btn-sm btn-secondary" onClick={dropzoneRef.open}>
+                Upload File
+              </button>
+              {this.renderSelectedFile()}
+            </div>
+            {this.renderDatePicker()}
+            {this.renderActionDropDown()}
+            <div className="col-auto h-100">
+              <BSBtn text={"Save"} onClick={() => this.props.save()} />
+            </div>
           </div>
         </div>
 

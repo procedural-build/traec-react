@@ -20,12 +20,10 @@ export class TitleAndDescription extends React.Component {
 
   renderTitle(description) {
     return (
-      <div>
-        <div className="col-sm-11">
-          <h5>{description.get("title")}</h5>
-          <i>{this.props.Assingee}</i>
-          <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />
-        </div>
+      <div className="col-sm-11 pl-0">
+        <h5 className="">{description.get("title")}</h5>
+        <i>{this.props.Assingee}</i>
+        <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />
       </div>
     );
   }

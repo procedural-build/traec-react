@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
+import moment from "moment";
 
 class DocumentCard extends Component {
   constructor(props) {
@@ -27,8 +28,7 @@ class DocumentCard extends Component {
     if (this.props.docStatus) {
       this.setState(() => {
         return {
-          ...this.state,
-          dueDate: convertISODateToDateObject(this.props.docStatus.get("due_date")),
+          dueDate: moment(this.props.docStatus.get("due_date")).toDate(),
           action: this.props.docStatus.getInPath("status.name")
         };
       });
@@ -38,7 +38,6 @@ class DocumentCard extends Component {
   setAction(name) {
     this.setState(() => {
       return {
-        ...this.state,
         action: name
       };
     });
@@ -60,14 +59,12 @@ class DocumentCard extends Component {
     if (value) value.setHours(1);
     this.setState(() => {
       return {
-        ...this.state,
         dueDate: value ? value : ""
       };
     });
   }
 
   onDrop(files) {
-    console.log(files);
     this.setState({ selectedFiles: files });
   }
 
@@ -81,16 +78,34 @@ class DocumentCard extends Component {
 
   save() {
     let { trackerId, refId, commitId, docId } = this.props;
-    let formData = new FormData();
-    formData.append("due_date", this.state.dueDate ? this.state.dueDate.toISOString() : "");
-    formData.append("name", this.state.action);
     let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
-    fetch.updateFetchParams({ body: formData });
+    if (this.state.selectedFiles) {
+      console.log("Upload file");
+      let formData = new FormData();
+      formData.append("fileobj", this.state.selectedFiles[0]);
+      fetch.updateFetchParams({ body: formData });
+      fetch.dispatch();
+      this.setState({
+        selectedFiles: []
+      });
+    }
+
+    fetch.updateFetchParams({
+      throttleTimeCheck: 0,
+      body: {
+        due_date: this.state.dueDate.toISOString(),
+        status: {
+          name: this.state.action
+        }
+      },
+      headers: { "content-type": "application/json" },
+      rawBody: false
+    });
     fetch.dispatch();
   }
 
   render() {
-    let { descriptions, assignee, docStatus, renderProps } = this.props;
+    let { descriptions, assignee, docStatus, renderProps, currentDocObject } = this.props;
     const files = this.getFiles();
     if (!descriptions) return "";
     let description = descriptions.toList().first() || Traec.Im.Map();
@@ -98,20 +113,24 @@ class DocumentCard extends Component {
       <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
         {({ getRootProps, getInputProps }) => {
           return (
-            <div {...getRootProps()} className="border border-dark">
+            <div {...getRootProps()}>
               <input {...getInputProps()}></input>
               <DocumentCardView
                 description={description}
                 assignee={assignee}
                 docStatus={docStatus}
                 setDueDate={this.setDueDate.bind(this)}
+                dueDate={this.state.dueDate}
                 setAction={this.setAction.bind(this)}
+                action={this.state.action}
                 deleteDocument={this.deleteDocument}
                 editDocument={this.editDocument}
                 copyDocument={this.copyDocument}
                 renderProps={renderProps}
                 dropzoneRef={this.dropzoneRef}
                 selectedFiles={files}
+                currentDocObject={currentDocObject}
+                save={this.save.bind(this)}
               ></DocumentCardView>
             </div>
           );
@@ -163,12 +182,6 @@ const getCurrentObject = (state, commitId, docId) => {
   let statusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
   let objId = state.getInPath(`entities.docStatuses.byId.${statusId}.current_object`);
   return state.getInPath(`entities.docObjects.byId.${objId}`);
-};
-
-const convertISODateToDateObject = ISODate => {
-  if (!ISODate) return "";
-  let dateArray = ISODate.split("T")[0].split("-");
-  return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 };
 
 export const getDocumentAssignee = function(state, docId, commitId, projectId) {
