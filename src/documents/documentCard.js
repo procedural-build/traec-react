@@ -105,7 +105,7 @@ class DocumentCard extends Component {
   }
 
   render() {
-    let { descriptions, assignee, docStatus, renderProps, currentDocObject } = this.props;
+    let { descriptions, assignee, docStatus, currentDocObject } = this.props;
     const files = this.getFiles();
     if (!descriptions) return "";
     let description = descriptions.toList().first() || Traec.Im.Map();
@@ -113,7 +113,7 @@ class DocumentCard extends Component {
       <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
         {({ getRootProps, getInputProps }) => {
           return (
-            <div {...getRootProps()}>
+            <div {...getRootProps()} style={{ outline: "none" }}>
               <input {...getInputProps()}></input>
               <DocumentCardView
                 description={description}
@@ -126,7 +126,6 @@ class DocumentCard extends Component {
                 deleteDocument={this.deleteDocument}
                 editDocument={this.editDocument}
                 copyDocument={this.copyDocument}
-                renderProps={renderProps}
                 dropzoneRef={this.dropzoneRef}
                 selectedFiles={files}
                 currentDocObject={currentDocObject}
