@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
-import moment from "moment";
+import Moment from "moment";
 
 class DocumentCard extends Component {
   constructor(props) {
@@ -25,11 +25,13 @@ class DocumentCard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.docStatus) {
+    let { docStatus } = this.props;
+    if (docStatus) {
+      let due_date = docStatus.get("due_date");
       this.setState(() => {
         return {
-          dueDate: moment(this.props.docStatus.get("due_date")).toDate(),
-          action: this.props.docStatus.getInPath("status.name")
+          dueDate: due_date ? Moment(due_date).toDate() : null,
+          action: docStatus.getInPath("status.name")
         };
       });
     }
@@ -104,7 +106,7 @@ class DocumentCard extends Component {
   }
 
   render() {
-    let { descriptions, assignee, docStatus, currentDocObject } = this.props;
+    let { cref, document, descriptions, assignee, docStatus, currentDocObject } = this.props;
     const files = this.getFiles();
     if (!descriptions) return "";
     let description = descriptions.toList().first() || Traec.Im.Map();
@@ -115,6 +117,8 @@ class DocumentCard extends Component {
             <div {...getRootProps()} style={{ outline: "none" }}>
               <input {...getInputProps()}></input>
               <DocumentCardView
+                cref={cref}
+                document={document}
                 description={description}
                 assignee={assignee}
                 docStatus={docStatus}

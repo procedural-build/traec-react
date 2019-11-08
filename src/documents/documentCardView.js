@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { TitleAndDescription } from "./titleAndDescription";
 import { DocumentStatus } from "./documentStatus";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
-import { BSBtn } from "traec-react/utils/bootstrap/btn";
 import DatePicker from "react-date-picker";
 import moment from "moment";
 
@@ -38,6 +37,7 @@ export class DocumentCardView extends Component {
   }
 
   renderDatePicker() {
+    console.log("RENDERING DATE PICKET", this.props.dueDate);
     return (
       <div className="row align-items-center justify-content-center">
         <div className="col-auto BS-btn-sm-text">Due:</div>
@@ -78,7 +78,7 @@ export class DocumentCardView extends Component {
   }
 
   render() {
-    let { description, assignee, dropzoneRef } = this.props;
+    let { cref, document, description, assignee, dropzoneRef } = this.props;
     if (!dropzoneRef) return "";
     return (
       <div className="row mb-4 mt-2">
@@ -86,7 +86,7 @@ export class DocumentCardView extends Component {
           <div className="float-right">
             <BSBtnDropdown links={this.adminDropDownLinks()} header={"Admin"} />
           </div>
-          <TitleAndDescription description={description} assignee={assignee}></TitleAndDescription>
+          <TitleAndDescription cref={cref} document={document} description={description} assignee={assignee} />
           {this.renderUploadedFile()}
 
           <div className="row align-items-center my-2 justify-content-between ">
