@@ -7,7 +7,6 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
 import UploadDocumentButton from "traec-react/utils/documentUpload";
 import { BSBtn } from "traec-react/utils/bootstrap/btn";
 import DatePicker from "react-date-picker";
-import Moment from "moment";
 
 class DocumentCard extends Component {
   constructor(props) {
@@ -74,10 +73,16 @@ class DocumentCard extends Component {
     let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
 
     // Add the file object to the form and dispatch
-    let formData = new FormData();
-    formData.append("due_date", this.state.dueDate ? this.state.dueDate.toISOString().split("T")[0] : "");
-    formData.append("name", this.state.action);
-    fetch.updateFetchParams({ body: formData });
+    fetch.updateFetchParams({
+      body: {
+        due_date: this.state.dueDate ? this.state.dueDate.toISOString() : "",
+        status: {
+          name: this.state.action
+        }
+      },
+      headers: { "content-type": "application/json" },
+      rawBody: false
+    });
     fetch.dispatch();
   }
 
