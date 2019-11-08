@@ -7,7 +7,9 @@ export class DocumentStatus extends Component {
   }
   render() {
     let { docStatus } = this.props;
-    let style = {};
+    let style = {
+      minHeight: "2rem"
+    };
     let name = "Nothing Recieved";
     if (!docStatus) {
       style["backgroundColor"] = "rgb(255,150,150)";
@@ -17,7 +19,7 @@ export class DocumentStatus extends Component {
     }
     return (
       <div className="col-md-2 text-center" style={style}>
-        {name}
+        <a className="abs-center BS-btn-sm-text">{name}</a>
       </div>
     );
   }
