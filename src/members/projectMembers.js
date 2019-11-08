@@ -14,6 +14,8 @@ export class ProjectMembers extends React.Component {
       return "";
     }
 
+    // Initially passed to specify which project uses this component so that this panel renders different information.
+    // Currently unused
     if (seeAssignments) {
       return (
         <React.Fragment>
@@ -23,13 +25,13 @@ export class ProjectMembers extends React.Component {
           {/*Render the members panel if allowed */}
           <MemberList projectId={projectId} />
 
-          {/*Render the invites panel if allowed COMMENT THIS OUT*/}
+          {/*Render the invites panel if allowed */}
           <InviteList projectId={projectId} />
 
-          {/*Render the discipline panel if allowed  COMMENT THIS OUT*/}
+          {/*Render the discipline panel if allowed */}
           <DisciplineList projectId={projectId} />
 
-          {/* Render the authGroup panel if allowed    COMMENT THIS OUT */}
+          {/* Render the authGroup panel if allowed */}
           {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
         </React.Fragment>
       );

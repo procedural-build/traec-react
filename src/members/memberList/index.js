@@ -26,7 +26,8 @@ export class MemberList extends React.Component {
         new Traec.Fetch("project_discipline", "list"),
         new Traec.Fetch("project_tracker", "list"),
         new Traec.Fetch("tracker_commit_target", "list"),
-        new Traec.Fetch("tracker_documents", "list", this.props.trackerId)
+        new Traec.Fetch("tracker_documents", "list", this.props.trackerId),
+        new Traec.Fetch("project_permission", "list", this.props.projectId)
       ];
     }
     let { fetchParams, stateParams } = this.fetch.params;
@@ -102,7 +103,6 @@ export class MemberList extends React.Component {
     let permObjId = projectId ? projectId : companyId;
     let permRenderFunc = projectId ? projectPermissionRender : companyPermissionRender;
     let inviteFields = projectId ? projectInviteFields : companyInviteFields;
-
     let permissionRender = permRenderFunc(permObjId, true, [], <BSBtn onClick={this.onClick} text="Send Invite" />);
 
     return (

@@ -6,7 +6,7 @@ import { Spinner } from "traec-react/utils/entities";
 import Im from "traec/immutable";
 import { RenderErrorMessage } from "../../errors/handleError";
 
-class Index extends React.Component {
+class UserDocuments extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
@@ -41,7 +41,6 @@ class Index extends React.Component {
     }
 
     let { documents } = this.props;
-
     if (!documents || documents.length === 0) {
       return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
     }
@@ -103,7 +102,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Index);
+)(UserDocuments);
 
 const getTrackersInState = function(state, ownProps) {
   let trackerIds = null;

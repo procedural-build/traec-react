@@ -59,13 +59,15 @@ class TraecUserTrackers extends React.Component {
 
   render() {
     return (
-      <BSCard
-        widthOffset="col-sm-12"
-        title={this.title()}
-        button={<BSBtn onClick={this.onClick} text={this.addButtonText()} />}
-        body={this.render_tracker_list()}
-        form={<BaseFormConnected params={this.state.formParams} fields={trackerFields} />}
-      />
+      <div className="row">
+        <BSCard
+          widthOffset="col-sm-12"
+          title={this.title()}
+          button={<BSBtn onClick={this.onClick} text={this.addButtonText()} />}
+          body={this.render_tracker_list()}
+          form={<BaseFormConnected params={this.state.formParams} fields={trackerFields} />}
+        />
+      </div>
     );
   }
 }

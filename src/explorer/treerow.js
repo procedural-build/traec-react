@@ -193,6 +193,7 @@ class TreeRow extends React.PureComponent {
       treeId
     });
     this.setState({ nameFormParams: fetch.params });
+    console.log(this.state.nameFormParams);
     fetch.toggleForm();
   }
 
