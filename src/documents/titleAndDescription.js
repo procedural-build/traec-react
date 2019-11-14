@@ -7,14 +7,14 @@ export class TitleAndDescription extends React.Component {
     super(props);
 
     this.state = {
-      showDescription: false
+      showDescription: true
     };
     this.toggleShowDescription = toggleShowDescription.bind(this);
   }
 
   renderDescription(description) {
     if (this.state.showDescription) {
-      return <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />;
+      return <div dangerouslySetInnerHTML={{ __html: description.toJS()[0].text }} />;
     } else {
       return null;
     }
@@ -24,7 +24,7 @@ export class TitleAndDescription extends React.Component {
     return (
       <div className="row">
         <div className="col-sm-11">
-          <h5>{description.get("title")}</h5>
+          <h5>{description.toJS()[0].title}</h5>
         </div>
         <div className="col-sm-1">
           <Octicon
