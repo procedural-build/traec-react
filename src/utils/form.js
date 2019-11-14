@@ -179,9 +179,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     postForm: (body, params) => {
       dispatch(fetchToState(params, body));
     },
-    toggleForm: () => {
-      dispatch(toggleForm(s));
-    },
+    toggleForm:
+      ownProps.toggleForm ||
+      (() => {
+        dispatch(toggleForm(s));
+      }),
     dispatch: dispatch
   };
 };

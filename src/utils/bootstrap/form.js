@@ -97,6 +97,7 @@ export class BSForm extends React.Component {
   }
 
   handleTinyMceChange(e, itemName) {
+    //console.log("HANDLING TNYMCE CHANGE")
     e.target.value = e.target.getContent();
     e.target.name = itemName;
     this.props.onChange(e);
@@ -113,6 +114,7 @@ export class BSForm extends React.Component {
     const extraClass = details.class || "col";
     const rowBreakDiv = details.endRow ? <div className="w-100" /> : "";
     const labelBlock = details.label === "" ? "" : <label>{label}</label>;
+    //console.log("RENDERING TINYMCE COMPONENT", details, details.initialContent, value)
     return (
       <React.Fragment key={keyIndex}>
         <div className={`form-group ${extraClass}`}>

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@tinymce/tinymce-react": "^3.3.2",
     "d3": "^5.9.7",
     "d3-tip": "^0.9.1",
     "jwt-decode": "^2.2.0",
@@ -21,7 +22,6 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-style-proptype": "^3.2.2",
-    "react-tinymce": "^0.7.0",
     "recharts": "^1.8.5",
     "sweetalert2": "^8.17.1",
     "traec": "^1.1.81"
