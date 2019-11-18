@@ -4,6 +4,7 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { toggleShowDescription } from "../tasks/utils/cardUtils";
 import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
+import Im from "traec/immutable";
 
 export class TitleAndDescription extends React.Component {
   constructor(props) {

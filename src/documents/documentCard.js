@@ -4,7 +4,21 @@ import Traec from "traec";
 import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
 import Moment from "moment";
-
+/**
+ * DocumentCard Component:
+ * @namespace DocumentCard
+ * @example
+ * return <DocumentCard
+ * key={i}
+ * selector={selector}
+ * docId={subDocId}
+ * trackerId={trackerId}
+ * crefId={crefId}
+ * commitId={commitId}
+ * collector={this.collectDocumentInfo}
+ * />
+ *
+ */
 class DocumentCard extends Component {
   constructor(props) {
     super(props);

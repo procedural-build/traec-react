@@ -2,3 +2,5 @@ node_modules
 dist
 !dist/.gitkeep
 .idea
+docs
+!docs/.gitkeep

@@ -2,7 +2,7 @@ import React from "react";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { getAllOps } from "traec/utils/metricOperations";
 import Octicon from "react-octicon";
-import "./tooltips.css";
+// import "./tooltips.css";
 
 export const renderOps = (ops, baseMetrics) => {
   for (let op of ops) {
