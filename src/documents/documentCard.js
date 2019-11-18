@@ -78,7 +78,7 @@ class DocumentCard extends Component {
     return this.state.selectedFiles.map(file => file.name + " (" + (file.size / 1000000).toFixed(1) + "Mb" + ")");
   }
 
-  save() {
+  doUpload(e) {
     let { trackerId, refId, commitId, docId } = this.props;
     let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
     if (this.state.selectedFiles.length) {
@@ -90,13 +90,22 @@ class DocumentCard extends Component {
         selectedFiles: []
       });
     }
+  }
+
+  save() {
+    let { trackerId, refId, commitId, docId, docStatus } = this.props;
+    let { dueDate, action } = this.state;
+    let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId: docId });
 
     fetch.updateFetchParams({
       throttleTimeCheck: 0,
       body: {
-        due_date: this.state.dueDate.toISOString(),
         status: {
-          name: this.state.action
+          uid: docStatus ? docStatus.get("uid") : null,
+          due_date: dueDate ? dueDate.toISOString() : null,
+          status: {
+            name: action
+          }
         }
       },
       headers: { "content-type": "application/json" },
@@ -107,8 +116,11 @@ class DocumentCard extends Component {
 
   render() {
     let { cref, document, descriptions, assignee, docStatus, currentDocObject } = this.props;
+    if (!cref || !descriptions) {
+      return null;
+    }
+
     const files = this.getFiles();
-    if (!descriptions) return "";
     let description = descriptions.toList().first() || Traec.Im.Map();
     return (
       <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
@@ -133,6 +145,7 @@ class DocumentCard extends Component {
                 selectedFiles={files}
                 currentDocObject={currentDocObject}
                 save={this.save.bind(this)}
+                doUpload={this.doUpload.bind(this)}
               ></DocumentCardView>
             </div>
           );

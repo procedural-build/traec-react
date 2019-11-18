@@ -1,0 +1,29 @@
+.tooltip_parent {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip_parent .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  padding: 1px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  top: -5px;
+  left: 105%;
+  z-index: 1;
+}
+
+.tooltip_parent:hover {
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+.tooltip_parent:hover .tooltiptext {
+  visibility: visible;
+}

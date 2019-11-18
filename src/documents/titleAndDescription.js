@@ -5,47 +5,6 @@ import { toggleShowDescription } from "../tasks/utils/cardUtils";
 import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
 
-export class TitleAndDescription_OLD extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      showDescription: false
-    };
-    this.toggleShowDescription = toggleShowDescription.bind(this);
-  }
-
-  renderDescription(description) {
-    if (this.state.showDescription) {
-      return <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />;
-    } else {
-      return null;
-    }
-  }
-
-  renderTitle(description) {
-    return (
-      <div className="col-sm-11 pl-0">
-        <h5 className="">{description.get("title")}</h5>
-        <i>{this.props.Assingee}</i>
-        <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />
-      </div>
-    );
-  }
-
-  render() {
-    if (!this.props.description) {
-      return null;
-    }
-    return (
-      <React.Fragment>
-        {this.renderTitle(this.props.description)}
-        {this.renderDescription(this.props.description)}
-      </React.Fragment>
-    );
-  }
-}
-
 export class TitleAndDescription extends React.Component {
   constructor(props) {
     super(props);
@@ -84,37 +43,49 @@ export class TitleAndDescription extends React.Component {
     };
   }
 
+  render_edit_dropdown() {
+    let { showEdit = true } = this.props;
+    if (!showEdit) {
+      return null;
+    }
+    return (
+      <BSBtnDropdown
+        links={[
+          {
+            name: "Edit Description",
+            onClick: e => {
+              this.fetch.toggleForm();
+            }
+          }
+        ]}
+        header={" "}
+      />
+    );
+  }
+
   render_content() {
     let { description: item } = this.props;
+    const TitleTag = this.props.TitleTag || "H2";
     return (
       <React.Fragment>
-        <h2>
+        <TitleTag>
           {item.get("title")}
-          <BSBtnDropdown
-            links={[
-              {
-                name: "Edit Description",
-                onClick: e => {
-                  this.fetch.toggleForm();
-                }
-              }
-            ]}
-            header={" "}
-          />
-        </h2>
+          {this.render_edit_dropdown()}
+        </TitleTag>
         <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: item.get("text") }} />
       </React.Fragment>
     );
   }
 
   render_form() {
+    let fetch = this.props.fetch || this.fetch;
     return (
       <BaseFormConnected
-        params={this.state.formParams}
+        params={fetch.params}
         fields={titleDescriptionFields}
         initFields={this.state.initFields || Traec.Im.Map()}
         toggleForm={() => {
-          this.fetch.toggleForm();
+          fetch.toggleForm();
         }}
       />
     );
@@ -131,6 +102,47 @@ export class TitleAndDescription extends React.Component {
           <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.render_form() : this.render_content()}</div>
         </div>
       </div>
+    );
+  }
+}
+
+export class TitleAndDescription_OLD extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showDescription: false
+    };
+    this.toggleShowDescription = toggleShowDescription.bind(this);
+  }
+
+  renderDescription(description) {
+    if (this.state.showDescription) {
+      return <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />;
+    } else {
+      return null;
+    }
+  }
+
+  renderTitle(description) {
+    return (
+      <div className="col-sm-11 pl-0">
+        <h5 className="">{description.get("title")}</h5>
+        <i>{this.props.Assingee}</i>
+        <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />
+      </div>
+    );
+  }
+
+  render() {
+    if (!this.props.description) {
+      return null;
+    }
+    return (
+      <React.Fragment>
+        {this.renderTitle(this.props.description)}
+        {this.renderDescription(this.props.description)}
+      </React.Fragment>
     );
   }
 }

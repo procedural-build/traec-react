@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Traec from "traec";
 import { TitleAndDescription } from "./titleAndDescription";
 import { DocumentStatus } from "./documentStatus";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
@@ -8,18 +9,47 @@ import moment from "moment";
 export class DocumentCardView extends Component {
   constructor(props) {
     super(props);
+
+    // Get the fetch that will be used in to edit the Description
+    let { description: item, cref, document } = props;
+    this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
+      trackerId: cref.get("tracker"),
+      documentId: document.get("uid"),
+      refId: cref.get("uid"),
+      commitId: cref.getInPath("latest_commit.uid")
+    });
+    // Reshape the post data just before fetching
+    this.fetch.updateFetchParams({
+      headers: { "content-type": "application/json" },
+      rawBody: false,
+      preFetchHook: body => ({
+        description: {
+          uid: item.get("uid"),
+          title: body.title,
+          text: body.description
+        }
+      })
+    });
+
     this.state = {
       dueDate: "",
-      action: "Nothing Recieved"
+      action: "Nothing Recieved",
+      editDocument: false
     };
+
     this.renderSelectedFile = this.renderSelectedFile.bind(this);
   }
 
   adminDropDownLinks() {
     let items = [
-      { name: "copy", onClick: this.props.copyDocument },
-      { name: "Edit", onClick: this.props.editDocument },
-      { name: "Delete", onClick: this.props.deleteDocument }
+      //{ name: "copy", onClick: this.props.copyDocument },
+      {
+        name: "Edit",
+        onClick: () => {
+          this.fetch.toggleForm();
+        }
+      }
+      //{ name: "Delete", onClick: this.props.deleteDocument }
     ];
     return items;
   }
@@ -37,7 +67,6 @@ export class DocumentCardView extends Component {
   }
 
   renderDatePicker() {
-    console.log("RENDERING DATE PICKET", this.props.dueDate);
     return (
       <div className="row align-items-center justify-content-center">
         <div className="col-auto BS-btn-sm-text">Due:</div>
@@ -67,11 +96,26 @@ export class DocumentCardView extends Component {
     }
   }
 
+  renderFileUpload() {
+    let { selectedFiles, dropzoneRef } = this.props;
+    let buttonText = selectedFiles.length ? "Upload File" : "Select or Drop File";
+    let buttonAction = selectedFiles.length ? this.props.doUpload : dropzoneRef.open;
+    return (
+      <React.Fragment>
+        <button className="btn-sm btn-secondary cursor-pointer px-1 py-0" onClick={buttonAction}>
+          {buttonText}
+        </button>
+        {this.renderSelectedFile()}
+      </React.Fragment>
+    );
+  }
+
   renderSelectedFile() {
-    if (this.props.selectedFiles.length) {
+    let { selectedFiles } = this.props;
+    if (selectedFiles.length) {
       return (
         <span className="badge badge-primary m-1">
-          <a className="BS-btn-sm-text text-white">{this.props.selectedFiles}</a>
+          <a className="BS-btn-sm-text text-white">{selectedFiles}</a>
         </span>
       );
     }
@@ -86,20 +130,25 @@ export class DocumentCardView extends Component {
           <div className="float-right">
             <BSBtnDropdown links={this.adminDropDownLinks()} header={"Admin"} />
           </div>
-          <TitleAndDescription cref={cref} document={document} description={description} assignee={assignee} />
+
+          <TitleAndDescription
+            cref={cref}
+            document={document}
+            description={description}
+            assignee={assignee}
+            TitleTag={"h5"}
+            fetch={this.fetch}
+            showEdit={false}
+          />
+
           {this.renderUploadedFile()}
 
-          <div className="row align-items-center my-2 justify-content-between ">
-            <div className="col-md-3">
-              <button className="btn-sm btn-secondary cursor-pointer px-1 py-0" onClick={dropzoneRef.open}>
-                Upload File
-              </button>
-              {this.renderSelectedFile()}
-            </div>
+          <div className="row">
+            <div className="col-md-4">{this.renderFileUpload()}</div>
 
             <div className="col-md-4">{this.renderDatePicker()}</div>
 
-            <div className="col-md-2 BS-btn-sm-text">
+            <div className="col-md-3 BS-btn-sm-text">
               <BSBtnDropdown links={this.actionDropDownLinks()} header={this.props.action} />
             </div>
 

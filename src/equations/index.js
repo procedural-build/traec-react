@@ -2,6 +2,7 @@ import React from "react";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { getAllOps } from "traec/utils/metricOperations";
 import Octicon from "react-octicon";
+import "./tooltips.css";
 
 export const renderOps = (ops, baseMetrics) => {
   for (let op of ops) {
@@ -12,8 +13,9 @@ export const renderOps = (ops, baseMetrics) => {
       .map((bm, i) => (
         <li key={i}>
           {bm ? (
-            <span>
-              {bm.get("name")} {/*[{bm.get("uid").substring(0, 8)}]*/}
+            <span className="tooltip_parent">
+              {bm.get("name")}
+              <span className="tooltiptext">{bm.get("uid").substring(0, 8)}</span>
             </span>
           ) : null}
         </li>
@@ -99,17 +101,16 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
   let greenBelow = metricTarget ? metricTarget.getInPath("meta_json.greenBelow") : null;
 
   // Useful for injecting into the UI for debugging
-  let idStr = (
-    <span>
-      [{indicator.get("uid").substring(0, 8)}:{indicator.getInPath("resultBaseMetric.uid").substring(0, 8)}]
-    </span>
-  );
+  let idStr = indicator.get("uid").substring(0, 8);
 
   return (
     <React.Fragment>
       <div className="row">
         <div className="col-sm-4">
-          <span className="align-middle">{indicator.getInPath("resultBaseMetric.name")}</span>
+          <span className="align-middle tooltip_parent">
+            {indicator.getInPath("resultBaseMetric.name")}
+            <span class="tooltiptext">{idStr}</span>
+          </span>
         </div>
         <div className="col-sm-2 align-middle">{indicator.getInPath("resultBaseMetric.category")}</div>
         <div className="col-sm-1 align-middle">{factor ? parseFloat(factor).toFixed(2) : factor}</div>
