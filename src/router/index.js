@@ -8,13 +8,17 @@ import NavBar from "../navBar";
 export default class AppRouter extends React.Component {
   render() {
     let { mainSwitch, navBarBrand } = this.props;
+    let UserProfileComponent = this.props.UserProfile || UserProfile;
     //console.log("RENDERING APPROUTER")
     return (
       <React.Fragment>
         <NavBar brand={navBarBrand} />
         <Switch>
           {/* Pass through a special router which checks login and directs if not / */}
-          <Route path="/accounts" render={routeProps => <AccountsRouter {...routeProps} UserProfile={UserProfile} />} />
+          <Route
+            path="/accounts"
+            render={routeProps => <AccountsRouter {...routeProps} UserProfile={UserProfileComponent} />}
+          />
 
           {/* Pass through a special router which checks login and directs if not / */}
           <Route
