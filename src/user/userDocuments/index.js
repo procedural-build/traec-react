@@ -29,9 +29,10 @@ class UserDocuments extends React.Component {
   }
 
   getDocuments() {
-    let { trackerIds } = this.props;
-    if (trackerIds) {
-      trackerIds.map(trackerId => new Traec.Fetch("tracker_documents", "list", { trackerId }).dispatch());
+    let { trackerId } = this.props;
+    if (trackerId) {
+      let fetch = new Traec.Fetch("tracker_documents", "list", { trackerId });
+      fetch.dispatch();
     }
   }
 
@@ -44,10 +45,19 @@ class UserDocuments extends React.Component {
     if (!documents || documents.length === 0) {
       return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
     }
+    let { trackerId, refId, commitId } = this.props;
 
-    return documents.map((document, index) => (
-      <this.props.documentComponent key={index} document={document} index={index} />
-    ));
+    return documents.valueSeq().map((document, index) => {
+      return (
+        <this.props.documentComponent
+          key={index}
+          docId={document.get("uid")}
+          trackerId={trackerId}
+          refId={refId}
+          commitId={commitId}
+        />
+      );
+    });
   }
 
   render() {
@@ -55,42 +65,26 @@ class UserDocuments extends React.Component {
   }
 }
 
-export const getDocumentsFromState = function(state) {
-  let userDocuments = state.getInPath("entities.user.documents.byId");
-  let documents = [];
-  if (userDocuments) {
-    documents = userDocuments.toArray().map(document => {
-      let descriptionId = document[1].get("description");
-      let statusId = document[1].get("status");
-      let trackerId = document[1].get("trackerId");
-      let { project, company } = getCompanyProjectFromTracker(state, trackerId);
-      return {
-        title: state.getInPath(`entities.descriptions.byId.${descriptionId}.title`),
-        status: state.getInPath(`entities.docStatus.byId.${statusId}.status`),
-        project,
-        company
-      };
-    });
-  }
-  return documents;
-};
-
-export const getCompanyProjectFromTracker = function(state, trackerId) {
-  let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
-  let project = state.getInPath(`entities.projects.byId.${projectId}`);
-  let companyName = state.getInPath(`entities.projects.byId.${projectId}.company.name`);
-
-  return { project, company: companyName };
-};
-
 export const mapStateToProps = (state, ownProps) => {
+  let { trackerId } = ownProps;
   let projects = state.getInPath("entities.projects.byId");
   let projectIds = projects ? projects.map(project => project.get("uid")) : null;
 
   let { trackerIds, singleTracker } = getTrackersInState(state, ownProps);
+  let refId = state.getInPath(`entities.trackers.byId.${trackerId}.root_master`);
+  // let crefId =
+  let commitId = state.getInPath(`entities.refs.byId.${refId}.latest_commit.uid`);
 
-  let documents = getDocumentsFromState(state);
-  return { trackerIds, projectIds, documents, singleTracker };
+  // let documents = getDocumentsFromState(state);
+  let documents = state.getInPath(`entities.user.documents.byId`);
+  return {
+    trackerIds,
+    projectIds,
+    documents,
+    singleTracker,
+    refId,
+    commitId
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -125,4 +119,32 @@ export const getTrackers = function(projectIds) {
   if (projectIds) {
     projectIds.map(projectId => new Traec.Fetch("project_tracker", "list", { projectId }).dispatch());
   }
+};
+
+export const getDocumentsFromState = function(state) {
+  let userDocuments = state.getInPath("entities.user.documents.byId");
+  let documents = [];
+  if (userDocuments) {
+    documents = userDocuments.toArray().map(document => {
+      let descriptionId = document[1].get("description");
+      let statusId = document[1].get("status");
+      let trackerId = document[1].get("trackerId");
+      let { project, company } = getCompanyProjectFromTracker(state, trackerId);
+      return {
+        title: state.getInPath(`entities.descriptions.byId.${descriptionId}.title`),
+        status: state.getInPath(`entities.docStatus.byId.${statusId}.status`),
+        project,
+        company
+      };
+    });
+  }
+  return documents;
+};
+
+export const getCompanyProjectFromTracker = function(state, trackerId) {
+  let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
+  let project = state.getInPath(`entities.projects.byId.${projectId}`);
+  let companyName = state.getInPath(`entities.projects.byId.${projectId}.company.name`);
+
+  return { project, company: companyName };
 };

@@ -9,32 +9,9 @@ import moment from "moment";
 export class DocumentCardView extends Component {
   constructor(props) {
     super(props);
-
-    // Get the fetch that will be used in to edit the Description
-    let { description: item, cref, document } = props;
-    this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
-      trackerId: cref.get("tracker"),
-      documentId: document.get("uid"),
-      refId: cref.get("uid"),
-      commitId: cref.getInPath("latest_commit.uid")
-    });
-    // Reshape the post data just before fetching
-    this.fetch.updateFetchParams({
-      headers: { "content-type": "application/json" },
-      rawBody: false,
-      preFetchHook: body => ({
-        description: {
-          uid: item.get("uid"),
-          title: body.title,
-          text: body.description
-        }
-      })
-    });
-
     this.state = {
       dueDate: "",
-      action: "Nothing Recieved",
-      editDocument: false
+      action: "Nothing Recieved"
     };
 
     this.renderSelectedFile = this.renderSelectedFile.bind(this);
@@ -69,12 +46,13 @@ export class DocumentCardView extends Component {
   renderDatePicker() {
     return (
       <div className="row align-items-center justify-content-center">
-        <div className="col-auto BS-btn-sm-text">Due:</div>
+        <div className="col-auto BS-btn-sm-text pb-2">Due:</div>
         <div className="col-auto">
           <DatePicker
-            className="form-control btn-sm datepicker-fullwidth p-0"
+            className="form-control btn-sm datepicker-fullwidth p-0 mb-1"
             onChange={value => this.props.setDueDate(value)}
             value={this.props.dueDate}
+            style={{ height: "12px" }}
           />
         </div>
       </div>
@@ -102,7 +80,11 @@ export class DocumentCardView extends Component {
     let buttonAction = selectedFiles.length ? this.props.doUpload : dropzoneRef.open;
     return (
       <React.Fragment>
-        <button className="btn-sm btn-secondary cursor-pointer px-1 py-0" onClick={buttonAction}>
+        <button
+          className="btn-sm btn-secondary cursor-pointer mb-1"
+          onClick={buttonAction}
+          style={{ padding: "2px 4px 2px" }}
+        >
           {buttonText}
         </button>
         {this.renderSelectedFile()}
@@ -122,22 +104,21 @@ export class DocumentCardView extends Component {
   }
 
   render() {
-    let { cref, document, description, assignee, dropzoneRef } = this.props;
+    let { cref, documentId, description, assignee, dropzoneRef } = this.props;
     if (!dropzoneRef) return "";
     return (
       <div className="row mb-4 mt-2">
-        <div className="col-md-10">
+        <div className="col-md-10" style={{ borderBottom: "1px solid lightgray" }}>
           <div className="float-right">
             <BSBtnDropdown links={this.adminDropDownLinks()} header={"Admin"} />
           </div>
 
           <TitleAndDescription
             cref={cref}
-            document={document}
+            documentId={documentId}
             description={description}
             assignee={assignee}
             TitleTag={"h5"}
-            fetch={this.fetch}
             showEdit={false}
           />
 
@@ -153,7 +134,11 @@ export class DocumentCardView extends Component {
             </div>
 
             <div className="col-md-1">
-              <button className="btn-sm btn-primary cursor-pointer px-1 py-0 float-right" onClick={this.props.save}>
+              <button
+                className="btn-sm btn-primary cursor-pointer mb-1 float-right"
+                onClick={this.props.save}
+                style={{ padding: "2px 4px 2px" }}
+              >
                 Save
               </button>
             </div>

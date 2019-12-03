@@ -115,22 +115,22 @@ class DocumentCard extends Component {
   }
 
   render() {
-    let { cref, document, descriptions, assignee, docStatus, currentDocObject } = this.props;
-    if (!cref || !descriptions) {
+    let { cref, description, assignee, docStatus, currentDocObject, docId } = this.props;
+    if (!cref || !description) {
       return null;
     }
 
     const files = this.getFiles();
-    let description = descriptions.toList().first() || Traec.Im.Map();
+    this.dropzoneRef = React.createRef();
     return (
-      <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
+      <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={this.dropzoneRef}>
         {({ getRootProps, getInputProps }) => {
           return (
             <div {...getRootProps()} style={{ outline: "none" }}>
               <input {...getInputProps()}></input>
               <DocumentCardView
                 cref={cref}
-                document={document}
+                documentId={docId}
                 description={description}
                 assignee={assignee}
                 docStatus={docStatus}
@@ -156,9 +156,8 @@ class DocumentCard extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { descriptionId, refId, commitId, docId, trackerId } = ownProps;
-  let document = state.getInPath(`entities.documents.byId.${docId}`);
-  let descriptions = getDescriptions(state, commitId, docId);
+  let { refId, commitId, docId, trackerId, document } = ownProps;
+  let description = getDescription(state, commitId, docId);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
   let currentDocObject = getCurrentObject(state, commitId, docId);
   let docStatusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
@@ -167,7 +166,7 @@ const mapStateToProps = (state, ownProps) => {
   let assignee = getDocumentAssignee(state, docId, commitId, projectId);
   return {
     document,
-    descriptions,
+    description,
     cref,
     refId,
     currentDocObject,
@@ -187,10 +186,14 @@ export default DocumentCard = connect(
   mapDispatchToProps
 )(DocumentCard);
 
-const getDescriptions = (state, commitId, docId) => {
-  let descriptionIds =
-    state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.descriptions`) || Traec.Im.Set();
-  return descriptionIds.map(id => state.getInPath(`entities.descriptions.byId.${id}`));
+const getDescription = (state, commitId, docId) => {
+  let descriptionIds = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.descriptions`);
+  if (!descriptionIds) {
+    let descriptionId = state.getInPath(`entities.user.documents.byId.${docId}.description`);
+    return state.getInPath(`entities.descriptions.byId.${descriptionId}`) || Traec.Im.Map();
+  }
+  let descriptions = descriptionIds.map(id => state.getInPath(`entities.descriptions.byId.${id}`));
+  return descriptions.toList().first() || Traec.Im.Map();
 };
 
 const getCurrentObject = (state, commitId, docId) => {
