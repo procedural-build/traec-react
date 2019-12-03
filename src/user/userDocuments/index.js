@@ -5,18 +5,35 @@ import Traec from "traec";
 import { Spinner } from "traec-react/utils/entities";
 import Im from "traec/immutable";
 import { RenderErrorMessage } from "../../errors/handleError";
+import { thisExpression } from "@babel/types";
+import { DocumentFilter } from "./documentFilter";
+import { setIn } from "immutable";
+import { moment } from "moment";
 
 class UserDocuments extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      hasError: false,
+      disciplineFilter: [],
+      statusFilter: [],
+      dueBefore: "",
+      dueAfter: ""
+    };
+    this.requiredFetches = [new Traec.Fetch("project_discipline", "list", { projectId: this.props.projectId })];
+    this.setDisciplineFilter = this.setDisciplineFilter.bind(this);
+    this.setStatusFilter = this.setStatusFilter.bind(this);
+    this.setDueAfter = this.setDueAfter.bind(this);
+    this.setDueBefore = this.setDueBefore.bind(this);
   }
 
   componentDidMount() {
+    Traec.fetchRequired.bind(this)();
     this.getDocuments();
   }
 
   componentDidUpdate() {
+    Traec.fetchRequired.bind(this)();
     if (!this.props.singleTracker) {
       getTrackers(this.props.projectIds);
     }
@@ -36,52 +53,158 @@ class UserDocuments extends React.Component {
     }
   }
 
-  renderDocuments() {
+  getStatuses() {
+    let statuses = [
+      { label: "Nothing Received" },
+      { label: "Pending Review" },
+      { label: "Requires Revision" },
+      { label: "OK for Submission" },
+      { label: "Not for Submission" }
+    ];
+
+    return statuses;
+  }
+
+  setDisciplineFilter(values) {
+    this.setFilter(values, "disciplineFilter");
+  }
+
+  setStatusFilter(values) {
+    this.setFilter(values, "statusFilter");
+  }
+
+  setFilter(values, key) {
+    let newState = {};
+    newState[key] = values.map(v => v.label);
+    this.setState(newState);
+  }
+
+  setDueBefore(dueBefore) {
+    this.setState({ dueBefore });
+  }
+
+  setDueAfter(dueAfter) {
+    this.setState({ dueAfter });
+  }
+
+  checkDueDateFilter(dueDate) {
+    let { dueAfter, dueBefore } = this.state;
+    if (!dueDate) return true;
+    return moment(dueDate).isSameOrBefore(dueBefore) || moment(dueDate).isSameOrAfter(dueAfter);
+  }
+
+  checkDisciplineFilter(components, disciplineName) {
+    let { disciplineFilter } = this.state;
+    return components.length > 0 && (disciplineFilter.length === 0 || disciplineFilter.includes(disciplineName));
+  }
+
+  checkStatusFilter(status) {
+    let { statusFilter } = this.state;
+    if (statusFilter.length === 0 || (!status && statusFilter.includes("Nothing Received"))) {
+      return true;
+    } else if (status && statusFilter.includes(status.name)) {
+      return true;
+    }
+    return false;
+  }
+
+  renderDocumentComponents() {
     if (this.state.hasError) {
       return <RenderErrorMessage error={this.state.error} />;
     }
 
-    let { documents } = this.props;
-    if (!documents || documents.length === 0) {
+    let { documents, disciplines, docStatuses } = this.props;
+    if (!documents || documents.length === 0 || !disciplines || !docStatuses) {
       return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
     }
+
+    let orderedDocumentComponents = {};
+    for (let discipline of disciplines.valueSeq()) {
+      orderedDocumentComponents[discipline.get("name")] = [];
+    }
+
     let { trackerId, refId, commitId } = this.props;
 
-    return documents.valueSeq().map((document, index) => {
-      return (
-        <this.props.documentComponent
-          key={index}
-          docId={document.get("uid")}
-          trackerId={trackerId}
-          refId={refId}
-          commitId={commitId}
-        />
-      );
-    });
+    for (let document of documents.valueSeq()) {
+      let statusId = document.get("status");
+      let status = docStatuses[statusId];
+      if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
+        let disciplineName = status ? disciplines.filter(d => d.uid === status.discipline_id) : "Unassigned";
+        let documentComponent = (
+          <this.props.documentComponent
+            docId={document.get("uid")}
+            trackerId={trackerId}
+            refId={refId}
+            commitId={commitId}
+          />
+        );
+        orderedDocumentComponents[disciplineName].push(documentComponent);
+      }
+    }
+
+    return (
+      <div className="mt-4">
+        {Object.keys(orderedDocumentComponents).map((disciplineName, disciplineIndex) => {
+          let documentComponents = orderedDocumentComponents[disciplineName];
+          if (this.checkDisciplineFilter(documentComponents, disciplineName)) {
+            return (
+              <div key={disciplineIndex}>
+                <h2>{disciplineName}</h2>
+
+                {documentComponents.map((component, componentIndex) => {
+                  return <div key={componentIndex}>{component}</div>;
+                })}
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
   }
 
   render() {
-    return <BSCard id="user-documents" widthOffset="col-sm-12" title="My Documents" body={this.renderDocuments()} />;
+    let { disciplines } = this.props;
+    if (!disciplines) return null;
+    return (
+      <div className="container">
+        <h2 style={{ fontSize: "30px" }}>My Documents</h2>
+        <DocumentFilter
+          disciplines={disciplines}
+          statuses={this.getStatuses()}
+          setStatusFilter={this.setStatusFilter}
+          setDisciplineFilter={this.setDisciplineFilter}
+          dueAfter={this.state.dueAfter}
+          dueBefore={this.state.dueBefore}
+          setDueAfter={this.setDueAfter}
+          setDueBefore={this.setDueBefore}
+        />
+        {this.renderDocumentComponents()}
+      </div>
+    );
   }
 }
 
 export const mapStateToProps = (state, ownProps) => {
   let { trackerId } = ownProps;
-  let projects = state.getInPath("entities.projects.byId");
-  let projectIds = projects ? projects.map(project => project.get("uid")) : null;
 
   let { trackerIds, singleTracker } = getTrackersInState(state, ownProps);
   let refId = state.getInPath(`entities.trackers.byId.${trackerId}.root_master`);
   let commitId = state.getInPath(`entities.refs.byId.${refId}.latest_commit.uid`);
 
+  let projectId = state.getInPath(`entities.refs.byId.${refId}.project`);
   let documents = state.getInPath(`entities.user.documents.byId`);
+  let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Im.Map();
+  disciplines = setIn(disciplines, ["uid", "name"], "Unassigned");
+  let docStatuses = state.getInPath(`entities.docStatus.byId`);
   return {
     trackerIds,
-    projectIds,
+    projectId,
     documents,
     singleTracker,
     refId,
-    commitId
+    commitId,
+    disciplines,
+    docStatuses
   };
 };
 
