@@ -17,20 +17,6 @@ export class DocumentCardView extends Component {
     this.renderSelectedFile = this.renderSelectedFile.bind(this);
   }
 
-  adminDropDownLinks() {
-    let items = [
-      //{ name: "copy", onClick: this.props.copyDocument },
-      {
-        name: "Edit",
-        onClick: () => {
-          this.fetch.toggleForm();
-        }
-      }
-      //{ name: "Delete", onClick: this.props.deleteDocument }
-    ];
-    return items;
-  }
-
   actionDropDownLinks() {
     let { setAction } = this.props;
     let items = [
@@ -109,17 +95,13 @@ export class DocumentCardView extends Component {
     return (
       <div className="row mb-4 mt-2">
         <div className="col-md-10" style={{ borderBottom: "1px solid lightgray" }}>
-          <div className="float-right">
-            <BSBtnDropdown links={this.adminDropDownLinks()} header={"Admin"} />
-          </div>
-
           <TitleAndDescription
             cref={cref}
             documentId={documentId}
             description={description}
             assignee={assignee}
             TitleTag={"h5"}
-            showEdit={false}
+            showEdit={true}
           />
 
           {this.renderUploadedFile()}

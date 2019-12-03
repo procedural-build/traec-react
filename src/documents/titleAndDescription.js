@@ -8,7 +8,6 @@ import { titleDescriptionFields } from "./form";
 export class TitleAndDescription extends React.Component {
   constructor(props) {
     super(props);
-
     /* 
     The fetch for this component is based on the props passed which are static 
     so we can safely define the fetch here once.
@@ -58,7 +57,7 @@ export class TitleAndDescription extends React.Component {
             }
           }
         ]}
-        header={" "}
+        header={"Admin"}
       />
     );
   }
@@ -69,9 +68,10 @@ export class TitleAndDescription extends React.Component {
     return (
       <React.Fragment>
         <TitleTag>
-          {item.get("title")}
-          {this.render_edit_dropdown()}
+          <b>{item.get("title")}</b>
+          <span style={{ fontSize: "0.875rem" }}>{this.render_edit_dropdown()}</span>
         </TitleTag>
+
         <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: item.get("text") }} />
       </React.Fragment>
     );
