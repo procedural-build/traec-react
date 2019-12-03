@@ -72,10 +72,8 @@ export const mapStateToProps = (state, ownProps) => {
 
   let { trackerIds, singleTracker } = getTrackersInState(state, ownProps);
   let refId = state.getInPath(`entities.trackers.byId.${trackerId}.root_master`);
-  // let crefId =
   let commitId = state.getInPath(`entities.refs.byId.${refId}.latest_commit.uid`);
 
-  // let documents = getDocumentsFromState(state);
   let documents = state.getInPath(`entities.user.documents.byId`);
   return {
     trackerIds,
@@ -119,26 +117,6 @@ export const getTrackers = function(projectIds) {
   if (projectIds) {
     projectIds.map(projectId => new Traec.Fetch("project_tracker", "list", { projectId }).dispatch());
   }
-};
-
-export const getDocumentsFromState = function(state) {
-  let userDocuments = state.getInPath("entities.user.documents.byId");
-  let documents = [];
-  if (userDocuments) {
-    documents = userDocuments.toArray().map(document => {
-      let descriptionId = document[1].get("description");
-      let statusId = document[1].get("status");
-      let trackerId = document[1].get("trackerId");
-      let { project, company } = getCompanyProjectFromTracker(state, trackerId);
-      return {
-        title: state.getInPath(`entities.descriptions.byId.${descriptionId}.title`),
-        status: state.getInPath(`entities.docStatus.byId.${statusId}.status`),
-        project,
-        company
-      };
-    });
-  }
-  return documents;
 };
 
 export const getCompanyProjectFromTracker = function(state, trackerId) {
