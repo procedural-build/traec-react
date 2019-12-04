@@ -6,7 +6,7 @@ import Im from "traec/immutable";
 import { RenderErrorMessage } from "../../errors/handleError";
 import { DocumentFilter } from "./documentFilter";
 import { setIn } from "immutable";
-import { moment } from "moment";
+import moment from "moment";
 
 class UserDocuments extends React.Component {
   constructor(props) {
@@ -125,9 +125,14 @@ class UserDocuments extends React.Component {
 
     for (let document of documents.valueSeq()) {
       let statusId = document.get("status");
-      let status = docStatuses[statusId];
+      let status = docStatuses.get(statusId);
+      console.log(status);
       if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
-        let disciplineName = status ? disciplines.filter(d => d.uid === status.discipline_id) : "Unassigned";
+        let disciplineName = status
+          ? disciplines.filter(d => d.get("uid") === status.get("discipline_id")).get("name")
+          : "Unassigned";
+        disciplineName = disciplineName ? disciplineName : "Unassigned";
+        console.log("Dis name", disciplineName);
         let documentComponent = (
           <this.props.documentComponent
             docId={document.get("uid")}
