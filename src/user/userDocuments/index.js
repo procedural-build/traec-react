@@ -167,7 +167,7 @@ class UserDocuments extends React.Component {
     let { statusFilter } = this.state;
     if (statusFilter.length === 0 || (!status && statusFilter.includes("Nothing Received"))) {
       return true;
-    } else if (status && statusFilter.includes(status.name)) {
+    } else if (status && statusFilter.includes(status.getInPath("status.name"))) {
       return true;
     }
     return false;
