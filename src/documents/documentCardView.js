@@ -62,6 +62,7 @@ export class DocumentCardView extends Component {
 
   renderFileUpload() {
     let { selectedFiles, dropzoneRef } = this.props;
+    if (!dropzoneRef) return "";
     let buttonText = selectedFiles.length ? "Upload File" : "Select or Drop File";
     let buttonAction = selectedFiles.length ? this.props.doUpload : dropzoneRef.open;
     return (
@@ -90,8 +91,8 @@ export class DocumentCardView extends Component {
   }
 
   render() {
-    let { cref, documentId, description, assignee, dropzoneRef } = this.props;
-    if (!dropzoneRef) return "";
+    let { cref, documentId, description, assignee } = this.props;
+
     return (
       <div className="row mb-4 mt-2">
         <div className="col-md-10" style={{ borderBottom: "1px solid lightgray" }}>

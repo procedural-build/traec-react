@@ -25,6 +25,8 @@ class DocumentCard extends Component {
   }
 
   componentDidMount() {
+    if (!this.dropzoneRef) this.forceUpdate(); // This has to be called, otherwise this.dropzoneRef won't be defined.
+
     let { docStatus } = this.props;
     if (docStatus) {
       let due_date = docStatus.get("due_date");
@@ -119,11 +121,9 @@ class DocumentCard extends Component {
     if (!cref || !description) {
       return null;
     }
-
     const files = this.getFiles();
-    this.dropzoneRef = React.createRef();
     return (
-      <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={this.dropzoneRef}>
+      <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
         {({ getRootProps, getInputProps }) => {
           return (
             <div {...getRootProps()} style={{ outline: "none" }}>
@@ -159,8 +159,9 @@ const mapStateToProps = (state, ownProps) => {
   let { refId, commitId, docId, trackerId, document } = ownProps;
   let description = getDescription(state, commitId, docId);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
-  let currentDocObject = getCurrentObject(state, commitId, docId);
-  let docStatusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
+
+  let docStatusId = getDocumentStatusId(state, commitId, docId);
+  let currentDocObject = getCurrentObject(state, docStatusId);
   let docStatus = state.getInPath(`entities.docStatuses.byId.${docStatusId}`);
   let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
   let assignee = getDocumentAssignee(state, docId, commitId, projectId);
@@ -186,6 +187,13 @@ export default DocumentCard = connect(
   mapDispatchToProps
 )(DocumentCard);
 
+const getDocumentStatusId = (state, commitId, docId) => {
+  let docStatusId =
+    state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`) ||
+    state.getInPath(`entities.user.documents.byId.${docId}.status`);
+  return docStatusId;
+};
+
 const getDescription = (state, commitId, docId) => {
   let descriptionIds = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.descriptions`);
   if (!descriptionIds) {
@@ -196,8 +204,7 @@ const getDescription = (state, commitId, docId) => {
   return descriptions.toList().first() || Traec.Im.Map();
 };
 
-const getCurrentObject = (state, commitId, docId) => {
-  let statusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
+const getCurrentObject = (state, statusId) => {
   let objId = state.getInPath(`entities.docStatuses.byId.${statusId}.current_object`);
   return state.getInPath(`entities.docObjects.byId.${objId}`);
 };

@@ -1,11 +1,9 @@
 import React from "react";
-import { BSCard } from "traec-react/utils/bootstrap";
 import { connect } from "react-redux";
 import Traec from "traec";
 import { Spinner } from "traec-react/utils/entities";
 import Im from "traec/immutable";
 import { RenderErrorMessage } from "../../errors/handleError";
-import { thisExpression } from "@babel/types";
 import { DocumentFilter } from "./documentFilter";
 import { setIn } from "immutable";
 import { moment } from "moment";
@@ -195,7 +193,7 @@ export const mapStateToProps = (state, ownProps) => {
   let documents = state.getInPath(`entities.user.documents.byId`);
   let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Im.Map();
   disciplines = setIn(disciplines, ["uid", "name"], "Unassigned");
-  let docStatuses = state.getInPath(`entities.docStatus.byId`);
+  let docStatuses = state.getInPath(`entities.docStatuses.byId`);
   return {
     trackerIds,
     projectId,
