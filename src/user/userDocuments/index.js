@@ -59,7 +59,6 @@ class UserDocuments extends React.Component {
       { label: "OK for Submission" },
       { label: "Not for Submission" }
     ];
-
     return statuses;
   }
 
@@ -85,65 +84,16 @@ class UserDocuments extends React.Component {
     this.setState({ dueAfter });
   }
 
-  checkDueDateFilter(dueDate) {
-    let { dueAfter, dueBefore } = this.state;
-    if (!dueDate) return true;
-    return moment(dueDate).isSameOrBefore(dueBefore) || moment(dueDate).isSameOrAfter(dueAfter);
-  }
-
-  checkDisciplineFilter(components, disciplineName) {
-    let { disciplineFilter } = this.state;
-    return components.length > 0 && (disciplineFilter.length === 0 || disciplineFilter.includes(disciplineName));
-  }
-
-  checkStatusFilter(status) {
-    let { statusFilter } = this.state;
-    if (statusFilter.length === 0 || (!status && statusFilter.includes("Nothing Received"))) {
-      return true;
-    } else if (status && statusFilter.includes(status.name)) {
-      return true;
-    }
-    return false;
-  }
-
   renderDocumentComponents() {
     if (this.state.hasError) {
-      return <RenderErrorMessage error={this.state.error} />;
+      return this.renderErrorMessage();
     }
 
-    let { documents, disciplines, docStatuses } = this.props;
-    if (!documents || documents.length === 0 || !disciplines || !docStatuses) {
-      return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
+    if (this.areDocumentsLoading()) {
+      return this.renderSpinner();
     }
 
-    let orderedDocumentComponents = {};
-    for (let discipline of disciplines.valueSeq()) {
-      orderedDocumentComponents[discipline.get("name")] = [];
-    }
-
-    let { trackerId, refId, commitId } = this.props;
-
-    for (let document of documents.valueSeq()) {
-      let statusId = document.get("status");
-      let status = docStatuses.get(statusId);
-      console.log(status);
-      if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
-        let disciplineName = status
-          ? disciplines.filter(d => d.get("uid") === status.get("discipline_id")).get("name")
-          : "Unassigned";
-        disciplineName = disciplineName ? disciplineName : "Unassigned";
-        console.log("Dis name", disciplineName);
-        let documentComponent = (
-          <this.props.documentComponent
-            docId={document.get("uid")}
-            trackerId={trackerId}
-            refId={refId}
-            commitId={commitId}
-          />
-        );
-        orderedDocumentComponents[disciplineName].push(documentComponent);
-      }
-    }
+    let orderedDocumentComponents = this.getOrderedDocumentComponents();
 
     return (
       <div className="mt-4">
@@ -163,6 +113,70 @@ class UserDocuments extends React.Component {
         })}
       </div>
     );
+  }
+
+  renderErrorMessage() {
+    return <RenderErrorMessage error={this.state.error} />;
+  }
+
+  areDocumentsLoading() {
+    let { documents, disciplines, docStatuses } = this.props;
+    return !documents || documents.length === 0 || !disciplines || !docStatuses;
+  }
+
+  renderSpinner() {
+    return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
+  }
+
+  checkDisciplineFilter(components, disciplineName) {
+    let { disciplineFilter } = this.state;
+    return components.length > 0 && (disciplineFilter.length === 0 || disciplineFilter.includes(disciplineName));
+  }
+
+  getOrderedDocumentComponents() {
+    let { disciplines } = this.props;
+    let orderedDocumentComponents = {};
+    for (let discipline of disciplines.valueSeq()) {
+      orderedDocumentComponents[discipline.get("name")] = [];
+    }
+
+    let { trackerId, refId, commitId, documents, docStatuses } = this.props;
+    for (let document of documents.valueSeq()) {
+      let statusId = document.get("status");
+      let status = docStatuses.get(statusId);
+      if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
+        let disciplineName = status
+          ? disciplines.filter(d => d.get("uid") === status.get("discipline_id")).get("name")
+          : "Unassigned";
+        disciplineName = disciplineName ? disciplineName : "Unassigned";
+        let documentComponent = (
+          <this.props.documentComponent
+            docId={document.get("uid")}
+            trackerId={trackerId}
+            refId={refId}
+            commitId={commitId}
+          />
+        );
+        orderedDocumentComponents[disciplineName].push(documentComponent);
+      }
+    }
+    return orderedDocumentComponents;
+  }
+
+  checkStatusFilter(status) {
+    let { statusFilter } = this.state;
+    if (statusFilter.length === 0 || (!status && statusFilter.includes("Nothing Received"))) {
+      return true;
+    } else if (status && statusFilter.includes(status.name)) {
+      return true;
+    }
+    return false;
+  }
+
+  checkDueDateFilter(dueDate) {
+    let { dueAfter, dueBefore } = this.state;
+    if (!dueDate || (!dueAfter && !dueBefore)) return true;
+    return moment(dueDate).isSameOrBefore(dueBefore) || moment(dueDate).isSameOrAfter(dueAfter);
   }
 
   render() {
