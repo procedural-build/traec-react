@@ -140,14 +140,16 @@ class UserDocuments extends React.Component {
       orderedDocumentComponents[discipline.get("name")] = [];
     }
 
-    let { trackerId, refId, commitId, documents, docStatuses } = this.props;
+    let { trackerId, commitId, documents, docStatuses } = this.props;
     for (let document of documents.valueSeq()) {
       let statusId = document.get("status");
       let status = docStatuses.get(statusId);
+      let refId = document.get("refId");
       if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
         let disciplineName = status
           ? disciplines.filter(d => d.get("uid") === status.get("discipline_id")).get("name")
           : "Unassigned";
+
         disciplineName = disciplineName ? disciplineName : "Unassigned";
         let documentComponent = (
           <this.props.documentComponent
