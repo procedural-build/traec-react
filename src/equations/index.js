@@ -109,7 +109,7 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
         <div className="col-sm-4">
           <span className="align-middle tooltip_parent">
             {indicator.getInPath("resultBaseMetric.name")}
-            <span class="tooltiptext">{idStr}</span>
+            <span className="tooltiptext">{idStr}</span>
           </span>
         </div>
         <div className="col-sm-2 align-middle">{indicator.getInPath("resultBaseMetric.category")}</div>
