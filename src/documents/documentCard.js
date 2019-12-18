@@ -182,10 +182,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default DocumentCard = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DocumentCard);
+export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
 
 const getDocumentStatusId = (state, commitId, docId) => {
   let docStatusId =

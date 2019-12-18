@@ -233,10 +233,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserDocuments);
+export default connect(mapStateToProps, mapDispatchToProps)(UserDocuments);
 
 const getTrackersInState = function(state, ownProps) {
   let trackerIds = null;
