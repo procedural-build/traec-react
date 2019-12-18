@@ -8,14 +8,15 @@ import { titleDescriptionFields } from "./form";
 export class TitleAndDescription extends React.Component {
   constructor(props) {
     super(props);
+
     /* 
     The fetch for this component is based on the props passed which are static 
     so we can safely define the fetch here once.
      */
-    let { description: item, cref, documentId } = props;
+    let { description: item, cref, document } = props;
     this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
       trackerId: cref.get("tracker"),
-      documentId: documentId,
+      documentId: document.get("uid"),
       refId: cref.get("uid"),
       commitId: cref.getInPath("latest_commit.uid")
     });
@@ -57,7 +58,7 @@ export class TitleAndDescription extends React.Component {
             }
           }
         ]}
-        header={"Admin"}
+        header={" "}
       />
     );
   }
@@ -68,10 +69,9 @@ export class TitleAndDescription extends React.Component {
     return (
       <React.Fragment>
         <TitleTag>
-          <b>{item.get("title")}</b>
-          <span style={{ fontSize: "0.875rem" }}>{this.render_edit_dropdown()}</span>
+          {item.get("title")}
+          {this.render_edit_dropdown()}
         </TitleTag>
-
         <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: item.get("text") }} />
       </React.Fragment>
     );
@@ -102,6 +102,47 @@ export class TitleAndDescription extends React.Component {
           <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.render_form() : this.render_content()}</div>
         </div>
       </div>
+    );
+  }
+}
+
+export class TitleAndDescription_OLD extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showDescription: false
+    };
+    this.toggleShowDescription = toggleShowDescription.bind(this);
+  }
+
+  renderDescription(description) {
+    if (this.state.showDescription) {
+      return <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />;
+    } else {
+      return null;
+    }
+  }
+
+  renderTitle(description) {
+    return (
+      <div className="col-sm-11 pl-0">
+        <h5 className="">{description.get("title")}</h5>
+        <i>{this.props.Assingee}</i>
+        <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />
+      </div>
+    );
+  }
+
+  render() {
+    if (!this.props.description) {
+      return null;
+    }
+    return (
+      <React.Fragment>
+        {this.renderTitle(this.props.description)}
+        {this.renderDescription(this.props.description)}
+      </React.Fragment>
     );
   }
 }

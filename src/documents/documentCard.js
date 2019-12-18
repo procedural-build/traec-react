@@ -25,8 +25,6 @@ class DocumentCard extends Component {
   }
 
   componentDidMount() {
-    if (!this.dropzoneRef) this.forceUpdate(); // This has to be called, otherwise this.dropzoneRef won't be defined.
-
     let { docStatus } = this.props;
     if (docStatus) {
       let due_date = docStatus.get("due_date");
@@ -117,11 +115,13 @@ class DocumentCard extends Component {
   }
 
   render() {
-    let { cref, description, assignee, docStatus, currentDocObject, docId } = this.props;
-    if (!cref || !description) {
+    let { cref, document, descriptions, assignee, docStatus, currentDocObject } = this.props;
+    if (!cref || !descriptions) {
       return null;
     }
+
     const files = this.getFiles();
+    let description = descriptions.toList().first() || Traec.Im.Map();
     return (
       <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
         {({ getRootProps, getInputProps }) => {
@@ -130,7 +130,7 @@ class DocumentCard extends Component {
               <input {...getInputProps()}></input>
               <DocumentCardView
                 cref={cref}
-                documentId={docId}
+                document={document}
                 description={description}
                 assignee={assignee}
                 docStatus={docStatus}
@@ -156,18 +156,18 @@ class DocumentCard extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { refId, commitId, docId, trackerId, document } = ownProps;
-  let description = getDescription(state, commitId, docId);
+  let { descriptionId, refId, commitId, docId, trackerId } = ownProps;
+  let document = state.getInPath(`entities.documents.byId.${docId}`);
+  let descriptions = getDescriptions(state, commitId, docId);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
-
-  let docStatusId = getDocumentStatusId(state, commitId, docId);
-  let currentDocObject = getCurrentObject(state, docStatusId);
+  let currentDocObject = getCurrentObject(state, commitId, docId);
+  let docStatusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
   let docStatus = state.getInPath(`entities.docStatuses.byId.${docStatusId}`);
   let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
   let assignee = getDocumentAssignee(state, docId, commitId, projectId);
   return {
     document,
-    description,
+    descriptions,
     cref,
     refId,
     currentDocObject,
@@ -184,24 +184,14 @@ const mapDispatchToProps = dispatch => {
 
 export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
 
-const getDocumentStatusId = (state, commitId, docId) => {
-  let docStatusId =
-    state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`) ||
-    state.getInPath(`entities.user.documents.byId.${docId}.status`);
-  return docStatusId;
+const getDescriptions = (state, commitId, docId) => {
+  let descriptionIds =
+    state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.descriptions`) || Traec.Im.Set();
+  return descriptionIds.map(id => state.getInPath(`entities.descriptions.byId.${id}`));
 };
 
-const getDescription = (state, commitId, docId) => {
-  let descriptionIds = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.descriptions`);
-  if (!descriptionIds) {
-    let descriptionId = state.getInPath(`entities.user.documents.byId.${docId}.description`);
-    return state.getInPath(`entities.descriptions.byId.${descriptionId}`) || Traec.Im.Map();
-  }
-  let descriptions = descriptionIds.map(id => state.getInPath(`entities.descriptions.byId.${id}`));
-  return descriptions.toList().first() || Traec.Im.Map();
-};
-
-const getCurrentObject = (state, statusId) => {
+const getCurrentObject = (state, commitId, docId) => {
+  let statusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${docId}.status`);
   let objId = state.getInPath(`entities.docStatuses.byId.${statusId}.current_object`);
   return state.getInPath(`entities.docObjects.byId.${objId}`);
 };
