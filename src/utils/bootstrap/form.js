@@ -1,6 +1,6 @@
 import React from "react";
 import { camelCaseToSentence } from "traec/utils/index";
-import TinyMCE from "react-tinymce";
+import TinyMCE from "@tinymce/tinymce-react";
 import DatePicker from "react-date-picker";
 import Crypto from "crypto";
 import Moment from "moment";
