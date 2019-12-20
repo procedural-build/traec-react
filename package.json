@@ -26,7 +26,7 @@
     "react-tinymce": "^0.7.0",
     "recharts": "^1.8.5",
     "sweetalert2": "^8.19.0",
-    "traec": "^1.1.92"
+    "traec": "^1.1.93"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.5",
