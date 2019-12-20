@@ -26,6 +26,8 @@ const getRecaptchaSiteKey = () => {
     return "6LfJt4sUAAAAAIGNjKs8OeA3gmDAYXmeiUHMtp2o";
   } else if (hostname.endsWith("ods-track.com")) {
     return "6LdViicUAAAAADRyFSQpSwJ3OBPjwC_jcrJizqsx";
+  } else if (hostname.endsWith("abate.dk")) {
+    return "6Lc1i8gUAAAAAIhmFXMivq-k_my-9t4JxejzWpor";
   } else {
     return "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
   }
