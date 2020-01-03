@@ -59,6 +59,7 @@ export class BSForm extends React.Component {
             onChange={this.handleChange}
             value={value}
             formNoValidate={true}
+            disabled={details.disabled || false}
           />
           {error}
         </div>
@@ -78,6 +79,7 @@ export class BSForm extends React.Component {
     const extraClass = details.class || "col";
     const rowBreakDiv = details.endRow ? <div className="w-100" /> : "";
     const labelBlock = details.label === "" ? "" : <label>{label}</label>;
+    let extra_attrs = details.disabled ? { disabled: true } : { disabled: true };
     return (
       <React.Fragment key={keyIndex}>
         <div className={`form-group ${extraClass}`}>
@@ -89,6 +91,7 @@ export class BSForm extends React.Component {
             name={item.name}
             onChange={this.handleChange}
             value={value}
+            disabled={details.disabled || false}
           />
           {error}
         </div>
@@ -147,7 +150,13 @@ export class BSForm extends React.Component {
       <React.Fragment key={keyIndex}>
         <div className={`form-group ${extraClass}`}>
           {labelBlock}
-          <select className={`custom-select ${validClass}`} onChange={this.handleChange} name={item.name} value={value}>
+          <select
+            className={`custom-select ${validClass}`}
+            onChange={this.handleChange}
+            name={item.name}
+            value={value}
+            disabled={details.disabled || false}
+          >
             {details.options}
           </select>
           {error}
@@ -218,6 +227,7 @@ export class BSForm extends React.Component {
               checked={value}
               onChange={this.handleChange}
               id={id}
+              disabled={details.disabled || false}
             />
             <label className="form-check-label" htmlFor={id}>
               {label}

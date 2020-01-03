@@ -93,6 +93,10 @@ class BaseForm extends React.Component {
       [e.target.name]: Object.assign({}, stateFormFields[e.target.name], { value: e.target.value })
     });
     this.setState({ formFields });
+    // Hook in an action post-change
+    if (this.props.postChangeHook) {
+      this.props.postChangeHook(e, formFields, this.setState);
+    }
   }
 
   onSubmit(e) {
@@ -129,8 +133,19 @@ class BaseForm extends React.Component {
     );
   }
 
+  render_submit() {
+    if (this.props.disabled) {
+      return null;
+    }
+    return (
+      <button type="submit" className="btn btn-sm btn-primary float-right">
+        Submit
+      </button>
+    );
+  }
+
   render() {
-    let { showForm, forceShowForm } = this.props;
+    let { showForm, forceShowForm, disabled } = this.props;
     if (!showForm && !forceShowForm) {
       return "";
     }
@@ -143,16 +158,22 @@ class BaseForm extends React.Component {
       };
     });
 
+    // disable inputs if disabled prop is set
+    if (disabled) {
+      for (let item of formFields) {
+        // Create new object to avoid mutating original details
+        item.details = { ...item.details, disabled: true };
+      }
+    }
+
     return (
       <div className="col-sm-12 ">
         <form onSubmit={e => this.onSubmit(e)}>
           <BSForm items={formFields} formErrors={this.state.formErrors} onChange={this.onChange} />
           {this.render_close()}
-          <button type="submit" className="btn btn-sm btn-primary float-right">
-            Submit
-          </button>
+          {this.render_submit()}
           <div style={{ clear: "both" }} />
-          <hr />
+          {this.props.hideUnderline ? null : <hr />}
         </form>
       </div>
     );
@@ -188,7 +209,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BaseForm);
+export default connect(mapStateToProps, mapDispatchToProps)(BaseForm);

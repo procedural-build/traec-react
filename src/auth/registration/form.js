@@ -29,7 +29,7 @@ const getRecaptchaSiteKey = () => {
   } else if (hostname.endsWith("abate.dk")) {
     return "6Lc1i8gUAAAAAIhmFXMivq-k_my-9t4JxejzWpor";
   } else {
-    return "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+    return "6LcbH3wUAAAAANJthLG_viHtCcXrDnXJ_kzH8Nga";
   }
 };
 
@@ -194,7 +194,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegistrationForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
