@@ -63,7 +63,7 @@ class UserProjects extends React.Component {
       <BSCard
         id="user-projects"
         widthOffset="col-sm-12"
-        title="My Projects"
+        title={this.props.title ? this.props.title : "My Projects"}
         body={projectList}
         form={
           <BaseFormConnected
