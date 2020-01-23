@@ -28,6 +28,7 @@ class UserDocuments extends React.Component {
   componentDidMount() {
     Traec.fetchRequired.bind(this)();
     this.getDocuments();
+    console.log(this.props);
   }
 
   componentDidUpdate() {
@@ -203,6 +204,7 @@ class UserDocuments extends React.Component {
   }
 }
 
+// FROM matias-dev-fix
 export const mapStateToProps = (state, ownProps) => {
   let { trackerId } = ownProps;
 
@@ -215,6 +217,7 @@ export const mapStateToProps = (state, ownProps) => {
   let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Im.Map();
   disciplines = setIn(disciplines, ["uid", "name"], "Unassigned");
   let docStatuses = state.getInPath(`entities.docStatuses.byId`);
+
   return {
     trackerIds,
     projectId,

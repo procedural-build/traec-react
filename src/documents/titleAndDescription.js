@@ -12,29 +12,30 @@ export class TitleAndDescription extends React.Component {
     The fetch for this component is based on the props passed which are static 
     so we can safely define the fetch here once.
      */
-    let { description: item, cref, documentId } = props;
-    this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
-      trackerId: cref.get("tracker"),
-      documentId: documentId,
-      refId: cref.get("uid"),
-      commitId: cref.getInPath("latest_commit.uid")
-    });
+    let { description: item, cref, documentId, showEdit } = props;
+    if (showEdit) {
+      this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
+        trackerId: cref.get("tracker"),
+        documentId: documentId,
+        refId: cref.get("uid"),
+        commitId: cref.getInPath("latest_commit.uid")
+      });
 
-    // Reshape the post data just before fetching
-    this.fetch.updateFetchParams({
-      headers: { "content-type": "application/json" },
-      rawBody: false,
-      preFetchHook: body => ({
-        description: {
-          uid: item.get("uid"),
-          title: body.title,
-          text: body.description
-        }
-      })
-    });
+      // Reshape the post data just before fetching
+      this.fetch.updateFetchParams({
+        headers: { "content-type": "application/json" },
+        rawBody: false,
+        preFetchHook: body => ({
+          description: {
+            uid: item.get("uid"),
+            title: body.title,
+            text: body.description
+          }
+        })
+      });
+    }
 
     this.state = {
-      formParams: this.fetch.params,
       initFields: Traec.Im.Map({
         title: item.get("title"),
         description: item.get("text")
@@ -43,7 +44,7 @@ export class TitleAndDescription extends React.Component {
   }
 
   render_edit_dropdown() {
-    let { showEdit = true } = this.props;
+    let { showEdit } = this.props;
     if (!showEdit) {
       return null;
     }
@@ -64,7 +65,8 @@ export class TitleAndDescription extends React.Component {
 
   render_content() {
     let { description: item } = this.props;
-    const TitleTag = this.props.TitleTag || "H2";
+    const TitleTag = this.props.TitleTag || "h2";
+
     return (
       <React.Fragment>
         <TitleTag>
@@ -92,10 +94,7 @@ export class TitleAndDescription extends React.Component {
   }
 
   render() {
-    let { item } = this.props;
-    let isFormVisible = this.fetch.isFormVisible();
-    //const created = Moment(item.get("created")).format("MMMM Do YYYY, h:mm:ss a");
-    //const creator = `${item.getInPath("creator.first_name")} ${item.getInPath("creator.last_name")}`;
+    let isFormVisible = this.fetch ? this.fetch.isFormVisible() : false;
     return (
       <div className="m-0">
         <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
