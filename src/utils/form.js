@@ -53,7 +53,7 @@ class BaseForm extends React.Component {
     const newItem = nextProps.newItem;
     // In case the form fields have changed
     let newState = prevState;
-    //let newState = {formFields: nextProps.fields}
+
     // Load any errors into the state
     if (newItem && newItem.get("errors")) {
       let errors = newItem.get("errors");
