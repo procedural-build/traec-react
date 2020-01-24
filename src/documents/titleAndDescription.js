@@ -35,7 +35,6 @@ export class TitleAndDescription extends React.Component {
     });
 
     this.state = {
-      formParams: this.fetch.params,
       initFields: Traec.Im.Map({
         title: item.get("title"),
         description: item.get("text")
@@ -44,7 +43,7 @@ export class TitleAndDescription extends React.Component {
   }
 
   render_edit_dropdown() {
-    let { showEdit = true } = this.props;
+    let { showEdit } = this.props;
     if (!showEdit) {
       return null;
     }
@@ -65,7 +64,8 @@ export class TitleAndDescription extends React.Component {
 
   render_content() {
     let { description: item } = this.props;
-    const TitleTag = this.props.TitleTag || "H2";
+    const TitleTag = this.props.TitleTag || "h2";
+
     return (
       <React.Fragment>
         <TitleTag>
@@ -92,10 +92,7 @@ export class TitleAndDescription extends React.Component {
   }
 
   render() {
-    let { item } = this.props;
-    let isFormVisible = this.fetch.isFormVisible();
-    //const created = Moment(item.get("created")).format("MMMM Do YYYY, h:mm:ss a");
-    //const creator = `${item.getInPath("creator.first_name")} ${item.getInPath("creator.last_name")}`;
+    let isFormVisible = this.fetch ? this.fetch.isFormVisible() : false;
     return (
       <div className="m-0">
         <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
@@ -146,3 +143,4 @@ export class TitleAndDescription_OLD extends React.Component {
     );
   }
 }
+import { BSBtnDropdown } from "traec-react/utils/bootstrap";

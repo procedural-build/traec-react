@@ -14,11 +14,13 @@ class UserDocuments extends React.Component {
 
   componentDidMount() {
     this.getDocuments();
+    console.log(this.props);
   }
 
   componentDidUpdate() {
-    if (!this.props.singleTracker) {
-      getTrackers(this.props.projectIds);
+    let { singleTracker, projectIds } = this.props;
+    if (!singleTracker) {
+      getTrackers(projectIds);
     }
 
     this.getDocuments();
@@ -83,14 +85,30 @@ export const getCompanyProjectFromTracker = function(state, trackerId) {
   return { project, company: companyName };
 };
 
+// FROM matias-dev-fix
 export const mapStateToProps = (state, ownProps) => {
   let projects = state.getInPath("entities.projects.byId");
   let projectIds = projects ? projects.map(project => project.get("uid")) : null;
 
   let { trackerIds, singleTracker } = getTrackersInState(state, ownProps);
 
-  let documents = getDocumentsFromState(state);
-  return { trackerIds, projectIds, documents, singleTracker };
+  let projectId = state.getInPath(`entities.refs.byId.${refId}.project`);
+  let documents = state.getInPath(`entities.user.documents.byId`);
+  let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Im.Map();
+  disciplines = setIn(disciplines, ["uid", "name"], "Unassigned");
+  let docStatuses = state.getInPath(`entities.docStatuses.byId`);
+
+  return {
+    trackerIds,
+    projectId,
+    projectIds,
+    documents,
+    singleTracker,
+    refId,
+    commitId,
+    disciplines,
+    docStatuses
+  };
 };
 
 const mapDispatchToProps = dispatch => {
