@@ -123,8 +123,6 @@ export const documentsState = Im.fromJS({
               email: "admin@ods-track.com",
               username: "admin"
             },
-            url:
-              "http://traec-dev-eu-central-1-secure.s3.amazonaws.com/media/secure/tracker/9ef2f2ef-3099-48dc-89e2-86fd80f6ce02/objects/da/39/a3/ee5e6b4b0d3255bfef95601890afd80709?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIO6J5ZOFAZABAGNQ%2F20191007%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20191007T165320Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7bb80fc2140c4ba047caafc04dc23a974bb62d24df72af53c6fb71701d1918d6",
             virus_checked: true,
             commit: "34855f1e-c1f9-49c2-af25-6207f21be1f7"
           },
@@ -648,8 +646,6 @@ export const myDocumentsState = Im.fromJS({
             email: "admin@ods-track.com",
             username: "admin"
           },
-          url:
-            "http://traec-dev-eu-central-1-secure.s3.amazonaws.com/media/secure/tracker/537560d0-44a1-4662-993e-94c5795cb64c/objects/b6/5d/71/e9f0699b8237b57801c17a607652c9c345?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIO6J5ZOFAZABAGNQ%2F20200123%2Feu-west-2%2Fs3%2Faws4_request&X-Amz-Date=20200123T153502Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=3e6017b5958dc26cc31a5a7ececfbaf7d8d29ae549e34e42ca8be89401767d67",
           virus_checked: true,
           commit: "9fcd463b-6171-4fe9-b6a5-107e5c133e59"
         }
