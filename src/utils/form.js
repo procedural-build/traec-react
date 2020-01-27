@@ -32,7 +32,8 @@ class BaseForm extends React.Component {
     // Otherwise step through the projectFields and get what you can from initFields
     let initialFormFields = fields;
     Object.keys(fields).map(key => {
-      initialFormFields[key].value = initFields.get(key) || fields[key].value;
+      initialFormFields[key].value =
+        typeof initFields.get(key) !== "undefined" ? initFields.get(key) : fields[key].value;
     });
     return initialFormFields;
   }
@@ -165,7 +166,6 @@ class BaseForm extends React.Component {
         item.details = { ...item.details, disabled: true };
       }
     }
-
     return (
       <div className="col-sm-12 ">
         <form onSubmit={e => this.onSubmit(e)}>

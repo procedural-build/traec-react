@@ -121,7 +121,6 @@ class TreeRow extends React.PureComponent {
 
   componentDidMount() {
     Traec.fetchRequired.bind(this)();
-    console.log(this.props.cref.toJS(), this.props.treeId);
   }
 
   componentDidUpdate() {
