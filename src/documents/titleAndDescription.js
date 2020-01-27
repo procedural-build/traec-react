@@ -47,6 +47,7 @@ export class TitleAndDescription extends React.Component {
     so we can safely define the fetch here once.
      */
     let { description, cref, documentId, showEdit, fetch } = props;
+    this.fetch = fetch;
     if (showEdit && !fetch) {
       this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
         trackerId: cref.get("tracker"),
@@ -73,14 +74,13 @@ export class TitleAndDescription extends React.Component {
 
   edit() {
     let { description } = this.props;
-    let fetch = this.props.fetch || this.fetch;
     this.setState({
       initFields: Traec.Im.Map({
         title: description.get("title") || "",
         description: description.get("text") || ""
       })
     });
-    fetch.toggleForm();
+    this.fetch.toggleForm();
   }
 
   renderEditDropdown() {
@@ -123,22 +123,20 @@ export class TitleAndDescription extends React.Component {
   }
 
   renderForm() {
-    let fetch = this.props.fetch || this.fetch;
     return (
       <BaseFormConnected
-        params={fetch.params}
+        params={this.fetch.params}
         fields={titleDescriptionFields}
         initFields={this.state.initFields || Traec.Im.Map()}
         toggleForm={() => {
-          fetch.toggleForm();
+          this.fetch.toggleForm();
         }}
       />
     );
   }
 
   render() {
-    let fetch = this.props.fetch || this.fetch;
-    let isFormVisible = fetch ? fetch.isFormVisible() : false;
+    let isFormVisible = this.fetch ? this.fetch.isFormVisible() : false;
     return (
       <div className="m-0">
         <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
