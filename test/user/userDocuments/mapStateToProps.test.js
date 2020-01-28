@@ -4,146 +4,188 @@ import Im from "traec/immutable";
 
 describe("mapStateToProps", () => {
   it("should give correct data", () => {
-    let ownProps = {};
+    let ownProps = { trackerId: "537560d0-44a1-4662-993e-94c5795cb64c" };
     let actualResult = mapStateToProps(myDocumentsState, ownProps);
     let expectedResult = {
-      trackerIds: Im.Map({
-        "537560d0-44a1-4662-993e-94c5795cb64c": "537560d0-44a1-4662-993e-94c5795cb64c",
-        "e81832af-70db-4e8e-bfa5-0bf2152d3d11": "e81832af-70db-4e8e-bfa5-0bf2152d3d11",
-        "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02": "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02"
+      commitId: "94249f1f-b2c6-4d97-8a45-977d0c3527eb",
+      disciplines: Im.Map({
+        "d5c4af7c-4428-43c0-8a21-a6a438db7e49": Im.Map({
+          uid: "d5c4af7c-4428-43c0-8a21-a6a438db7e49",
+          name: "Administrator",
+          approver: null,
+          auth: Im.Map({
+            uid: "27188a14-55dd-4d66-97a8-096c31081a3d",
+            is_admin: true,
+            name: "Admin",
+            policy_json: Im.Map({})
+          }),
+          project: Im.Map({
+            uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+            name: "ENV Demo"
+          }),
+          base_uid: "c1c91f73-caec-43d2-afb4-84301f6f16f5"
+        }),
+        "58257d94-0f38-4a64-9385-88dcdde86388": Im.Map({
+          uid: "58257d94-0f38-4a64-9385-88dcdde86388",
+          name: "admin@ods-track.com",
+          approver: null,
+          auth: Im.Map({
+            uid: "27188a14-55dd-4d66-97a8-096c31081a3d",
+            is_admin: true,
+            name: "Admin",
+            policy_json: Im.Map({})
+          }),
+          project: Im.Map({
+            uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+            name: "ENV Demo"
+          }),
+          base_uid: "63348e8b-0082-4545-951e-3778ae5354d7"
+        }),
+        uid: Im.Map({
+          name: "Unassigned"
+        })
       }),
-      projectIds: Im.Map({
-        "3a6f1905-2efb-400a-b305-3243f9ff657e": "3a6f1905-2efb-400a-b305-3243f9ff657e",
-        "730c60ce-509c-4909-a360-2841798eab7c": "730c60ce-509c-4909-a360-2841798eab7c",
-        "7c3fc288-9f40-463f-acac-dca47b74de33": "7c3fc288-9f40-463f-acac-dca47b74de33"
-      }),
-      documents: [
-        {
-          title: "Doc 1",
+      docStatuses: Im.Map({
+        "a4d8d36f-74d1-4356-a642-bc62d2bf8630": Im.Map({
+          uid: "a4d8d36f-74d1-4356-a642-bc62d2bf8630",
           status: Im.Map({
             uid: "f84b9324-ea4e-4ede-bb95-7a0655f8b2b5",
             name: "OK for Submission",
             color: "#99EB99"
           }),
-          project: Im.Map({
-            meta_json: Im.Map({}),
-            NLA: null,
-            suburb: "",
-            app_host: null,
-            created: "2019-08-27T08:14:16.936605",
-            name: "DGNB NKB16",
-            client: "",
-            creator: Im.Map({
-              first_name: "",
-              last_name: "",
-              email: "admin@ods-track.com",
-              username: "admin"
-            }),
-            closed: false,
-            postcode: "",
-            uid: "730c60ce-509c-4909-a360-2841798eab7c",
-            state: "",
-            address: "",
-            country: "",
-            trackers: Im.List([
-              Im.Map({
-                uid: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02",
-                name: "dgnb_tool"
-              })
-            ]),
-            company: Im.Map({
-              uid: "7551772c-13d0-4024-8985-fd2e5e87e7f8",
-              name: "BIG",
-              depth: 1
-            }),
-            default_workflow: "e6c5d5bb-898c-4ef8-8161-b01f9a538245",
-            host_site: 14
-          }),
-          company: "BIG"
-        }
-      ],
-      singleTracker: false
+          current_object: "5e436020-80f3-410d-9be1-8f62cf968c97",
+          due_date: null,
+          discipline_id: null
+        })
+      }),
+      documents: Im.Map({
+        "044485fb-ef08-43c8-bd26-527ea87d22d4": Im.Map({
+          uid: "044485fb-ef08-43c8-bd26-527ea87d22d4",
+          status: null,
+          description: "4e886c66-3f5b-4964-b704-77ad334c89cf",
+          trackerId: "537560d0-44a1-4662-993e-94c5795cb64c",
+          refId: "0b0a235e-3dee-45de-bd9d-e8d9634849a0"
+        }),
+        "0a71439a-ab60-44e0-ad19-e602af88dfbc": Im.Map({
+          uid: "0a71439a-ab60-44e0-ad19-e602af88dfbc",
+          status: "a4d8d36f-74d1-4356-a642-bc62d2bf8630",
+          description: "32cb8d4d-6889-45a3-a272-79d0a2677645",
+          trackerId: "537560d0-44a1-4662-993e-94c5795cb64c",
+          refId: "171c10d9-22b4-491f-a89b-a8967c2aa434"
+        })
+      }),
+      projectId: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+      refId: "473a1322-2391-412d-a7a7-e5514cf94902",
     };
     expect(actualResult).toEqual(expectedResult);
   });
 
   it("should only return from one tracker", () => {
-    let ownProps = { trackerId: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02" };
+    let ownProps = { trackerId: "537560d0-44a1-4662-993e-94c5795cb64c" };
     let actualResult = mapStateToProps(myDocumentsState, ownProps);
     let expectedResult = {
-      trackerIds: Im.Map({
-        "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02": "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02"
+      commitId: "94249f1f-b2c6-4d97-8a45-977d0c3527eb",
+      disciplines: Im.Map({
+        "d5c4af7c-4428-43c0-8a21-a6a438db7e49": Im.Map({
+          uid: "d5c4af7c-4428-43c0-8a21-a6a438db7e49",
+          name: "Administrator",
+          approver: null,
+          auth: Im.Map({
+            uid: "27188a14-55dd-4d66-97a8-096c31081a3d",
+            is_admin: true,
+            name: "Admin",
+            policy_json: Im.Map({})
+          }),
+          project: Im.Map({
+            uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+            name: "ENV Demo"
+          }),
+          base_uid: "c1c91f73-caec-43d2-afb4-84301f6f16f5"
+        }),
+        "58257d94-0f38-4a64-9385-88dcdde86388": Im.Map({
+          uid: "58257d94-0f38-4a64-9385-88dcdde86388",
+          name: "admin@ods-track.com",
+          approver: null,
+          auth: Im.Map({
+            uid: "27188a14-55dd-4d66-97a8-096c31081a3d",
+            is_admin: true,
+            name: "Admin",
+            policy_json: Im.Map({})
+          }),
+          project: Im.Map({
+            uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+            name: "ENV Demo"
+          }),
+          base_uid: "63348e8b-0082-4545-951e-3778ae5354d7"
+        }),
+        uid: Im.Map({
+          name: "Unassigned"
+        })
       }),
-      projectIds: Im.Map({
-        "3a6f1905-2efb-400a-b305-3243f9ff657e": "3a6f1905-2efb-400a-b305-3243f9ff657e",
-        "730c60ce-509c-4909-a360-2841798eab7c": "730c60ce-509c-4909-a360-2841798eab7c",
-        "7c3fc288-9f40-463f-acac-dca47b74de33": "7c3fc288-9f40-463f-acac-dca47b74de33"
-      }),
-      documents: [
-        {
-          title: "Doc 1",
+      docStatuses: Im.Map({
+        "a4d8d36f-74d1-4356-a642-bc62d2bf8630": Im.Map({
+          uid: "a4d8d36f-74d1-4356-a642-bc62d2bf8630",
           status: Im.Map({
             uid: "f84b9324-ea4e-4ede-bb95-7a0655f8b2b5",
             name: "OK for Submission",
             color: "#99EB99"
           }),
-          project: Im.Map({
-            meta_json: Im.Map({}),
-            NLA: null,
-            suburb: "",
-            app_host: null,
-            created: "2019-08-27T08:14:16.936605",
-            name: "DGNB NKB16",
-            client: "",
-            creator: Im.Map({
-              first_name: "",
-              last_name: "",
-              email: "admin@ods-track.com",
-              username: "admin"
-            }),
-            closed: false,
-            postcode: "",
-            uid: "730c60ce-509c-4909-a360-2841798eab7c",
-            state: "",
-            address: "",
-            country: "",
-            trackers: Im.List([
-              Im.Map({
-                uid: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02",
-                name: "dgnb_tool"
-              })
-            ]),
-            company: Im.Map({
-              uid: "7551772c-13d0-4024-8985-fd2e5e87e7f8",
-              name: "BIG",
-              depth: 1
-            }),
-            default_workflow: "e6c5d5bb-898c-4ef8-8161-b01f9a538245",
-            host_site: 14
-          }),
-          company: "BIG"
-        }
-      ],
-      singleTracker: true
+          current_object: "5e436020-80f3-410d-9be1-8f62cf968c97",
+          due_date: null,
+          discipline_id: null
+        })
+      }),
+      documents: Im.Map({
+        "044485fb-ef08-43c8-bd26-527ea87d22d4": Im.Map({
+          uid: "044485fb-ef08-43c8-bd26-527ea87d22d4",
+          status: null,
+          description: "4e886c66-3f5b-4964-b704-77ad334c89cf",
+          trackerId: "537560d0-44a1-4662-993e-94c5795cb64c",
+          refId: "0b0a235e-3dee-45de-bd9d-e8d9634849a0"
+        }),
+        "0a71439a-ab60-44e0-ad19-e602af88dfbc": Im.Map({
+          uid: "0a71439a-ab60-44e0-ad19-e602af88dfbc",
+          status: "a4d8d36f-74d1-4356-a642-bc62d2bf8630",
+          description: "32cb8d4d-6889-45a3-a272-79d0a2677645",
+          trackerId: "537560d0-44a1-4662-993e-94c5795cb64c",
+          refId: "171c10d9-22b4-491f-a89b-a8967c2aa434"
+        })
+      }),
+      projectId: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+      refId: "473a1322-2391-412d-a7a7-e5514cf94902",
     };
     expect(actualResult).toEqual(expectedResult);
   });
 
   it("should return empty when no trackers", () => {
-    let ownProps = {};
+    let ownProps = { trackerId: "537560d0-44a1-4662-993e-94c5795cb64c" };
     let state = myDocumentsState;
     state = state.deleteIn(["entities", "trackers"]);
     state = state.deleteIn(["entities", "user"]);
     let actualResult = mapStateToProps(state, ownProps);
     let expectedResult = {
-      trackerIds: Im.Map({}),
-      projectIds: Im.Map({
-        "3a6f1905-2efb-400a-b305-3243f9ff657e": "3a6f1905-2efb-400a-b305-3243f9ff657e",
-        "730c60ce-509c-4909-a360-2841798eab7c": "730c60ce-509c-4909-a360-2841798eab7c",
-        "7c3fc288-9f40-463f-acac-dca47b74de33": "7c3fc288-9f40-463f-acac-dca47b74de33"
+      commitId: undefined,
+      disciplines: Im.Map({
+        uid: Im.Map({
+          name: "Unassigned"
+        })
       }),
-      documents: [],
-      singleTracker: false
+      docStatuses: Im.Map({
+        "a4d8d36f-74d1-4356-a642-bc62d2bf8630": Im.Map({
+          uid: "a4d8d36f-74d1-4356-a642-bc62d2bf8630",
+          status: Im.Map({
+            uid: "f84b9324-ea4e-4ede-bb95-7a0655f8b2b5",
+            name: "OK for Submission",
+            color: "#99EB99"
+          }),
+          current_object: "5e436020-80f3-410d-9be1-8f62cf968c97",
+          due_date: null,
+          discipline_id: null
+        })
+      }),
+      documents: undefined,
+      projectId: undefined,
+      refId: undefined,
     };
     expect(actualResult).toEqual(expectedResult);
   });

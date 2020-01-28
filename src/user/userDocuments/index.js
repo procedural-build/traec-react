@@ -1,26 +1,37 @@
 import React from "react";
-import { BSCard } from "traec-react/utils/bootstrap";
 import { connect } from "react-redux";
 import Traec from "traec";
 import { Spinner } from "traec-react/utils/entities";
 import Im from "traec/immutable";
 import { RenderErrorMessage } from "../../errors/handleError";
+import { DocumentFilter } from "./documentFilter";
+import { setIn } from "immutable";
+import moment from "moment";
 
 class UserDocuments extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      hasError: false,
+      disciplineFilter: [],
+      statusFilter: [],
+      dueBefore: "",
+      dueAfter: ""
+    };
+    this.requiredFetches = [new Traec.Fetch("project_discipline", "list", { projectId: this.props.projectId })];
+    this.setDisciplineFilter = this.setDisciplineFilter.bind(this);
+    this.setStatusFilter = this.setStatusFilter.bind(this);
+    this.setDueAfter = this.setDueAfter.bind(this);
+    this.setDueBefore = this.setDueBefore.bind(this);
   }
 
   componentDidMount() {
+    Traec.fetchRequired.bind(this)();
     this.getDocuments();
   }
 
   componentDidUpdate() {
-    if (!this.props.singleTracker) {
-      getTrackers(this.props.projectIds);
-    }
-
+    Traec.fetchRequired.bind(this)();
     this.getDocuments();
   }
 
@@ -29,68 +40,186 @@ class UserDocuments extends React.Component {
   }
 
   getDocuments() {
-    let { trackerIds } = this.props;
-    if (trackerIds) {
-      trackerIds.map(trackerId => new Traec.Fetch("tracker_documents", "list", { trackerId }).dispatch());
+    let { trackerId } = this.props;
+    if (trackerId) {
+      let fetch = new Traec.Fetch("tracker_documents", "list", { trackerId });
+      fetch.dispatch();
     }
   }
 
-  renderDocuments() {
+  getStatuses() {
+    let statuses = [
+      { label: "Nothing Received" },
+      { label: "Pending Review" },
+      { label: "Requires Revision" },
+      { label: "OK for Submission" },
+      { label: "Not for Submission" }
+    ];
+    return statuses;
+  }
+
+  setDisciplineFilter(values) {
+    this.setFilter(values, "disciplineFilter");
+  }
+
+  setStatusFilter(values) {
+    this.setFilter(values, "statusFilter");
+  }
+
+  setFilter(values, key) {
+    let newState = {};
+    newState[key] = values.map(v => v.label);
+    this.setState(newState);
+  }
+
+  setDueBefore(dueBefore) {
+    this.setState({ dueBefore });
+  }
+
+  setDueAfter(dueAfter) {
+    this.setState({ dueAfter });
+  }
+
+  renderDocumentComponents() {
     if (this.state.hasError) {
-      return <RenderErrorMessage error={this.state.error} />;
+      return this.renderErrorMessage();
     }
 
-    let { documents } = this.props;
-    if (!documents || documents.length === 0) {
-      return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
+    if (this.areDocumentsLoading()) {
+      return this.renderSpinner();
     }
 
-    return documents.map((document, index) => (
-      <this.props.documentComponent key={index} document={document} index={index} />
-    ));
+    let orderedDocumentComponents = this.getOrderedDocumentComponents();
+
+    return (
+      <div className="mt-4">
+        {Object.keys(orderedDocumentComponents).map((disciplineName, disciplineIndex) => {
+          let documentComponents = orderedDocumentComponents[disciplineName];
+          if (this.checkDisciplineFilter(documentComponents, disciplineName)) {
+            return (
+              <div key={disciplineIndex}>
+                <h2>{disciplineName}</h2>
+
+                {documentComponents.map((component, componentIndex) => {
+                  return <div key={componentIndex}>{component}</div>;
+                })}
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
+  }
+
+  renderErrorMessage() {
+    return <RenderErrorMessage error={this.state.error} />;
+  }
+
+  areDocumentsLoading() {
+    let { documents, disciplines, docStatuses } = this.props;
+    return !documents || documents.length === 0 || !disciplines || !docStatuses;
+  }
+
+  renderSpinner() {
+    return <Spinner explanation="Loading Documents" timedOutComment="No Documents Found" />;
+  }
+
+  checkDisciplineFilter(components, disciplineName) {
+    let { disciplineFilter } = this.state;
+    return components.length > 0 && (disciplineFilter.length === 0 || disciplineFilter.includes(disciplineName));
+  }
+
+  getOrderedDocumentComponents() {
+    let { disciplines } = this.props;
+    let orderedDocumentComponents = {};
+    for (let discipline of disciplines.valueSeq()) {
+      orderedDocumentComponents[discipline.get("name")] = [];
+    }
+
+    let { trackerId, commitId, documents, docStatuses } = this.props;
+
+    for (let document of documents.valueSeq()) {
+      let statusId = document.get("status");
+      let status = docStatuses.get(statusId);
+      let refId = document.get("refId");
+      if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
+        let disciplineName = status
+          ? disciplines.filter(d => d.get("uid") === status.get("discipline_id")).get("name")
+          : "Unassigned";
+
+        disciplineName = disciplineName ? disciplineName : "Unassigned";
+        let documentComponent = (
+          <this.props.documentComponent
+            docId={document.get("uid")}
+            trackerId={trackerId}
+            refId={refId}
+            commitId={commitId}
+          />
+        );
+        orderedDocumentComponents[disciplineName].push(documentComponent);
+      }
+    }
+    return orderedDocumentComponents;
+  }
+
+  checkStatusFilter(status) {
+    let { statusFilter } = this.state;
+    if (statusFilter.length === 0 || (!status && statusFilter.includes("Nothing Received"))) {
+      return true;
+    } else if (status && statusFilter.includes(status.getInPath("status.name"))) {
+      return true;
+    }
+    return false;
+  }
+
+  checkDueDateFilter(dueDate) {
+    let { dueAfter, dueBefore } = this.state;
+    if (!dueDate || (!dueAfter && !dueBefore)) return true;
+    return moment(dueDate).isSameOrBefore(dueBefore) || moment(dueDate).isSameOrAfter(dueAfter);
   }
 
   render() {
-    return <BSCard id="user-documents" widthOffset="col-sm-12" title="My Documents" body={this.renderDocuments()} />;
+    let { disciplines } = this.props;
+    if (!disciplines) return null;
+    return (
+      <div className="container">
+        <h2 style={{ fontSize: "30px" }}>My Documents</h2>
+        <DocumentFilter
+          disciplines={disciplines}
+          statuses={this.getStatuses()}
+          setStatusFilter={this.setStatusFilter}
+          setDisciplineFilter={this.setDisciplineFilter}
+          dueAfter={this.state.dueAfter}
+          dueBefore={this.state.dueBefore}
+          setDueAfter={this.setDueAfter}
+          setDueBefore={this.setDueBefore}
+        />
+        {this.renderDocumentComponents()}
+      </div>
+    );
   }
 }
 
-export const getDocumentsFromState = function(state) {
-  let userDocuments = state.getInPath("entities.user.documents.byId");
-  let documents = [];
-  if (userDocuments) {
-    documents = userDocuments.toArray().map(document => {
-      let descriptionId = document[1].get("description");
-      let statusId = document[1].get("status");
-      let trackerId = document[1].get("trackerId");
-      let { project, company } = getCompanyProjectFromTracker(state, trackerId);
-      return {
-        title: state.getInPath(`entities.descriptions.byId.${descriptionId}.title`),
-        status: state.getInPath(`entities.docStatus.byId.${statusId}.status`),
-        project,
-        company
-      };
-    });
-  }
-  return documents;
-};
-
-export const getCompanyProjectFromTracker = function(state, trackerId) {
-  let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
-  let project = state.getInPath(`entities.projects.byId.${projectId}`);
-  let companyName = state.getInPath(`entities.projects.byId.${projectId}.company.name`);
-
-  return { project, company: companyName };
-};
-
 export const mapStateToProps = (state, ownProps) => {
-  let projects = state.getInPath("entities.projects.byId");
-  let projectIds = projects ? projects.map(project => project.get("uid")) : null;
+  let { trackerId } = ownProps;
 
-  let { trackerIds, singleTracker } = getTrackersInState(state, ownProps);
+  let refId = state.getInPath(`entities.trackers.byId.${trackerId}.root_master`);
+  let commitId = state.getInPath(`entities.refs.byId.${refId}.latest_commit.uid`);
 
-  let documents = getDocumentsFromState(state);
-  return { trackerIds, projectIds, documents, singleTracker };
+  let projectId = state.getInPath(`entities.refs.byId.${refId}.project`);
+  let documents = state.getInPath(`entities.user.documents.byId`);
+  let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Im.Map();
+  disciplines = setIn(disciplines, ["uid", "name"], "Unassigned");
+  let docStatuses = state.getInPath(`entities.docStatuses.byId`);
+
+  return {
+    projectId,
+    documents,
+    refId,
+    commitId,
+    disciplines,
+    docStatuses
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -100,26 +229,3 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserDocuments);
-
-const getTrackersInState = function(state, ownProps) {
-  let trackerIds = null;
-  let singleTracker = null;
-  let { trackerId } = ownProps;
-
-  if (trackerId) {
-    trackerIds = Im.Map();
-    trackerIds = trackerIds.set(trackerId, trackerId);
-    singleTracker = true;
-  } else {
-    let trackers = state.getInPath("entities.trackers.byId");
-    trackerIds = trackers ? trackers.map(tracker => tracker.get("uid")) : Im.Map({});
-    singleTracker = false;
-  }
-  return { trackerIds, singleTracker };
-};
-
-export const getTrackers = function(projectIds) {
-  if (projectIds) {
-    projectIds.map(projectId => new Traec.Fetch("project_tracker", "list", { projectId }).dispatch());
-  }
-};

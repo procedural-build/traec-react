@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import { UserRefItem } from "./refItem";
 import { Spinner } from "traec-react/utils/entities";
-import { getTrackers, getCompanyProjectFromTracker } from "../userDocuments";
 
 class UserRefs extends React.Component {
   constructor(props) {
@@ -97,3 +96,17 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserRefs);
+
+export const getTrackers = function(projectIds) {
+  if (projectIds) {
+    projectIds.map(projectId => new Traec.Fetch("project_tracker", "list", { projectId }).dispatch());
+  }
+};
+
+export const getCompanyProjectFromTracker = function(state, trackerId) {
+  let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
+  let project = state.getInPath(`entities.projects.byId.${projectId}`);
+  let companyName = state.getInPath(`entities.projects.byId.${projectId}.company.name`);
+
+  return { project, company: companyName };
+};
