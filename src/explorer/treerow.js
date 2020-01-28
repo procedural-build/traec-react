@@ -132,7 +132,7 @@ class TreeRow extends React.PureComponent {
       { name: "Edit Category", onClick: this.editTree },
       { name: "Add a new revision", onClick: this.addCategoryRef },
       { name: "Add a new sub-category", onClick: this.addTree },
-      { name: "Add a new package", onClick: this.addDocument },
+      { name: "Add a new document", onClick: this.addDocument },
       { label: null },
       { name: "Delete category", onClick: this.deleteTree }
     ];

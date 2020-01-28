@@ -138,10 +138,8 @@ export class TitleAndDescription extends React.Component {
   render() {
     let isFormVisible = this.fetch ? this.fetch.isFormVisible() : false;
     return (
-      <div className="m-0">
-        <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
-          <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.renderForm() : this.renderContent()}</div>
-        </div>
+      <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
+        <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.renderForm() : this.renderContent()}</div>
       </div>
     );
   }
