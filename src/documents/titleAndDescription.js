@@ -116,7 +116,6 @@ export class TitleAndDescription extends React.Component {
           <b>{description.get("title")}</b>
           <span style={{ fontSize: "0.875rem" }}>{this.renderEditDropdown()}</span>
         </TitleTag>
-
         <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: description.get("text") }} />
       </React.Fragment>
     );

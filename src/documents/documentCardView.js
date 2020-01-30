@@ -91,7 +91,7 @@ export class DocumentCardView extends Component {
   }
 
   render() {
-    let { cref, documentId, description, assignee, showEdit } = this.props;
+    let { cref, documentId, description, assignee, editableTitleAndDescription, editableDocument } = this.props;
     return (
       <div className="row mb-4 mt-2">
         <div className="col-md-10" style={{ borderBottom: "1px solid lightgray" }}>
@@ -101,30 +101,32 @@ export class DocumentCardView extends Component {
             description={description}
             assignee={assignee}
             TitleTag={"h5"}
-            showEdit={typeof showEdit === "undefined" ? true : showEdit}
+            showEdit={typeof editableTitleAndDescription === "undefined" ? true : editableTitleAndDescription}
           />
 
           {this.renderUploadedFile()}
 
-          <div className="row">
-            <div className="col-md-4">{this.renderFileUpload()}</div>
+          {typeof editableDocument === "undefined" || editableDocument ? (
+            <div className="row">
+              <div className="col-md-4">{this.renderFileUpload()}</div>
 
-            <div className="col-md-4">{this.renderDatePicker()}</div>
+              <div className="col-md-4">{this.renderDatePicker()}</div>
 
-            <div className="col-md-3 BS-btn-sm-text">
-              <BSBtnDropdown links={this.actionDropDownLinks()} header={this.props.action} />
+              <div className="col-md-3 BS-btn-sm-text">
+                <BSBtnDropdown links={this.actionDropDownLinks()} header={this.props.action} />
+              </div>
+
+              <div className="col-md-1">
+                <button
+                  className="btn-sm btn-primary cursor-pointer mb-1 float-right"
+                  onClick={this.props.save}
+                  style={{ padding: "2px 4px 2px" }}
+                >
+                  Save
+                </button>
+              </div>
             </div>
-
-            <div className="col-md-1">
-              <button
-                className="btn-sm btn-primary cursor-pointer mb-1 float-right"
-                onClick={this.props.save}
-                style={{ padding: "2px 4px 2px" }}
-              >
-                Save
-              </button>
-            </div>
-          </div>
+          ) : null}
         </div>
 
         <DocumentStatus docStatus={this.props.docStatus}></DocumentStatus>

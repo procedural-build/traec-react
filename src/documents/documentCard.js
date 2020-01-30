@@ -117,11 +117,22 @@ class DocumentCard extends Component {
   }
 
   render() {
-    let { cref, description, assignee, docStatus, currentDocObject, docId, showEdit } = this.props;
+    let {
+      cref,
+      description,
+      assignee,
+      docStatus,
+      currentDocObject,
+      docId,
+      editableTitleAndDescription,
+      editableDocument
+    } = this.props;
+
     if (!cref || !description) {
       return null;
     }
     const files = this.getFiles();
+    console.log(this.props);
     return (
       <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
         {({ getRootProps, getInputProps }) => {
@@ -146,8 +157,9 @@ class DocumentCard extends Component {
                 currentDocObject={currentDocObject}
                 save={this.save.bind(this)}
                 doUpload={this.doUpload.bind(this)}
-                showEdit={showEdit}
-              ></DocumentCardView>
+                editableTitleAndDescription={editableTitleAndDescription}
+                editableDocument={editableDocument}
+              />
             </div>
           );
         }}
