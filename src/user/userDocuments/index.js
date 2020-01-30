@@ -154,6 +154,7 @@ class UserDocuments extends React.Component {
             trackerId={trackerId}
             refId={refId}
             commitId={commitId}
+            {...this.props.documentComponentProps}
           />
         );
         orderedDocumentComponents[disciplineName].push(documentComponent);
@@ -179,11 +180,11 @@ class UserDocuments extends React.Component {
   }
 
   render() {
-    let { disciplines } = this.props;
+    let { disciplines, title } = this.props;
     if (!disciplines) return null;
     return (
       <div className="container">
-        <h2 style={{ fontSize: "30px" }}>My Documents</h2>
+        <h2 style={{ fontSize: "30px" }}>{title ? title : "My Documents"}</h2>
         <DocumentFilter
           disciplines={disciplines}
           statuses={this.getStatuses()}

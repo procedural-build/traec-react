@@ -117,7 +117,7 @@ class DocumentCard extends Component {
   }
 
   render() {
-    let { cref, description, assignee, docStatus, currentDocObject, docId } = this.props;
+    let { cref, description, assignee, docStatus, currentDocObject, docId, showEdit } = this.props;
     if (!cref || !description) {
       return null;
     }
@@ -146,6 +146,7 @@ class DocumentCard extends Component {
                 currentDocObject={currentDocObject}
                 save={this.save.bind(this)}
                 doUpload={this.doUpload.bind(this)}
+                showEdit={showEdit}
               ></DocumentCardView>
             </div>
           );
@@ -182,10 +183,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default DocumentCard = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DocumentCard);
+export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
 
 const getDocumentStatusId = (state, commitId, docId) => {
   let docStatusId =
