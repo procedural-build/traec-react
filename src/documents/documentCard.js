@@ -4,6 +4,7 @@ import Traec from "traec";
 import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
 import Moment from "moment";
+import category from "traec-react/explorer/category";
 
 class DocumentCard extends Component {
   constructor(props) {
@@ -13,6 +14,8 @@ class DocumentCard extends Component {
       action: "Nothing Recieved",
       selectedFiles: []
     };
+    let { trackerId, cref } = props;
+    let commitId = (this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })]);
   }
 
   adminDropDownLinks() {
@@ -24,8 +27,22 @@ class DocumentCard extends Component {
     return items;
   }
 
+  fetchCommitEdge() {
+    let { trackerId, cref } = this.props;
+    if (cref) {
+      let commitId = cref.getInPath("latest_commit.uid");
+      let fetch = new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId });
+      fetch.dispatch();
+    }
+  }
+
+  componentDidUpdate() {
+    this.fetchCommitEdge();
+  }
+
   componentDidMount() {
     if (!this.dropzoneRef) this.forceUpdate(); // This has to be called, otherwise this.dropzoneRef won't be defined.
+    this.fetchCommitEdge();
 
     let { docStatus } = this.props;
     if (docStatus) {
@@ -125,14 +142,14 @@ class DocumentCard extends Component {
       currentDocObject,
       docId,
       editableTitleAndDescription,
-      editableDocument
+      editableDocument,
+      showAssignee,
+      showTreeTitle
     } = this.props;
-
     if (!cref || !description) {
       return null;
     }
     const files = this.getFiles();
-    console.log(this.props);
     return (
       <Dropzone onDrop={this.onDrop.bind(this)} noClick={true} ref={node => (this.dropzoneRef = node)}>
         {({ getRootProps, getInputProps }) => {
@@ -145,20 +162,22 @@ class DocumentCard extends Component {
                 description={description}
                 assignee={assignee}
                 docStatus={docStatus}
-                setDueDate={this.setDueDate.bind(this)}
-                dueDate={this.state.dueDate}
-                setAction={this.setAction.bind(this)}
-                action={this.state.action}
-                deleteDocument={this.deleteDocument}
-                editDocument={this.editDocument}
-                copyDocument={this.copyDocument}
-                dropzoneRef={this.dropzoneRef}
                 selectedFiles={files}
                 currentDocObject={currentDocObject}
+                editableDocument={editableDocument}
+                showAssignee={showAssignee}
+                showTreeTitle={showTreeTitle}
+                editableTitleAndDescription={editableTitleAndDescription}
+                dueDate={this.state.dueDate}
+                action={this.state.action}
+                dropzoneRef={this.dropzoneRef}
+                editDocument={this.editDocument}
+                copyDocument={this.copyDocument}
+                deleteDocument={this.deleteDocument}
                 save={this.save.bind(this)}
                 doUpload={this.doUpload.bind(this)}
-                editableTitleAndDescription={editableTitleAndDescription}
-                editableDocument={editableDocument}
+                setAction={this.setAction.bind(this)}
+                setDueDate={this.setDueDate.bind(this)}
               />
             </div>
           );
@@ -172,12 +191,14 @@ const mapStateToProps = (state, ownProps) => {
   let { refId, commitId, docId, trackerId, document } = ownProps;
   let description = getDescription(state, commitId, docId);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
+  description = addTreeTitleToDescription(state, cref, description);
 
   let docStatusId = getDocumentStatusId(state, commitId, docId);
   let currentDocObject = getCurrentObject(state, docStatusId);
   let docStatus = state.getInPath(`entities.docStatuses.byId.${docStatusId}`);
   let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
   let assignee = getDocumentAssignee(state, docId, commitId, projectId);
+
   return {
     document,
     description,
@@ -196,6 +217,22 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
+
+const addTreeTitleToDescription = (state, cref, description) => {
+  let latestCommitId = cref.getInPath(`latest_commit.uid`);
+  let rootTreeId = cref.getInPath(`latest_commit.tree_root.uid`);
+  let categoryDescriptionIds = state.getInPath(
+    `entities.commitEdges.byId.${latestCommitId}.trees.${rootTreeId}.descriptions`
+  );
+  if (categoryDescriptionIds) {
+    let categoryTitle = state.getInPath(`entities.descriptions.byId.${categoryDescriptionIds.first()}.title`);
+    description = description.setIn(["tree", "title"], categoryTitle);
+    let trackerId = cref.getInPath("tracker");
+    let refId = cref.get("uid");
+    description = description.setIn(["tree", "url"], `/tracker/${trackerId}/root/${rootTreeId}/ref/${refId}/`);
+  }
+  return description;
+};
 
 const getDocumentStatusId = (state, commitId, docId) => {
   let docStatusId =

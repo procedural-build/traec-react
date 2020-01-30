@@ -91,7 +91,16 @@ export class DocumentCardView extends Component {
   }
 
   render() {
-    let { cref, documentId, description, assignee, editableTitleAndDescription, editableDocument } = this.props;
+    let {
+      cref,
+      documentId,
+      description,
+      assignee,
+      editableTitleAndDescription,
+      editableDocument,
+      showAssignee,
+      showTreeTitle
+    } = this.props;
     return (
       <div className="row mb-4 mt-2">
         <div className="col-md-10" style={{ borderBottom: "1px solid lightgray" }}>
@@ -102,6 +111,8 @@ export class DocumentCardView extends Component {
             assignee={assignee}
             TitleTag={"h5"}
             showEdit={typeof editableTitleAndDescription === "undefined" ? true : editableTitleAndDescription}
+            showTreeTitle={showTreeTitle}
+            showAssignee={showAssignee}
           />
 
           {this.renderUploadedFile()}

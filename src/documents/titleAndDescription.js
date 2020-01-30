@@ -4,41 +4,8 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { toggleShowDescription } from "../tasks/utils/cardUtils";
 import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
+import { Link } from "react-router-dom";
 
-/**
- * TitleAndDescription component.
- *
- *
- * Example usage:
- * render(){
- *     const { cref, parentCommitId, treeId, descriptions, tree } = this.props;
- *     if(!descriptions.first()) return
- *     const fetch = new Traec.Fetch("tracker_ref_tree_description", "put", {
- *       trackerId: cref.get("tracker"),
- *       refId: cref.get("uid"),
- *       commitId: parentCommitId,
- *       treeId,
- *       descriptionId: descriptions.first().get("uid")
- *     });
- *     const titleAndDescriptionRef = React.createRef();
- *     const dropdownLinks = [
- *       {name: "Edit Description", onClick: e => {titleAndDescriptionRef.current.edit()}},
- *       {name: "Delete", onClick: e => {this.delete()}}
- *     ]
- *     return (
- *       <TitleAndDescription
- *         ref={titleAndDescriptionRef}
- *         cref={cref}
- *         parentCommitId={parentCommitId}
- *         tree={tree}
- *         fetch={fetch}
- *         showEdit={true}
- *         description={descriptions.first()}
- *         dropdownLinks={dropdownLinks}/>
- *     );
- * }
- *
- */
 export class TitleAndDescription extends React.Component {
   constructor(props) {
     super(props);
@@ -108,14 +75,18 @@ export class TitleAndDescription extends React.Component {
   }
 
   renderContent() {
-    let { description } = this.props;
+    let { description, showAssingee, showTreeTitle } = this.props;
     const TitleTag = this.props.TitleTag || "h2";
+    console.log(description.toJS());
     return (
       <React.Fragment>
-        <TitleTag>
+        <TitleTag className="mb-0 pb-1">
           <b>{description.get("title")}</b>
           <span style={{ fontSize: "0.875rem" }}>{this.renderEditDropdown()}</span>
         </TitleTag>
+        <Link to={description.getInPath("tree.url") ? description.getInPath("tree.url") : "#"}>
+          <i style={{ fontSize: "1rem", color: "#555" }}>{showTreeTitle ? description.getInPath("tree.title") : ""}</i>
+        </Link>
         <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: description.get("text") }} />
       </React.Fragment>
     );
