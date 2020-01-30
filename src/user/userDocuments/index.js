@@ -18,7 +18,10 @@ class UserDocuments extends React.Component {
       dueBefore: "",
       dueAfter: ""
     };
-    this.requiredFetches = [new Traec.Fetch("project_discipline", "list", { projectId: this.props.projectId })];
+    this.requiredFetches = [
+      new Traec.Fetch("project_discipline", "list", { projectId: this.props.projectId }),
+      new Traec.Fetch("tracker_documents", "list", { trackerId: props.trackerId })
+    ];
     this.setDisciplineFilter = this.setDisciplineFilter.bind(this);
     this.setStatusFilter = this.setStatusFilter.bind(this);
     this.setDueAfter = this.setDueAfter.bind(this);
@@ -27,24 +30,14 @@ class UserDocuments extends React.Component {
 
   componentDidMount() {
     Traec.fetchRequired.bind(this)();
-    this.getDocuments();
   }
 
   componentDidUpdate() {
     Traec.fetchRequired.bind(this)();
-    this.getDocuments();
   }
 
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
-  }
-
-  getDocuments() {
-    let { trackerId } = this.props;
-    if (trackerId) {
-      let fetch = new Traec.Fetch("tracker_documents", "list", { trackerId });
-      fetch.dispatch();
-    }
   }
 
   getStatuses() {

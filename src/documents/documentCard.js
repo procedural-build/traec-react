@@ -15,7 +15,8 @@ class DocumentCard extends Component {
       selectedFiles: []
     };
     let { trackerId, cref } = props;
-    let commitId = (this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })]);
+    let commitId = cref.getInPath("latest_commit.uid");
+    this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })];
   }
 
   adminDropDownLinks() {
@@ -27,22 +28,13 @@ class DocumentCard extends Component {
     return items;
   }
 
-  fetchCommitEdge() {
-    let { trackerId, cref } = this.props;
-    if (cref) {
-      let commitId = cref.getInPath("latest_commit.uid");
-      let fetch = new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId });
-      fetch.dispatch();
-    }
-  }
-
   componentDidUpdate() {
-    this.fetchCommitEdge();
+    this.requiredFetches.map(fetch => fetch.dispatch());
   }
 
   componentDidMount() {
+    this.requiredFetches.map(fetch => fetch.dispatch());
     if (!this.dropzoneRef) this.forceUpdate(); // This has to be called, otherwise this.dropzoneRef won't be defined.
-    this.fetchCommitEdge();
 
     let { docStatus } = this.props;
     if (docStatus) {

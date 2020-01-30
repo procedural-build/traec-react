@@ -77,7 +77,6 @@ export class TitleAndDescription extends React.Component {
   renderContent() {
     let { description, showAssingee, showTreeTitle } = this.props;
     const TitleTag = this.props.TitleTag || "h2";
-    console.log(description.toJS());
     return (
       <React.Fragment>
         <TitleTag className="mb-0 pb-1">
