@@ -3,10 +3,10 @@ import UserDocuments from "../../../src/user/userDocuments";
 import React from "react";
 import { Provider } from "react-redux";
 import { myDocumentsState } from "../../testData/documents";
-import configureStore from "redux-mock-store";
+//import configureStore from "redux-mock-store";
 import renderer from "react-test-renderer";
 
-const mockStore = configureStore([]);
+//const mockStore = configureStore([]);
 
 xdescribe("UserDocument.areDocumentsLoading", () => {
   beforeEach(() => {
