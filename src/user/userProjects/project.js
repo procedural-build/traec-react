@@ -1,14 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
-
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
 import Traec from "traec";
 import { BSCard } from "traec-react/utils/bootstrap";
 import BaseFormConnected from "traec-react/utils/form";
-import ProjectItem from "./projectItem";
+import { ProjectItem } from "./projectItem";
 
 export const projectFields = {
   name: { value: "", class: "col", endRow: true },
@@ -56,7 +52,9 @@ class UserProjects extends React.Component {
       .toList()
       .sortBy((obj, i) => obj.get("name"))
       .map((item, i) => (
-        <ProjectItem key={i} index={i} project={item} dispatch={this.props.dispatch} showTrackers={false} />
+        <ProjectItem key={i} index={i} project={item} showTrackers={false}>
+          {this.props.children}
+        </ProjectItem>
       ));
 
     // Reset the row counter
@@ -65,7 +63,7 @@ class UserProjects extends React.Component {
       <BSCard
         id="user-projects"
         widthOffset="col-sm-12"
-        title="My Projects"
+        title={this.props.title ? this.props.title : "My Projects"}
         body={projectList}
         form={
           <BaseFormConnected

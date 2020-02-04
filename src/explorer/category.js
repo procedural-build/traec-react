@@ -32,11 +32,11 @@ class CategoryRow extends React.PureComponent {
 
   dropDownLinks() {
     return [
-      { name: "Add Branch", onClick: this.addBranch },
-      { name: "Rename Branch", onClick: this.editBranch },
-      { name: "Make a Commit", onClick: this.doCommit },
-      //{ name: "Show Commit Log", linkTo: `/tracker/${tid}/ref/${cid}/log` },
-      { name: null }
+      // { name: "Add Branch", onClick: this.addBranch },
+      // { name: "Rename Branch", onClick: this.editBranch },
+      // { name: "Make a Commit", onClick: this.doCommit },
+      // { name: "Show Commit Log", linkTo: `/tracker/${tid}/ref/${cid}/log` },
+      // { name: null }
     ];
   }
 

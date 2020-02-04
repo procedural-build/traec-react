@@ -6,144 +6,142 @@ import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
 import Im from "traec/immutable";
 
+/**
+ * TitleAndDescription component.
+ *
+ *
+ * Example usage:
+ * render(){
+ *     const { cref, parentCommitId, treeId, descriptions, tree } = this.props;
+ *     if(!descriptions.first()) return
+ *     const fetch = new Traec.Fetch("tracker_ref_tree_description", "put", {
+ *       trackerId: cref.get("tracker"),
+ *       refId: cref.get("uid"),
+ *       commitId: parentCommitId,
+ *       treeId,
+ *       descriptionId: descriptions.first().get("uid")
+ *     });
+ *     const titleAndDescriptionRef = React.createRef();
+ *     const dropdownLinks = [
+ *       {name: "Edit Description", onClick: e => {titleAndDescriptionRef.current.edit()}},
+ *       {name: "Delete", onClick: e => {this.delete()}}
+ *     ]
+ *     return (
+ *       <TitleAndDescription
+ *         ref={titleAndDescriptionRef}
+ *         cref={cref}
+ *         parentCommitId={parentCommitId}
+ *         tree={tree}
+ *         fetch={fetch}
+ *         showEdit={true}
+ *         description={descriptions.first()}
+ *         dropdownLinks={dropdownLinks}/>
+ *     );
+ * }
+ *
+ */
 export class TitleAndDescription extends React.Component {
   constructor(props) {
     super(props);
-
     /* 
     The fetch for this component is based on the props passed which are static 
     so we can safely define the fetch here once.
      */
-    let { description: item, cref, document } = props;
-    this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
-      trackerId: cref.get("tracker"),
-      documentId: document.get("uid"),
-      refId: cref.get("uid"),
-      commitId: cref.getInPath("latest_commit.uid")
-    });
+    let { description, cref, documentId, showEdit, fetch } = props;
+    this.fetch = fetch;
+    if (showEdit && !fetch) {
+      this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
+        trackerId: cref.get("tracker"),
+        documentId: documentId,
+        refId: cref.get("uid"),
+        commitId: cref.getInPath("latest_commit.uid")
+      });
+      // Reshape the post data just before fetching
+      this.fetch.updateFetchParams({
+        headers: { "content-type": "application/json" },
+        rawBody: false,
+        preFetchHook: body => ({
+          description: {
+            uid: description.get("uid"),
+            title: body.title,
+            text: body.description
+          }
+        })
+      });
+    }
 
-    // Reshape the post data just before fetching
-    this.fetch.updateFetchParams({
-      headers: { "content-type": "application/json" },
-      rawBody: false,
-      preFetchHook: body => ({
-        description: {
-          uid: item.get("uid"),
-          title: body.title,
-          text: body.description
-        }
-      })
-    });
-
-    this.state = {
-      formParams: this.fetch.params,
-      initFields: Traec.Im.Map({
-        title: item.get("title"),
-        description: item.get("text")
-      })
-    };
+    this.state = {};
   }
 
-  render_edit_dropdown() {
-    let { showEdit = true } = this.props;
+  edit() {
+    let { description } = this.props;
+    this.setState({
+      initFields: Traec.Im.Map({
+        title: description.get("title") || "",
+        description: description.get("text") || ""
+      })
+    });
+    this.fetch.toggleForm();
+  }
+
+  renderEditDropdown() {
+    let { showEdit, dropdownLinks } = this.props;
     if (!showEdit) {
       return null;
     }
     return (
       <BSBtnDropdown
-        links={[
-          {
-            name: "Edit Description",
-            onClick: e => {
-              this.fetch.toggleForm();
-            }
-          }
-        ]}
-        header={" "}
+        links={
+          dropdownLinks
+            ? dropdownLinks
+            : [
+                {
+                  name: "Edit Description",
+                  onClick: e => {
+                    this.edit();
+                  }
+                }
+              ]
+        }
+        header={"Admin"}
       />
     );
   }
 
-  render_content() {
-    let { description: item } = this.props;
-    const TitleTag = this.props.TitleTag || "H2";
+  renderContent() {
+    let { description } = this.props;
+    const TitleTag = this.props.TitleTag || "h2";
     return (
       <React.Fragment>
         <TitleTag>
-          {item.get("title")}
-          {this.render_edit_dropdown()}
+          <b>{description.get("title")}</b>
+          <span style={{ fontSize: "0.875rem" }}>{this.renderEditDropdown()}</span>
         </TitleTag>
-        <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: item.get("text") }} />
+
+        <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: description.get("text") }} />
       </React.Fragment>
     );
   }
 
-  render_form() {
-    let fetch = this.props.fetch || this.fetch;
+  renderForm() {
     return (
       <BaseFormConnected
-        params={fetch.params}
+        params={this.fetch.params}
         fields={titleDescriptionFields}
         initFields={this.state.initFields || Traec.Im.Map()}
         toggleForm={() => {
-          fetch.toggleForm();
+          this.fetch.toggleForm();
         }}
       />
     );
   }
 
   render() {
-    let { item } = this.props;
-    let isFormVisible = this.fetch.isFormVisible();
-    //const created = Moment(item.get("created")).format("MMMM Do YYYY, h:mm:ss a");
-    //const creator = `${item.getInPath("creator.first_name")} ${item.getInPath("creator.last_name")}`;
+    let isFormVisible = this.fetch ? this.fetch.isFormVisible() : false;
     return (
-      <div className="m-0">
-        <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
-          <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.render_form() : this.render_content()}</div>
-        </div>
+      <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
+        <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.renderForm() : this.renderContent()}</div>
       </div>
-    );
-  }
-}
-
-export class TitleAndDescription_OLD extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      showDescription: false
-    };
-    this.toggleShowDescription = toggleShowDescription.bind(this);
-  }
-
-  renderDescription(description) {
-    if (this.state.showDescription) {
-      return <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />;
-    } else {
-      return null;
-    }
-  }
-
-  renderTitle(description) {
-    return (
-      <div className="col-sm-11 pl-0">
-        <h5 className="">{description.get("title")}</h5>
-        <i>{this.props.Assingee}</i>
-        <div dangerouslySetInnerHTML={{ __html: description.get("text") }} />
-      </div>
-    );
-  }
-
-  render() {
-    if (!this.props.description) {
-      return null;
-    }
-    return (
-      <React.Fragment>
-        {this.renderTitle(this.props.description)}
-        {this.renderDescription(this.props.description)}
-      </React.Fragment>
     );
   }
 }

@@ -298,16 +298,9 @@ class BootstrapSplitPane extends React.Component {
   }
 
   collapseSidebar() {
-    let collapseButtonIndex;
-    if (this.state.collapseButtonIndex == 0) {
-      collapseButtonIndex = 1;
-    } else {
-      collapseButtonIndex = 0;
-    }
-
     this.setState(
       {
-        collapseButtonIndex,
+        collapseButtonIndex: !this.state.collapseButtonIndex,
         collapsed: !this.state.collapsed
       },
       () => this.handleSidebarCollapse()
@@ -346,6 +339,7 @@ class BootstrapSplitPane extends React.Component {
   render() {
     const {
       allowResize,
+      allowZero,
       children,
       className,
       onResizerClick,
@@ -362,7 +356,7 @@ class BootstrapSplitPane extends React.Component {
       style: styleProps
     } = this.props;
 
-    const { pane1Size, pane2Size } = this.state;
+    const { pane1Size, pane2Size, collapsed } = this.state;
 
     const disabledClass = allowResize ? "" : "disabled";
     const resizerClassNamesIncludingDefault = resizerClassName
@@ -427,7 +421,7 @@ class BootstrapSplitPane extends React.Component {
           split={split}
           style={pane1Style}
         >
-          {notNullChildren[0]}
+          {allowZero && collapsed ? "" : notNullChildren[0]}
         </Pane>
 
         <Resizer

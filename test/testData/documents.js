@@ -123,8 +123,6 @@ export const documentsState = Im.fromJS({
               email: "admin@ods-track.com",
               username: "admin"
             },
-            url:
-              "http://traec-dev-eu-central-1-secure.s3.amazonaws.com/media/secure/tracker/9ef2f2ef-3099-48dc-89e2-86fd80f6ce02/objects/da/39/a3/ee5e6b4b0d3255bfef95601890afd80709?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIO6J5ZOFAZABAGNQ%2F20191007%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20191007T165320Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7bb80fc2140c4ba047caafc04dc23a974bb62d24df72af53c6fb71701d1918d6",
             virus_checked: true,
             commit: "34855f1e-c1f9-49c2-af25-6207f21be1f7"
           },
@@ -408,6 +406,25 @@ export const documentsState = Im.fromJS({
 
 export const myDocumentsState = Im.fromJS({
   entities: {
+    trackers: {
+      byId: {
+        "537560d0-44a1-4662-993e-94c5795cb64c": {
+          created: "2019-09-04T11:48:56.962304",
+          alt_root_masters: {},
+          name: "dgnb_tool",
+          errors: null,
+          from_template: null,
+          is_template: false,
+          uid: "537560d0-44a1-4662-993e-94c5795cb64c",
+          project: {
+            uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+            name: "ENV Demo"
+          },
+          is_public: false,
+          root_master: "473a1322-2391-412d-a7a7-e5514cf94902"
+        }
+      }
+    },
     refs: {
       byId: {
         "473a1322-2391-412d-a7a7-e5514cf94902": {
@@ -444,337 +461,195 @@ export const myDocumentsState = Im.fromJS({
           depth: 1,
           project: "3a6f1905-2efb-400a-b305-3243f9ff657e"
         },
-        "dff11852-1926-470f-96ce-27d42586adfd": {
-          uid: "dff11852-1926-470f-96ce-27d42586adfd",
+        "0b0a235e-3dee-45de-bd9d-e8d9634849a0": {
+          uid: "0b0a235e-3dee-45de-bd9d-e8d9634849a0",
           name: "master",
           latest_commit: {
             meta_json: {},
             tree_root: {
-              uid: "65b080a2-ea06-4ff9-bfdf-e5d6facfa573",
-              name: "root"
+              uid: "8ee39f2e-dee5-4914-a612-fa105de6ac2f",
+              name: "cd31507b9f6d2e9309fd1681ac09b1eb66e2b878"
             },
             is_staging: true,
-            created: "2019-08-24T06:02:37.817361",
+            created: "2019-09-04T12:25:29.113019",
             creator: {
               first_name: "",
               last_name: "",
               email: "admin@ods-track.com",
               username: "admin"
             },
-            uid: "53f89992-3c46-4944-a069-4c0303099a61",
+            uid: "2a55799d-f3b3-4c94-8728-ab05fff142c8",
             discipline: null,
             reporting_period: null,
             status: null,
-            ref: "dff11852-1926-470f-96ce-27d42586adfd",
-            root_commit: "53f89992-3c46-4944-a069-4c0303099a61",
+            ref: "0b0a235e-3dee-45de-bd9d-e8d9634849a0",
+            root_commit: "2a55799d-f3b3-4c94-8728-ab05fff142c8",
             previous: null,
-            tracker: "e81832af-70db-4e8e-bfa5-0bf2152d3d11",
+            tracker: "537560d0-44a1-4662-993e-94c5795cb64c",
             due_date: null,
-            project: "7c3fc288-9f40-463f-acac-dca47b74de33",
+            project: "3a6f1905-2efb-400a-b305-3243f9ff657e",
             forced_by: null,
             comment: "(staging)"
           },
-          tracker: "e81832af-70db-4e8e-bfa5-0bf2152d3d11",
-          depth: 1,
-          project: "7c3fc288-9f40-463f-acac-dca47b74de33"
+          tracker: "537560d0-44a1-4662-993e-94c5795cb64c",
+          depth: 4,
+          project: "3a6f1905-2efb-400a-b305-3243f9ff657e"
         },
-        "0f49b3f3-2aff-4ef2-8141-508693c183ca": {
-          uid: "0f49b3f3-2aff-4ef2-8141-508693c183ca",
+        "171c10d9-22b4-491f-a89b-a8967c2aa434": {
+          uid: "171c10d9-22b4-491f-a89b-a8967c2aa434",
           name: "master",
           latest_commit: {
             meta_json: {},
             tree_root: {
-              uid: "41cc9a14-2211-4dd3-8d31-acf20ce27917",
-              name: "root"
+              uid: "d82627e1-b4db-416d-a917-3bd85f877c3a",
+              name: "fc9434eefcd188a45d07f46ed78c8d01e1b7bdf2"
             },
             is_staging: true,
-            created: "2019-08-27T08:14:17.064532",
+            created: "2019-09-04T12:25:52.633927",
             creator: {
               first_name: "",
               last_name: "",
               email: "admin@ods-track.com",
               username: "admin"
             },
-            uid: "094b10d9-d134-424e-85ea-09fe46f985f1",
+            uid: "9fcd463b-6171-4fe9-b6a5-107e5c133e59",
             discipline: null,
             reporting_period: null,
             status: null,
-            ref: "0f49b3f3-2aff-4ef2-8141-508693c183ca",
-            root_commit: "094b10d9-d134-424e-85ea-09fe46f985f1",
+            ref: "171c10d9-22b4-491f-a89b-a8967c2aa434",
+            root_commit: "9fcd463b-6171-4fe9-b6a5-107e5c133e59",
             previous: null,
-            tracker: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02",
+            tracker: "537560d0-44a1-4662-993e-94c5795cb64c",
             due_date: null,
-            project: "730c60ce-509c-4909-a360-2841798eab7c",
+            project: "3a6f1905-2efb-400a-b305-3243f9ff657e",
             forced_by: null,
             comment: "(staging)"
           },
-          tracker: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02",
-          depth: 1,
-          project: "730c60ce-509c-4909-a360-2841798eab7c"
+          tracker: "537560d0-44a1-4662-993e-94c5795cb64c",
+          depth: 4,
+          project: "3a6f1905-2efb-400a-b305-3243f9ff657e"
         }
       }
     },
-    docStatus: {
+    projectObjects: {
       byId: {
-        "d5961aee-84a1-44f4-bc3f-6bab0806bec0": {
-          uid: "d5961aee-84a1-44f4-bc3f-6bab0806bec0",
-          status: {
-            uid: "f84b9324-ea4e-4ede-bb95-7a0655f8b2b5",
-            name: "OK for Submission",
-            color: "#99EB99"
-          },
-          current_object: null,
-          due_date: null,
-          discipline_id: "c1c91f73-caec-43d2-afb4-84301f6f16f5"
+        "3a6f1905-2efb-400a-b305-3243f9ff657e": {
+          disciplines: {
+            "d5c4af7c-4428-43c0-8a21-a6a438db7e49": {
+              uid: "d5c4af7c-4428-43c0-8a21-a6a438db7e49",
+              name: "Administrator",
+              approver: null,
+              auth: {
+                uid: "27188a14-55dd-4d66-97a8-096c31081a3d",
+                is_admin: true,
+                name: "Admin",
+                policy_json: {}
+              },
+              project: {
+                uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+                name: "ENV Demo"
+              },
+              base_uid: "c1c91f73-caec-43d2-afb4-84301f6f16f5"
+            },
+            "58257d94-0f38-4a64-9385-88dcdde86388": {
+              uid: "58257d94-0f38-4a64-9385-88dcdde86388",
+              name: "admin@ods-track.com",
+              approver: null,
+              auth: {
+                uid: "27188a14-55dd-4d66-97a8-096c31081a3d",
+                is_admin: true,
+                name: "Admin",
+                policy_json: {}
+              },
+              project: {
+                uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
+                name: "ENV Demo"
+              },
+              base_uid: "63348e8b-0082-4545-951e-3778ae5354d7"
+            }
+          }
         }
       }
     },
     user: {
       documents: {
         byId: {
-          "52ffadfd-8850-4ddc-83df-b3178990c8c4": {
-            uid: "52ffadfd-8850-4ddc-83df-b3178990c8c4",
-            status: "d5961aee-84a1-44f4-bc3f-6bab0806bec0",
-            description: "4578f6f7-4b84-45c7-8f84-66ff3e4475f4",
-            trackerId: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02"
+          "044485fb-ef08-43c8-bd26-527ea87d22d4": {
+            uid: "044485fb-ef08-43c8-bd26-527ea87d22d4",
+            status: null,
+            description: "4e886c66-3f5b-4964-b704-77ad334c89cf",
+            trackerId: "537560d0-44a1-4662-993e-94c5795cb64c",
+            refId: "0b0a235e-3dee-45de-bd9d-e8d9634849a0"
+          },
+          "0a71439a-ab60-44e0-ad19-e602af88dfbc": {
+            uid: "0a71439a-ab60-44e0-ad19-e602af88dfbc",
+            status: "a4d8d36f-74d1-4356-a642-bc62d2bf8630",
+            description: "32cb8d4d-6889-45a3-a272-79d0a2677645",
+            trackerId: "537560d0-44a1-4662-993e-94c5795cb64c",
+            refId: "171c10d9-22b4-491f-a89b-a8967c2aa434"
           }
         }
       }
     },
-    companyInvites: {
-      byId: {}
-    },
-    projectInvites: {
-      byId: {}
-    },
     descriptions: {
       byId: {
-        "4578f6f7-4b84-45c7-8f84-66ff3e4475f4": {
-          uid: "4578f6f7-4b84-45c7-8f84-66ff3e4475f4",
-          title: "Doc 1",
-          text: "",
+        "4e886c66-3f5b-4964-b704-77ad334c89cf": {
+          uid: "4e886c66-3f5b-4964-b704-77ad334c89cf",
+          title: "fefwe",
+          text: "<p>a</p>",
           creator: {
             first_name: "",
             last_name: "",
             email: "admin@ods-track.com",
             username: "admin"
           },
-          created: "2019-11-04T11:39:02.616479"
+          created: "2019-10-21T10:44:12.779376"
+        },
+        "32cb8d4d-6889-45a3-a272-79d0a2677645": {
+          uid: "32cb8d4d-6889-45a3-a272-79d0a2677645",
+          title: "somrhing",
+          text: "<p>fwk&aelig;lgfekew n&nbsp;</p>\n<p>&nbsp;</p>\n<p>#vsdkn</p>\n<p>#klnl</p>",
+          creator: {
+            first_name: "",
+            last_name: "",
+            email: "admin@ods-track.com",
+            username: "admin"
+          },
+          created: "2019-10-28T09:37:47.113079"
         }
       }
     },
-    projects: {
+    docStatuses: {
       byId: {
-        "3a6f1905-2efb-400a-b305-3243f9ff657e": {
-          meta_json: {},
-          NLA: null,
-          suburb: "",
-          app_host: null,
-          created: "2019-09-04T11:48:56.736174",
-          name: "ENV Demo",
-          client: "",
-          creator: {
-            first_name: "",
-            last_name: "",
-            email: "admin@ods-track.com",
-            username: "admin"
+        "a4d8d36f-74d1-4356-a642-bc62d2bf8630": {
+          uid: "a4d8d36f-74d1-4356-a642-bc62d2bf8630",
+          status: {
+            uid: "f84b9324-ea4e-4ede-bb95-7a0655f8b2b5",
+            name: "OK for Submission",
+            color: "#99EB99"
           },
-          closed: false,
-          postcode: "",
-          uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
-          state: "",
-          address: "",
-          country: "",
-          trackers: [
-            {
-              uid: "537560d0-44a1-4662-993e-94c5795cb64c",
-              name: "dgnb_tool"
-            }
-          ],
-          company: {
-            uid: "ed63b358-d3e5-4db1-af52-f15de1d52c31",
-            name: "Test",
-            depth: 1
-          },
-          default_workflow: "f0f293d2-4cf8-4c1c-b4b1-4855d11ffef7",
-          host_site: 14
-        },
-        "730c60ce-509c-4909-a360-2841798eab7c": {
-          meta_json: {},
-          NLA: null,
-          suburb: "",
-          app_host: null,
-          created: "2019-08-27T08:14:16.936605",
-          name: "DGNB NKB16",
-          client: "",
-          creator: {
-            first_name: "",
-            last_name: "",
-            email: "admin@ods-track.com",
-            username: "admin"
-          },
-          closed: false,
-          postcode: "",
-          uid: "730c60ce-509c-4909-a360-2841798eab7c",
-          state: "",
-          address: "",
-          country: "",
-          trackers: [
-            {
-              uid: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02",
-              name: "dgnb_tool"
-            }
-          ],
-          company: {
-            uid: "7551772c-13d0-4024-8985-fd2e5e87e7f8",
-            name: "BIG",
-            depth: 1
-          },
-          default_workflow: "e6c5d5bb-898c-4ef8-8161-b01f9a538245",
-          host_site: 14
-        },
-        "7c3fc288-9f40-463f-acac-dca47b74de33": {
-          meta_json: {},
-          NLA: null,
-          suburb: "",
-          app_host: null,
-          created: "2019-08-24T06:02:37.653447",
-          name: "Test Company",
-          client: "",
-          creator: {
-            first_name: "",
-            last_name: "",
-            email: "admin@ods-track.com",
-            username: "admin"
-          },
-          closed: false,
-          postcode: "",
-          uid: "7c3fc288-9f40-463f-acac-dca47b74de33",
-          state: "",
-          address: "",
-          country: "",
-          trackers: [
-            {
-              uid: "e81832af-70db-4e8e-bfa5-0bf2152d3d11",
-              name: "dgnb_tool"
-            }
-          ],
-          company: {
-            uid: "ed63b358-d3e5-4db1-af52-f15de1d52c31",
-            name: "Test",
-            depth: 1
-          },
-          default_workflow: "cdd5ff4c-6877-4f96-8118-e0492b871f9f",
-          host_site: 14
+          current_object: "5e436020-80f3-410d-9be1-8f62cf968c97",
+          due_date: null,
+          discipline_id: null
         }
       }
     },
-    trackers: {
+    docObjects: {
       byId: {
-        "537560d0-44a1-4662-993e-94c5795cb64c": {
-          created: "2019-09-04T11:48:56.962304",
-          alt_root_masters: {},
-          name: "dgnb_tool",
-          from_template: null,
-          is_template: false,
-          uid: "537560d0-44a1-4662-993e-94c5795cb64c",
-          project: {
-            uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
-            name: "ENV Demo"
-          },
-          is_public: false,
-          root_master: "473a1322-2391-412d-a7a7-e5514cf94902"
-        },
-        "e81832af-70db-4e8e-bfa5-0bf2152d3d11": {
-          created: "2019-08-24T06:02:37.794690",
-          alt_root_masters: {},
-          name: "dgnb_tool",
-          from_template: null,
-          is_template: false,
-          uid: "e81832af-70db-4e8e-bfa5-0bf2152d3d11",
-          project: {
-            uid: "7c3fc288-9f40-463f-acac-dca47b74de33",
-            name: "Test Company"
-          },
-          is_public: false,
-          root_master: "dff11852-1926-470f-96ce-27d42586adfd"
-        },
-        "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02": {
-          created: "2019-08-27T08:14:17.050651",
-          alt_root_masters: {},
-          name: "dgnb_tool",
-          from_template: null,
-          is_template: false,
-          uid: "9ef2f2ef-3099-48dc-89e2-86fd80f6ce02",
-          project: {
-            uid: "730c60ce-509c-4909-a360-2841798eab7c",
-            name: "DGNB NKB16"
-          },
-          is_public: false,
-          root_master: "0f49b3f3-2aff-4ef2-8141-508693c183ca"
-        }
-      }
-    },
-    companies: {
-      byId: {
-        "ed63b358-d3e5-4db1-af52-f15de1d52c31": {
-          meta_json: "",
-          suburb: "",
-          parentid: null,
-          name: "Test",
+        "5e436020-80f3-410d-9be1-8f62cf968c97": {
+          uid: "5e436020-80f3-410d-9be1-8f62cf968c97",
+          filename: "AirTestVentCalc.xls",
+          created: "2019-10-28T09:38:06.442965",
           creator: {
             first_name: "",
             last_name: "",
             email: "admin@ods-track.com",
             username: "admin"
           },
-          postcode: "",
-          uid: "ed63b358-d3e5-4db1-af52-f15de1d52c31",
-          state: "",
-          address: "",
-          country: "",
-          projects: [
-            {
-              uid: "7c3fc288-9f40-463f-acac-dca47b74de33",
-              name: "Test Company"
-            },
-            {
-              uid: "3a6f1905-2efb-400a-b305-3243f9ff657e",
-              name: "ENV Demo"
-            }
-          ],
-          childids: [],
-          address2: ""
-        },
-        "7551772c-13d0-4024-8985-fd2e5e87e7f8": {
-          meta_json: "",
-          suburb: "Valby",
-          parentid: null,
-          name: "BIG",
-          creator: {
-            first_name: "",
-            last_name: "",
-            email: "admin@ods-track.com",
-            username: "admin"
-          },
-          postcode: "2500",
-          uid: "7551772c-13d0-4024-8985-fd2e5e87e7f8",
-          state: "Copenhagen",
-          address: "Kløverbladsgade 56",
-          country: "Denmark",
-          projects: [
-            {
-              uid: "730c60ce-509c-4909-a360-2841798eab7c",
-              name: "DGNB NKB16"
-            }
-          ],
-          childids: [],
-          address2: ""
+          virus_checked: true,
+          commit: "9fcd463b-6171-4fe9-b6a5-107e5c133e59"
         }
       }
-    },
-    commits: {
-      byId: {}
     }
   }
 });

@@ -53,7 +53,7 @@ export function TargetValueDisplay({ targetValue, raThreshold, greenBelow }) {
 
 export function OperationMetrics({ ops, numerator = true }) {
   let lists = [];
-  let validOps = ops.filter(i => i.exponent > 0 == numerator && i.renderedMetrics.length);
+  let validOps = ops.filter(i => i.exponent > 0 === numerator && i.renderedMetrics.length);
   let multipleSets = validOps.length > 1;
   let counter = 0;
   for (let op of validOps) {
@@ -70,32 +70,48 @@ export function OperationMetrics({ ops, numerator = true }) {
     counter += 1;
   }
 
-  if (!numerator && lists.length == 0) {
+  if (!numerator && lists.length === 0) {
     lists = "1";
   }
 
   return <React.Fragment>{lists}</React.Fragment>;
 }
 
-export function IndicatorEqn({ ops, outOfScope }) {
-  // Render 'Out of Scope' on indicators in the indicator panel that are not displayed in the project overview panel -- Jira: ASS-260
-  return outOfScope ? (
-    <ul style={{ margin: 0, padding: 0, color: "grey" }}>
-      Out of Scope
-      <OperationMetrics ops={ops} />
-    </ul>
-  ) : (
-    <React.Fragment>
-      <ul style={{ margin: 0, padding: 0 }}>
-        <OperationMetrics ops={ops} />
+export const IndicatorEqn = props => {
+  if (props.outOfScope) {
+    // Render 'Out of Scope' on indicators in the indicator panel that are not displayed in the project overview panel -- Jira: ASS-260
+    return (
+      <ul style={{ margin: 0, padding: 0, color: "grey" }}>
+        Out of Scope
+        <OperationMetrics ops={props.ops} />
       </ul>
-      <hr style={{ margin: "0.25em", padding: 0, border: null, borderBottom: "1px solid black" }} />
-      <ul style={{ margin: 0, padding: 0 }}>
-        <OperationMetrics ops={ops} numerator={false} />
-      </ul>
-    </React.Fragment>
-  );
-}
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <ul style={{ margin: 0, padding: 0 }}>
+          <OperationMetrics ops={props.ops} />
+        </ul>
+        <hr style={{ margin: "0.25em", padding: 0, border: null, borderBottom: "1px solid black" }} />
+        <ul style={{ margin: 0, padding: 0 }}>
+          <OperationMetrics ops={props.ops} numerator={false} />
+        </ul>
+      </React.Fragment>
+    );
+  }
+};
+
+export const checkScope = ops => {
+  // If the indicator is not setup for the project overview panel, the indicator in the indicators panel
+  // will be greyed out and defined as 'Out of Scope'-- Jira: ASS-260
+  let outOfScope = true;
+  for (let op of ops) {
+    if (op.metricIds.length) {
+      outOfScope = false;
+    }
+  }
+  return outOfScope;
+};
 
 export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, setTargetComponent }) {
   if (!baseMetrics) {
@@ -111,14 +127,7 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
   // Useful for injecting into the UI for debugging
   let idStr = indicator.get("uid").substring(0, 8);
 
-  // If the indicator is not setup for the project overview panel, the indicator in the indicators panel
-  // will be greyed out and defined as 'Out of Scope'-- Jira: ASS-260
-
-  for (let op of ops) {
-    if (op.renderedMetrics.length == 0) {
-      var outOfScope = true;
-    }
-  }
+  let outOfScope = checkScope(ops);
 
   return (
     <React.Fragment>
@@ -152,7 +161,6 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
           />
         </div>
       </div>
-      {/*this.render_add_form(indicator, factor, numIds, denIds)*/}
       {setTargetComponent}
       <hr />
     </React.Fragment>
