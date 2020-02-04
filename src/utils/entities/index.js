@@ -31,7 +31,7 @@ export class Spinner extends React.Component {
 
   renderExplanation() {
     let { explanation } = this.props;
-    if (explanation) {
+    if (explanation && this.state.showSpinner) {
       return <p>{explanation}</p>;
     }
     return null;

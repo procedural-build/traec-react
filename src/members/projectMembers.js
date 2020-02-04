@@ -52,6 +52,8 @@ export class ProjectMembers extends React.Component {
 
           {/*Render the authGroup panel if allowed */}
           {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
+
+          {this.props.children}
         </React.Fragment>
       );
     }

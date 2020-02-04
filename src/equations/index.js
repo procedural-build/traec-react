@@ -69,14 +69,22 @@ export function OperationMetrics({ ops, numerator = true }) {
     );
     counter += 1;
   }
+
   if (!numerator && lists.length == 0) {
     lists = "1";
   }
+
   return <React.Fragment>{lists}</React.Fragment>;
 }
 
-export function IndicatorEqn({ ops }) {
-  return (
+export function IndicatorEqn({ ops, outOfScope }) {
+  // Render 'Out of Scope' on indicators in the indicator panel that are not displayed in the project overview panel -- Jira: ASS-260
+  return outOfScope ? (
+    <ul style={{ margin: 0, padding: 0, color: "grey" }}>
+      Out of Scope
+      <OperationMetrics ops={ops} />
+    </ul>
+  ) : (
     <React.Fragment>
       <ul style={{ margin: 0, padding: 0 }}>
         <OperationMetrics ops={ops} />
@@ -103,21 +111,34 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
   // Useful for injecting into the UI for debugging
   let idStr = indicator.get("uid").substring(0, 8);
 
+  // If the indicator is not setup for the project overview panel, the indicator in the indicators panel
+  // will be greyed out and defined as 'Out of Scope'-- Jira: ASS-260
+
+  for (let op of ops) {
+    if (op.renderedMetrics.length == 0) {
+      var outOfScope = true;
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="row">
         <div className="col-sm-4">
-          <span className="align-middle tooltip_parent">
+          <span className="align-middle tooltip_parent" style={{ color: outOfScope ? "grey" : "#333" }}>
             {indicator.getInPath("resultBaseMetric.name")}
-            <span class="tooltiptext">{idStr}</span>
+            <span className="tooltiptext">{idStr}</span>
           </span>
         </div>
-        <div className="col-sm-2 align-middle">{indicator.getInPath("resultBaseMetric.category")}</div>
-        <div className="col-sm-1 align-middle">{factor ? parseFloat(factor).toFixed(2) : factor}</div>
-        <div className="col-sm-3 align-middle">
-          <IndicatorEqn ops={ops} />
+        <div className="col-sm-2 align-middle" style={{ color: outOfScope ? "grey" : "#333" }}>
+          {indicator.getInPath("resultBaseMetric.category")}
         </div>
-        <div className="col-sm-1 align-middle">
+        <div className="col-sm-1 align-middle" style={{ color: outOfScope ? "grey" : "#333" }}>
+          {factor ? parseFloat(factor).toFixed(2) : factor}
+        </div>
+        <div className="col-sm-3 align-middle">
+          <IndicatorEqn ops={ops} outOfScope={outOfScope} />
+        </div>
+        <div className="col-sm-1 align-middle" style={{ color: outOfScope ? "grey" : "#333" }}>
           <TargetValueDisplay targetValue={targetValue} raThreshold={raThreshold} greenBelow={greenBelow} />
         </div>
         <div className="col-sm-1 align-middle">

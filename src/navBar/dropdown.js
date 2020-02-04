@@ -12,6 +12,9 @@ class DropDownItem extends React.Component {
   }
 
   renderItem(item, keyIndex) {
+    if (!item) {
+      return null;
+    }
     let labelText = item.get("label");
     if (!labelText) {
       return <hr key={keyIndex} />;

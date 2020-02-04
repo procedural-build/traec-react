@@ -2,9 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
 import * as eventHandlers from "traec/eventHandlers";
-//import "../styles.css";
-//import { DocumentSortBar } from "../sort/sortDocs";
-//import { sortComponentList } from "../utils/sort";
 
 import { BSBtn } from "traec-react/utils/bootstrap/btn";
 

@@ -4,7 +4,7 @@ import Octicon from "react-octicon";
 
 export class BSBtnDropdown extends React.Component {
   renderItem(item, i) {
-    if (item.name != undefined) {
+    if (item.name !== undefined) {
       if ("onClick" in item) {
         return (
           <a key={i} className="dropdown-item" onClick={e => item.onClick(e, item.id)}>
