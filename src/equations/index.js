@@ -114,11 +114,14 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
   // If the indicator is not setup for the project overview panel, the indicator in the indicators panel
   // will be greyed out and defined as 'Out of Scope'-- Jira: ASS-260
 
-  for (let op of ops) {
-    if (op.renderedMetrics.length == 0) {
-      var outOfScope = true;
-    }
-  }
+  // for (let op of ops) {
+  //   if (op.renderedMetrics.length == 0) {
+  //     console.log(op.renderedMetrics)
+  //     var outOfScope = true;
+  //   }else{
+  //     outOfScope = false;
+  //   }
+  // }
 
   return (
     <React.Fragment>
