@@ -128,6 +128,8 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
   let idStr = indicator.get("uid").substring(0, 8);
 
   let outOfScope = checkScope(ops);
+  // If the indicator is not setup for the project overview panel, the indicator in the indicators panel
+  // will be greyed out and defined as 'Out of Scope'-- Jira: ASS-260
 
   return (
     <React.Fragment>
