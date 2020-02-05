@@ -5,30 +5,35 @@ import Traec from "traec";
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
 const Chart = props => {
-  let { data } = props;
+  let { data, width, height } = props;
   if (!data) return "";
 
   let dataKeys = [];
-  data.map(d =>
-    Object.keys(d).map(key => {
+  data.map(elements => {
+    Object.keys(elements).map(key => {
       if (key !== "name" && !dataKeys.includes(key)) {
         dataKeys.push(key);
       }
-    })
-  );
+    });
+  });
 
-  console.log(dataKeys);
-  console.log(data);
+  let fills = {
+    "Nothing Recieved": "rgb(255, 150, 150)",
+    "Pending Review": "rgb(255, 214, 153)",
+    "Requires Revision": "rgb(173, 194, 255)",
+    "OK for Submission": "rgb(153, 235, 153)",
+    "Not for Submission": "rgb(153, 235, 153)"
+  };
   return (
     <BarChart
-      width={500}
-      height={300}
+      width={width ? witdh : 500}
+      height={height ? height : 300}
       data={data}
       margin={{
-        top: 20,
-        right: 30,
-        left: 20,
-        bottom: 5
+        top: 0,
+        right: 0,
+        left: 0,
+        bottom: 0
       }}
     >
       <CartesianGrid strokeDasharray="3 3" />
@@ -36,9 +41,9 @@ const Chart = props => {
       <YAxis />
       <Tooltip />
       <Legend />
-      {dataKeys.map((key, index) => (
-        <Bar key={index} dataKey={key} />
-      ))}
+      {dataKeys.map((status, index) => {
+        return <Bar key={index} dataKey={status} stackId={"a"} fill={fills[status]} />;
+      })}
     </BarChart>
   );
 };
@@ -89,7 +94,7 @@ class DocumentSummary extends Component {
       });
     } else if (documents) {
       let element = {};
-      element.name = data.get("title");
+      element.name = data.get("title").slice(0, 10);
       documents.map(document => {
         let statusName = document.getInPath("status.name") ? document.getInPath("status.name") : "Nothing Recieved";
         let occurences = element[statusName];
@@ -104,17 +109,18 @@ class DocumentSummary extends Component {
   render() {
     let { trackerData } = this.props;
     if (!trackerData) return "";
-    console.log(trackerData.toJS());
     return (
-      <div>
-        {trackerData.valueSeq().map((data, index) => {
-          return (
-            <div key={index}>
-              <h2>{data.get("title")}</h2>
-              <Chart data={this.convertTrackerDataToChartData(data)} />
-            </div>
-          );
-        })}
+      <div className="container">
+        <div className="row justify-content-cente">
+          {trackerData.valueSeq().map((data, index) => {
+            return (
+              <div key={index} className="col-md-6">
+                <h2 className="ml-5 mt-4">{data.get("title")}</h2>
+                <Chart data={this.convertTrackerDataToChartData(data)} />
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
