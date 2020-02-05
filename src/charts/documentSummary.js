@@ -60,6 +60,7 @@ class DocumentSummary extends Component {
     let { refs, trackerId } = this.props;
     if (refs) {
       refs.map(ref => {
+        if (ref.get("tracker") !== trackerId) return;
         let commitId = ref.getInPath("latest_commit.uid");
         let fetch = new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId });
         fetch.dispatch();
@@ -109,6 +110,7 @@ class DocumentSummary extends Component {
   render() {
     let { trackerData } = this.props;
     if (!trackerData) return "";
+    console.log(trackerData.toJS());
     return (
       <div className="container">
         <div className="row justify-content-cente">
@@ -134,7 +136,8 @@ const mapStateToProps = (state, ownProps) => {
   let commitBranches = state.getInPath("entities.commitBranches.commit");
   let trackerData = Traec.Im.Map({});
   if (commitEdges) {
-    trackerData = getTrackerData(refs, commitEdges, documentStatuses, descriptions);
+    let refsWithDepth2 = refs.filter(ref => ref.get("depth") === 2 && ref.get("tracker") === ownProps.trackerId);
+    trackerData = recursiveDataExtraction(refsWithDepth2, refs, commitEdges, documentStatuses, descriptions);
   }
   return {
     refs,
@@ -148,13 +151,7 @@ const mapStateToProps = (state, ownProps) => {
 
 export default DocumentSummary = connect(mapStateToProps)(DocumentSummary);
 
-function getTrackerData(allRefs, commitEdges, documentStatuses, descriptions) {
-  let refsWithDepth2 = allRefs.filter(ref => ref.get("depth") === 2);
-  let data = recurseRef(refsWithDepth2, allRefs, commitEdges, documentStatuses, descriptions);
-  return data;
-}
-
-function recurseRef(parentRefs, allRefs, commitEdges, documentStatuses, descriptions) {
+function recursiveDataExtraction(parentRefs, allRefs, commitEdges, documentStatuses, descriptions) {
   let data = parentRefs.map(ref => {
     let subData = Traec.Im.Map({});
     if (!ref) return subData;
@@ -175,7 +172,7 @@ function recurseRef(parentRefs, allRefs, commitEdges, documentStatuses, descript
       subCategories = getSubRefs(subCategories, allRefs);
       subData = subData.set(
         "subCategories",
-        recurseRef(subCategories, allRefs, commitEdges, documentStatuses, descriptions)
+        recursiveDataExtraction(subCategories, allRefs, commitEdges, documentStatuses, descriptions)
       );
     }
 
