@@ -129,17 +129,12 @@ class TreeRow extends React.PureComponent {
 
   dropDownLinks() {
     let thisItems = [
-      { name: "Rename", onClick: this.editTree },
-      { name: "Add Folder", onClick: this.addTree },
-      { name: "Add Document", onClick: this.addDocument },
-      { name: "Add CategoryRef", onClick: this.addCategoryRef },
-      { name: null },
-      {
-        name: this.state.showDocs ? "Hide Docs" : "Show Docs",
-        onClick: this.showDocs
-      },
-      { name: null },
-      { name: "Delete", onClick: this.deleteTree }
+      { name: "Edit Category", onClick: this.editTree },
+      { name: "Add a new revision", onClick: this.addCategoryRef },
+      { name: "Add a new sub-category", onClick: this.addTree },
+      { name: "Add a new document", onClick: this.addDocument },
+      { label: null },
+      { name: "Delete category", onClick: this.deleteTree }
     ];
     let extraDropDowns = this.props.extraDropDowns || [];
     return extraDropDowns.concat(thisItems);
@@ -380,7 +375,7 @@ class TreeRow extends React.PureComponent {
     let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
 
     // Skip rendering if there is no description
-    if (!(isRoot && renderRootTree) && (!showTreesWithoutDescriptions && !this.has_description(tree))) {
+    if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.has_description(tree)) {
       return null;
     }
 
@@ -518,8 +513,5 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const TreeRowConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TreeRow);
+const TreeRowConnected = connect(mapStateToProps, mapDispatchToProps)(TreeRow);
 export default TreeRowConnected;

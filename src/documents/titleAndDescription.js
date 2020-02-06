@@ -1,10 +1,10 @@
-
 import React from "react";
 import Traec from "traec";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { toggleShowDescription } from "../tasks/utils/cardUtils";
 import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
+import { Link } from "react-router-dom";
 
 export class TitleAndDescription extends React.Component {
   constructor(props) {
@@ -13,22 +13,22 @@ export class TitleAndDescription extends React.Component {
     The fetch for this component is based on the props passed which are static 
     so we can safely define the fetch here once.
      */
-    let { description: item, cref, documentId, showEdit } = props;
-    if (showEdit) {
+    let { description, cref, documentId, showEdit, fetch } = props;
+    this.fetch = fetch;
+    if (showEdit && !fetch) {
       this.fetch = new Traec.Fetch("tracker_ref_document", "put", {
         trackerId: cref.get("tracker"),
         documentId: documentId,
         refId: cref.get("uid"),
         commitId: cref.getInPath("latest_commit.uid")
       });
-
       // Reshape the post data just before fetching
       this.fetch.updateFetchParams({
         headers: { "content-type": "application/json" },
         rawBody: false,
         preFetchHook: body => ({
           description: {
-            uid: item.get("uid"),
+            uid: description.get("uid"),
             title: body.title,
             text: body.description
           }
@@ -36,59 +36,69 @@ export class TitleAndDescription extends React.Component {
       });
     }
 
-    this.state = {
-      initFields: Traec.Im.Map({
-        title: item.get("title"),
-        description: item.get("text")
-      })
-    };
+    this.state = {};
   }
 
-  render_edit_dropdown() {
-    let { showEdit } = this.props;
+  edit() {
+    let { description } = this.props;
+    this.setState({
+      initFields: Traec.Im.Map({
+        title: description.get("title") || "",
+        description: description.get("text") || ""
+      })
+    });
+    this.fetch.toggleForm();
+  }
+
+  renderEditDropdown() {
+    let { showEdit, dropdownLinks } = this.props;
     if (!showEdit) {
       return null;
     }
     return (
       <BSBtnDropdown
-        links={[
-          {
-            name: "Edit Description",
-            onClick: e => {
-              this.fetch.toggleForm();
-            }
-          }
-        ]}
+        links={
+          dropdownLinks
+            ? dropdownLinks
+            : [
+                {
+                  name: "Edit Description",
+                  onClick: e => {
+                    this.edit();
+                  }
+                }
+              ]
+        }
         header={"Admin"}
       />
     );
   }
 
-  render_content() {
-    let { description: item } = this.props;
+  renderContent() {
+    let { description, showAssingee, showTreeTitle } = this.props;
     const TitleTag = this.props.TitleTag || "h2";
-
     return (
       <React.Fragment>
-        <TitleTag>
-          <b>{item.get("title")}</b>
-          <span style={{ fontSize: "0.875rem" }}>{this.render_edit_dropdown()}</span>
+        <TitleTag className="mb-0 pb-1">
+          <b>{description.get("title")}</b>
+          <span style={{ fontSize: "0.875rem" }}>{this.renderEditDropdown()}</span>
         </TitleTag>
-
-        <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: item.get("text") }} />
+        <Link to={description.getInPath("tree.url") ? description.getInPath("tree.url") : "#"}>
+          <i style={{ fontSize: "1rem", color: "#555" }}>{showTreeTitle ? description.getInPath("tree.title") : ""}</i>
+        </Link>
+        <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: description.get("text") }} />
       </React.Fragment>
     );
   }
 
-  render_form() {
-    let fetch = this.props.fetch || this.fetch;
+  renderForm() {
     return (
       <BaseFormConnected
-        params={fetch.params}
+        params={this.fetch.params}
         fields={titleDescriptionFields}
         initFields={this.state.initFields || Traec.Im.Map()}
         toggleForm={() => {
-          fetch.toggleForm();
+          this.fetch.toggleForm();
         }}
       />
     );
@@ -97,10 +107,8 @@ export class TitleAndDescription extends React.Component {
   render() {
     let isFormVisible = this.fetch ? this.fetch.isFormVisible() : false;
     return (
-      <div className="m-0">
-        <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
-          <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.render_form() : this.render_content()}</div>
-        </div>
+      <div className={`row m-0 p-0`} style={{ borderTop: "1px solid #F6F6F6" }}>
+        <div className="col-sm-12 m-0 p-0">{isFormVisible ? this.renderForm() : this.renderContent()}</div>
       </div>
     );
   }
