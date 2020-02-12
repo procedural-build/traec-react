@@ -1,6 +1,6 @@
 export const titleDescriptionFields = {
   title: { value: "", class: "col", endRow: true },
-  description: {
+  text: {
     value: "",
     inputType: "tinymce",
     rows: "3",
