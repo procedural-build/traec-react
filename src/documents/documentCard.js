@@ -127,7 +127,7 @@ class DocumentCard extends Component {
         {({ getRootProps, getInputProps }) => {
           return (
             <div {...getRootProps()} style={{ outline: "none" }}>
-              <input {...getInputProps()}></input>
+              <input {...getInputProps()} />
               <DocumentCardView
                 cref={cref}
                 documentId={docId}
@@ -146,7 +146,7 @@ class DocumentCard extends Component {
                 currentDocObject={currentDocObject}
                 save={this.save.bind(this)}
                 doUpload={this.doUpload.bind(this)}
-              ></DocumentCardView>
+              />
             </div>
           );
         }}

@@ -78,7 +78,11 @@ export class BSBtnDropdown extends React.Component {
       return "";
     }
     return (
-      <div className="dropdown-menu dropdown-menu-right" aria-labelledby="btnDropdown">
+      <div
+        className="dropdown-menu dropdown-menu-right"
+        style={{ maxHeight: "50rem", overflowX: "scroll" }}
+        aria-labelledby="btnDropdown"
+      >
         {links}
       </div>
     );
