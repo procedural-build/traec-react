@@ -147,7 +147,7 @@ class DocumentCard extends Component {
         {({ getRootProps, getInputProps }) => {
           return (
             <div {...getRootProps()} style={{ outline: "none" }}>
-              <input {...getInputProps()}></input>
+              <input {...getInputProps()} />
               <DocumentCardView
                 cref={cref}
                 documentId={docId}

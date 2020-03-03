@@ -140,7 +140,7 @@ export class DocumentCardView extends Component {
           ) : null}
         </div>
 
-        <DocumentStatus docStatus={this.props.docStatus}></DocumentStatus>
+        <DocumentStatus docStatus={this.props.docStatus} />
       </div>
     );
   }
