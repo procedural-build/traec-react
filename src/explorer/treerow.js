@@ -245,7 +245,27 @@ class TreeRow extends React.PureComponent {
       refId,
       commitId,
       treeId
-      // skip_categories: true
+    });
+    fetch.updateFetchParams({
+      preFetchHook: body => {
+        let name =
+          body.name ||
+          Crypto.createHash("sha1")
+            .update(body.title)
+            .digest("hex");
+        let newBody = { name };
+        if (body.title) {
+          newBody = {
+            ...newBody,
+            description: {
+              title: body.title,
+              text: body.description
+            },
+            commit: commitId
+          };
+        }
+        return newBody;
+      }
     });
     this.setState({ nameFormParams: fetch.params });
     fetch.toggleForm();

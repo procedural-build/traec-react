@@ -76,7 +76,7 @@ class TrackerTree extends React.PureComponent {
           refId={refId}
           renderRootTree={renderRootTree}
           rootTreeName={tracker.get("name")}
-          showTreesWithoutDescriptions={!showTreesWithoutDescriptions}
+          showTreesWithoutDescriptions={showTreesWithoutDescriptions}
           forceExpand={true}
           addWithDescriptions={false}
           formFields={formFields}
