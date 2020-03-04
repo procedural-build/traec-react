@@ -48,6 +48,7 @@ function SubTreeList({ treeIds, commitId, cref, showTreesWithoutDescriptions = t
   if (!treeIds) {
     return null;
   }
+  console.log(treeIds.toJS());
   return treeIds
     .sortBy(treeId => treeId)
     .map((itemId, i) => (
@@ -244,26 +245,7 @@ class TreeRow extends React.PureComponent {
       refId,
       commitId,
       treeId
-    });
-    fetch.updateFetchParams({
-      preFetchHook: body => {
-        let name =
-          body.name ||
-          Crypto.createHash("sha1")
-            .update(body.title)
-            .digest("hex");
-        let newBody = { name };
-        if (body.title) {
-          newBody = {
-            ...newBody,
-            description: {
-              title: body.title,
-              text: body.description
-            }
-          };
-        }
-        return newBody;
-      }
+      // skip_categories: true
     });
     this.setState({ nameFormParams: fetch.params });
     fetch.toggleForm();
@@ -373,11 +355,11 @@ class TreeRow extends React.PureComponent {
 
   render_row() {
     let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
-
     // Skip rendering if there is no description
     if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.has_description(tree)) {
       return null;
     }
+    console.log("Rendering row", tree.get("uid"));
 
     const name = this.get_tree_name(tree);
     const bgColor = this.get_bgColor();
@@ -401,10 +383,7 @@ class TreeRow extends React.PureComponent {
                 {name}
               </b>
             ) : (
-              <React.Fragment>
-                {/*<Octicon name="triangle-right" />*/}
-                {name}
-              </React.Fragment>
+              <React.Fragment>{name}</React.Fragment>
             )}
           </p>
           {this.props.extraContent}
@@ -434,15 +413,12 @@ class TreeRow extends React.PureComponent {
 
   render() {
     let { tree, tracker, extraRowClass, addWithDescriptions, formFields } = this.props;
-
-    //console.log("Rendering tree", this.props.treeId)
     if (!tree || !tracker) {
       return null;
     }
 
     extraRowClass = extraRowClass || "ml-2";
 
-    // Return the element
     return (
       <div className={`m-0 ${extraRowClass}`}>
         {this.render_row()}
