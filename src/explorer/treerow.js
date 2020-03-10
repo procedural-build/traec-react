@@ -379,7 +379,6 @@ class TreeRow extends React.PureComponent {
     if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.has_description(tree)) {
       return null;
     }
-    console.log("Rendering row", tree.get("uid"));
 
     const name = this.get_tree_name(tree);
     const bgColor = this.get_bgColor();

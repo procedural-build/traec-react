@@ -109,8 +109,8 @@ class UserDocuments extends React.Component {
   }
 
   areDocumentsLoading() {
-    let { documents, disciplines, docStatuses } = this.props;
-    return !documents || documents.length === 0 || !disciplines || !docStatuses;
+    let { documents, disciplines } = this.props;
+    return !documents || documents.length === 0 || !disciplines;
   }
 
   renderSpinner() {
@@ -133,7 +133,7 @@ class UserDocuments extends React.Component {
 
     for (let document of documents.valueSeq()) {
       let statusId = document.get("status");
-      let status = docStatuses.get(statusId);
+      let status = docStatuses ? docStatuses.get(statusId) : undefined;
       let refId = document.get("refId");
       if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
         let disciplineName = status
