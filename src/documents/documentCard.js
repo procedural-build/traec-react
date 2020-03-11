@@ -5,6 +5,7 @@ import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
 import Moment from "moment";
 import category from "traec-react/explorer/category";
+import { confirmDelete } from "traec-react/utils/sweetalert";
 
 class DocumentCard extends Component {
   constructor(props) {
@@ -14,15 +15,23 @@ class DocumentCard extends Component {
       action: "Nothing Recieved",
       selectedFiles: []
     };
-    let { trackerId, cref } = props;
-    let commitId = cref.getInPath("latest_commit.uid");
+    let { trackerId, commitId } = props;
     this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })];
+
+    this.deleteDocument = this.deleteDocument.bind(this);
+    this.copyDocument = this.copyDocument.bind(this);
   }
 
-  adminDropDownLinks() {
+  adminDropdownLinks() {
     let items = [
-      { name: "copy", onClick: this.copyDocument },
-      { name: "Edit", onClick: this.editDocument },
+      {
+        name: "Edit",
+        onClick: e => {
+          throw "Error Not Changed to a valid method!";
+        }
+      },
+      { name: "Copy", onClick: this.copyDocument },
+      { label: null },
       { name: "Delete", onClick: this.deleteDocument }
     ];
     return items;
@@ -57,15 +66,17 @@ class DocumentCard extends Component {
   }
 
   deleteDocument() {
-    throw "Not implemented";
-  }
-
-  editDocument() {
-    throw "Not implemented";
+    const { trackerId, commitId, refId, docId } = this.props;
+    confirmDelete({
+      text: `This will delete this document including any data contained within.  Are you sure you would like to proceed?`,
+      onConfirm: () => {
+        new Traec.Fetch("tracker_ref_document", "delete", { trackerId, commitId, refId, docId }).dispatch();
+      }
+    });
   }
 
   copyDocument() {
-    throw "Not implemented";
+    alert("Not implemented");
   }
 
   setDueDate(value) {
@@ -170,6 +181,7 @@ class DocumentCard extends Component {
                 doUpload={this.doUpload.bind(this)}
                 setAction={this.setAction.bind(this)}
                 setDueDate={this.setDueDate.bind(this)}
+                adminDropdownLinks={this.adminDropdownLinks()}
               />
             </div>
           );

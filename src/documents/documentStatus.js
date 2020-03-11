@@ -8,7 +8,6 @@ export class DocumentStatus extends Component {
   render() {
     let { docStatus } = this.props;
     let divStyle = {
-      minHeight: "2rem",
       display: "flex",
       alignItems: "center",
       justifyContent: "center"
