@@ -39,7 +39,10 @@ export const getMetricsFromIndicator = ({ indicator, baseMetrics }) => {
 };
 
 export function TargetValueDisplay({ targetValue, raThreshold, greenBelow }) {
-  if (!targetValue) {
+  if (targetValue == 0) {
+    // If the target value is set to 0, display 0 rather than empty/null values in the row.
+    targetValue = 0;
+  } else if (!targetValue) {
     return null;
   }
   let arrowUp = raThreshold ? raThreshold < targetValue : !greenBelow;
