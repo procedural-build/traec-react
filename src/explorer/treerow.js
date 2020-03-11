@@ -513,5 +513,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const TreeRowConnected = connect(mapStateToProps, mapDispatchToProps)(TreeRow);
+const TreeRowConnected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TreeRow);
 export default TreeRowConnected;

@@ -2,6 +2,13 @@ import React from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import Im from "traec/immutable";
 
+/**
+ * Discipline Summary:
+ * @namespace DisciplineSummary
+ * @example
+ * return <DisciplineSummary data={null} />;
+ *
+ */
 export class DisciplineSummary extends React.Component {
   checkData() {
     if (!this.props.data || !this.props.data.size) {

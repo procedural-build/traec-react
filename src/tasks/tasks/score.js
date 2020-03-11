@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { saveToRedux } from "../utils/cardUtils";
 import { connect } from "react-redux";
 
-class TaskScore extends Component {
+export class TaskScore extends Component {
   constructor(props) {
     super(props);
     this.state = {

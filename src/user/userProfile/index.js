@@ -62,4 +62,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TraecUserProfile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TraecUserProfile);

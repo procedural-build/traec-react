@@ -208,7 +208,10 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
+export default DocumentCard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DocumentCard);
 
 const addTreeTitleToDescription = (state, cref, description) => {
   let latestCommitId = cref.getInPath(`latest_commit.uid`);

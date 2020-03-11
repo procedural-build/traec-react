@@ -211,4 +211,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BaseForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BaseForm);

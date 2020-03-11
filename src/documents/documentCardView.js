@@ -5,7 +5,32 @@ import { DocumentStatus } from "./documentStatus";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
 import DatePicker from "react-date-picker";
 import moment from "moment";
-
+/**
+ * DocumentCardView Component:
+ * @namespace DocumentCardView
+ * @memberof DocumentCard
+ * @property {string} cref the cref is an id
+ * @example
+ * return <DocumentCardView
+ * cref={cref}
+ * document={document}
+ * description={description}
+ * assignee={assignee}
+ * docStatus={docStatus}
+ * setDueDate={this.setDueDate.bind(this)}
+ * dueDate={this.state.dueDate}
+ * setAction={this.setAction.bind(this)}
+ * action={this.state.action}
+ * deleteDocument={this.deleteDocument}
+ * editDocument={this.editDocument}
+ * copyDocument={this.copyDocument}
+ * dropzoneRef={this.dropzoneRef}
+ * selectedFiles={files}
+ * currentDocObject={currentDocObject}
+ * save={this.save.bind(this)}
+ * doUpload={this.doUpload.bind(this)}
+ * >
+ */
 export class DocumentCardView extends Component {
   constructor(props) {
     super(props);

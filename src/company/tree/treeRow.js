@@ -5,6 +5,14 @@ import { Link } from "react-router-dom";
 import Octicon from "react-octicon";
 import { companyPermissionRender } from "traec/utils/permissions/company";
 
+/**
+ * CompanyTreeRow Component:
+ * @namespace CompanyTreeRow
+ * @memberof CompanyPage
+ * @example
+ * return  <CompanyTreeRow company={rootCompany} companyList={this.props.companyList} currentId={this.props.currentId} />
+ *
+ */
 export default class CompanyTreeRow extends React.Component {
   get_child_company(childId) {
     return this.props.companyList.get(childId);
