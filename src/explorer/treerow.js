@@ -135,7 +135,7 @@ class TreeRow extends React.PureComponent {
       { name: "Add a new package", onClick: this.addTree },
       { name: "Add a new document", onClick: this.addDocument },
       { label: null },
-      { name: "Delete category", onClick: this.deleteCategory }
+      { name: "Delete category", onClick: this.deleteTree }
     ];
     return dropdownLinks;
   }
@@ -143,9 +143,12 @@ class TreeRow extends React.PureComponent {
   getTreeDropdownLinks() {
     let dropdownLinks = [
       { name: "Edit package", onClick: this.editTree },
+      { name: "Add a new revision", onClick: this.addRevision },
+      { name: "Add a new sub-category", onClick: this.addCategoryRef },
+      { name: "Add a new package", onClick: this.addTree },
       { name: "Add a new document", onClick: this.addDocument },
       { label: null },
-      { name: "Delete sub-category", onClick: this.deleteTree }
+      { name: "Delete package", onClick: this.deleteTree }
     ];
     return dropdownLinks;
   }
