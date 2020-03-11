@@ -48,7 +48,6 @@ function SubTreeList({ treeIds, commitId, cref, showTreesWithoutDescriptions = t
   if (!treeIds) {
     return null;
   }
-  console.log(treeIds.toJS());
   return treeIds
     .sortBy(treeId => treeId)
     .map((itemId, i) => (
@@ -205,12 +204,10 @@ class TreeRow extends React.PureComponent {
             }
           };
         }
-        console.log("POSTING DOCUMENT", newBody);
         return newBody;
       }
     });
     this.setState({ nameFormParams: fetch.params });
-    console.log(this.state.nameFormParams);
     fetch.toggleForm();
   }
 
