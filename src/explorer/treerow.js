@@ -335,7 +335,7 @@ class TreeRow extends React.PureComponent {
     return selection.has(treeId);
   }
 
-  render_doc_count() {
+  renderDocCount() {
     let { documentIds } = this.props;
     if (!documentIds) {
       return null;
@@ -343,12 +343,12 @@ class TreeRow extends React.PureComponent {
     return `(${documentIds.count()})  `;
   }
 
-  has_description(tree) {
+  hasDescription(tree) {
     let descriptions = tree.get("descriptions");
     return descriptions.size > 0;
   }
 
-  get_tree_name(tree) {
+  getTreeName(tree) {
     // Render a name if passed in through props
     if (this.props.renderName) {
       return this.props.renderName;
@@ -362,7 +362,7 @@ class TreeRow extends React.PureComponent {
     return tree.get("name");
   }
 
-  get_bgColor() {
+  getBgColor() {
     // Get the Selection type
     let bgColor = "";
     if (this.isActiveSelection()) {
@@ -373,15 +373,28 @@ class TreeRow extends React.PureComponent {
     return bgColor;
   }
 
-  render_row() {
+  renderDropdownMenu() {
+    if (this.props.isRoot) {
+      return (
+        <div className="col-sm-1 m-0 p-0">
+          <BSBtnDropdown
+            links={this.dropDownLinks()}
+            header={<React.Fragment>{this.renderDocCount()}</React.Fragment>}
+          />
+        </div>
+      );
+    }
+  }
+
+  renderRow() {
     let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
     // Skip rendering if there is no description
-    if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.has_description(tree)) {
+    if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.hasDescription(tree)) {
       return null;
     }
 
-    const name = this.get_tree_name(tree);
-    const bgColor = this.get_bgColor();
+    const name = this.getTreeName(tree);
+    const bgColor = this.getBgColor();
     return (
       <div className={`row m-0 p-0 ${bgColor}`} style={{ borderTop: "1px solid #F6F6F6" }}>
         <div className="col-sm-11 m-0 p-0">
@@ -407,17 +420,12 @@ class TreeRow extends React.PureComponent {
           </p>
           {this.props.extraContent}
         </div>
-        <div className="col-sm-1 m-0 p-0">
-          <BSBtnDropdown
-            links={this.dropDownLinks()}
-            header={<React.Fragment>{this.render_doc_count()}</React.Fragment>}
-          />
-        </div>
+        {this.renderDropdownMenu()}
       </div>
     );
   }
 
-  render_sub_items() {
+  renderSubItems() {
     if (this.state.isCollapsed) {
       return null;
     }
@@ -440,7 +448,7 @@ class TreeRow extends React.PureComponent {
 
     return (
       <div className={`m-0 ${extraRowClass}`}>
-        {this.render_row()}
+        {this.renderRow()}
         {/* Render the form for simple name input */}
         <BaseFormConnected
           params={this.state.nameFormParams}
@@ -450,7 +458,7 @@ class TreeRow extends React.PureComponent {
           }
         />
         {/* Render the sub-elements */}
-        {this.render_sub_items()}
+        {this.renderSubItems()}
       </div>
     );
   }

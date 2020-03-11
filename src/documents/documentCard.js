@@ -195,6 +195,7 @@ const mapStateToProps = (state, ownProps) => {
   let { refId, commitId, docId, trackerId, document } = ownProps;
   let description = getDescription(state, commitId, docId);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
+  if (!cref) debugger;
   description = addTreeTitleToDescription(state, cref, description);
 
   let docStatusId = getDocumentStatusId(state, commitId, docId);
