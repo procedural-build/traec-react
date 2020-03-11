@@ -79,7 +79,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TraecUserParticipation);
+export default connect(mapStateToProps, mapDispatchToProps)(TraecUserParticipation);

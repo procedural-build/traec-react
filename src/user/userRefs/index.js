@@ -95,10 +95,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserRefs);
+export default connect(mapStateToProps, mapDispatchToProps)(UserRefs);
 
 export const getTrackers = function(projectIds) {
   if (projectIds) {

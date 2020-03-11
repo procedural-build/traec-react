@@ -103,7 +103,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default TaskScore = connect(
-  null,
-  mapDispatchToProps
-)(TaskScore);
+export default TaskScore = connect(null, mapDispatchToProps)(TaskScore);
