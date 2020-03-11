@@ -14,9 +14,8 @@ class DocumentCard extends Component {
       action: "Nothing Recieved",
       selectedFiles: []
     };
-    let { trackerId, cref } = props;
-    let commitId = cref.getInPath("latest_commit.uid");
-    this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })];
+
+    this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read")];
   }
 
   adminDropDownLinks() {
@@ -29,11 +28,11 @@ class DocumentCard extends Component {
   }
 
   componentDidUpdate() {
-    this.requiredFetches.map(fetch => fetch.dispatch());
+    Traec.fetchRequired.bind(this)();
   }
 
   componentDidMount() {
-    this.requiredFetches.map(fetch => fetch.dispatch());
+    Traec.fetchRequired.bind(this)();
     if (!this.dropzoneRef) this.forceUpdate(); // This has to be called, otherwise this.dropzoneRef won't be defined.
 
     let { docStatus } = this.props;
@@ -211,6 +210,9 @@ const mapDispatchToProps = dispatch => {
 export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
 
 const addTreeTitleToDescription = (state, cref, description) => {
+  if (!cref) {
+    return null;
+  }
   let latestCommitId = cref.getInPath(`latest_commit.uid`);
   let rootTreeId = cref.getInPath(`latest_commit.tree_root.uid`);
   let categoryDescriptionIds = state.getInPath(
@@ -256,11 +258,9 @@ export const getDocumentAssignee = function(state, docId, commitId, projectId) {
   let documentAssigneeList = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Traec.Im.Map();
 
   // Check that the document uid matches with the discipline uid and then get the name of that discipline to display on the document.
-  let assignee = documentAssigneeList.toList().map(item => {
-    if (item.getInPath(`base_uid`) === docDisciplineId) {
-      return item.getInPath(`name`);
-    }
-  });
-
-  return { assignee };
+  let assignee = documentAssigneeList
+    .toList()
+    .filter(item => item.getInPath(`base_uid`) === docDisciplineId)
+    .first();
+  return assignee;
 };

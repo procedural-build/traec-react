@@ -61,8 +61,10 @@ class DocumentSummary extends Component {
     if (refs) {
       refs.map(ref => {
         let commitId = ref.getInPath("latest_commit.uid");
-        let fetch = new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId });
-        fetch.dispatch();
+        if (trackerId && commitId) {
+          let fetch = new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId });
+          fetch.dispatch();
+        }
       });
     }
   }
