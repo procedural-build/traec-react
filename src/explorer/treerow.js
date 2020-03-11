@@ -127,22 +127,36 @@ class TreeRow extends React.PureComponent {
     Traec.fetchRequired.bind(this)();
   }
 
-  dropDownLinks() {
-    let thisItems = [
+  getRootDropdownLinks() {
+    let dropdownLinks = [
       { name: "Edit Category", onClick: this.editTree },
-      { name: "Add a new revision", onClick: this.addCategoryRef },
-      { name: "Add a new sub-category", onClick: this.addTree },
+      { name: "Add a new revision", onClick: this.addRevision },
+      { name: "Add a new sub-category", onClick: this.addCategoryRef },
+      { name: "Add a new package", onClick: this.addTree },
       { name: "Add a new document", onClick: this.addDocument },
       { label: null },
-      { name: "Delete category", onClick: this.deleteTree }
+      { name: "Delete category", onClick: this.deleteCategory }
     ];
-    let extraDropDowns = this.props.extraDropDowns || [];
-    return extraDropDowns.concat(thisItems);
+    return dropdownLinks;
+  }
+
+  getTreeDropdownLinks() {
+    let dropdownLinks = [
+      { name: "Edit package", onClick: this.editTree },
+      { name: "Add a new document", onClick: this.addDocument },
+      { label: null },
+      { name: "Delete sub-category", onClick: this.deleteTree }
+    ];
+    return dropdownLinks;
   }
 
   showDocs(e) {
     e.preventDefault();
     this.setState({ showDocs: !this.state.showDocs });
+  }
+
+  addRevision() {
+    alert("Not implemented");
   }
 
   addTree(e) {
@@ -232,6 +246,11 @@ class TreeRow extends React.PureComponent {
         new Traec.Fetch("tracker_ref_tree", "delete", { ...this.getUrlParams() }).dispatch();
       }
     });
+  }
+
+  deleteCategory(e) {
+    e.preventDefault();
+    alert("Not implemented");
   }
 
   addCategoryRef(e) {
@@ -371,20 +390,17 @@ class TreeRow extends React.PureComponent {
   }
 
   renderDropdownMenu() {
-    if (this.props.isRoot) {
-      return (
-        <div className="col-sm-1 m-0 p-0">
-          <BSBtnDropdown
-            links={this.dropDownLinks()}
-            header={<React.Fragment>{this.renderDocCount()}</React.Fragment>}
-          />
-        </div>
-      );
-    }
+    let { treeIds, commitBranches } = this.props;
+    let dropdownLinks = treeIds || commitBranches ? this.getRootDropdownLinks() : this.getTreeDropdownLinks();
+    return (
+      <div className="col-sm-1 m-0 p-0">
+        <BSBtnDropdown links={dropdownLinks} header={<React.Fragment>{this.renderDocCount()}</React.Fragment>} />
+      </div>
+    );
   }
 
   renderRow() {
-    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
+    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions, treeIds, commitBranches } = this.props;
     // Skip rendering if there is no description
     if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.hasDescription(tree)) {
       return null;
@@ -400,7 +416,7 @@ class TreeRow extends React.PureComponent {
             style={{ display: "inline-block", verticalAlign: "middle" }}
             onClick={this.clickedName}
           >
-            {isRoot ? (
+            {treeIds || commitBranches ? (
               <b>
                 <Octicon
                   name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
@@ -449,7 +465,6 @@ class TreeRow extends React.PureComponent {
         {/* Render the form for simple name input */}
         <BaseFormConnected
           params={this.state.nameFormParams}
-          //fields = {forms.titleFields}
           fields={
             formFields ? forms[formFields] : addWithDescriptions ? forms.titleDescriptionFields : forms.nameFormFields
           }

@@ -16,6 +16,7 @@ class DocumentCard extends Component {
       selectedFiles: []
     };
     let { trackerId, commitId } = props;
+    console.log(trackerId, commitId);
     this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })];
 
     this.deleteDocument = this.deleteDocument.bind(this);
