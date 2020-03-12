@@ -5,6 +5,7 @@ import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
 import Moment from "moment";
 import category from "traec-react/explorer/category";
+import { confirmDelete } from "traec-react/utils/sweetalert";
 
 class DocumentCard extends Component {
   constructor(props) {
@@ -14,15 +15,24 @@ class DocumentCard extends Component {
       action: "Nothing Recieved",
       selectedFiles: []
     };
-    let { trackerId, cref } = props;
-    let commitId = cref.getInPath("latest_commit.uid");
+    let { trackerId, commitId } = props;
+    console.log(trackerId, commitId);
     this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })];
+
+    this.deleteDocument = this.deleteDocument.bind(this);
+    this.copyDocument = this.copyDocument.bind(this);
   }
 
-  adminDropDownLinks() {
+  adminDropdownLinks() {
     let items = [
-      { name: "copy", onClick: this.copyDocument },
-      { name: "Edit", onClick: this.editDocument },
+      {
+        name: "Edit",
+        onClick: e => {
+          throw "Error Not Changed to a valid method!";
+        }
+      },
+      { name: "Copy", onClick: this.copyDocument },
+      { label: null },
       { name: "Delete", onClick: this.deleteDocument }
     ];
     return items;
@@ -57,15 +67,17 @@ class DocumentCard extends Component {
   }
 
   deleteDocument() {
-    throw "Not implemented";
-  }
-
-  editDocument() {
-    throw "Not implemented";
+    const { trackerId, commitId, refId, docId, treeId } = this.props;
+    confirmDelete({
+      text: `This will delete this document including any data contained within.  Are you sure you would like to proceed?`,
+      onConfirm: () => {
+        new Traec.Fetch("tracker_ref_document", "delete", { trackerId, commitId, refId, docId, treeId }).dispatch();
+      }
+    });
   }
 
   copyDocument() {
-    throw "Not implemented";
+    alert("Not implemented");
   }
 
   setDueDate(value) {
@@ -170,6 +182,7 @@ class DocumentCard extends Component {
                 doUpload={this.doUpload.bind(this)}
                 setAction={this.setAction.bind(this)}
                 setDueDate={this.setDueDate.bind(this)}
+                adminDropdownLinks={this.adminDropdownLinks()}
               />
             </div>
           );
@@ -181,9 +194,11 @@ class DocumentCard extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   let { refId, commitId, docId, trackerId, document } = ownProps;
-  let description = getDescription(state, commitId, docId);
   let cref = state.getInPath(`entities.refs.byId.${refId}`);
-  description = addTreeTitleToDescription(state, cref, description);
+
+  let treeId = getTreeId(state, cref, docId);
+  let description = getDescription(state, commitId, docId);
+  description = addTreeTitleToDescription({ state, cref, description, treeId });
 
   let docStatusId = getDocumentStatusId(state, commitId, docId);
   let currentDocObject = getCurrentObject(state, docStatusId);
@@ -198,7 +213,8 @@ const mapStateToProps = (state, ownProps) => {
     refId,
     currentDocObject,
     docStatus,
-    assignee
+    assignee,
+    treeId
   };
 };
 
@@ -210,9 +226,19 @@ const mapDispatchToProps = dispatch => {
 
 export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
 
-const addTreeTitleToDescription = (state, cref, description) => {
+const getTreeId = (state, cref, docId) => {
+  let latestCommitId = cref.getInPath(`latest_commit.uid`);
+  let subTrees = state.getInPath(`entities.commitEdges.byId.${latestCommitId}.trees`);
+
+  if (!subTrees) return;
+  let tree = subTrees.filter(tree => (tree.get("documents") ? tree.get("documents").includes(docId) : false)).toJS();
+  return tree ? Object.keys(tree)[0] : null;
+};
+
+const addTreeTitleToDescription = ({ state, cref, description, treeId }) => {
   let latestCommitId = cref.getInPath(`latest_commit.uid`);
   let rootTreeId = cref.getInPath(`latest_commit.tree_root.uid`);
+
   let categoryDescriptionIds = state.getInPath(
     `entities.commitEdges.byId.${latestCommitId}.trees.${rootTreeId}.descriptions`
   );
@@ -221,7 +247,10 @@ const addTreeTitleToDescription = (state, cref, description) => {
     description = description.setIn(["tree", "title"], categoryTitle);
     let trackerId = cref.getInPath("tracker");
     let refId = cref.get("uid");
-    description = description.setIn(["tree", "url"], `/tracker/${trackerId}/root/${rootTreeId}/ref/${refId}/`);
+    description = description.setIn(
+      ["tree", "url"],
+      `/tracker/${trackerId}/root/${latestCommitId}/ref/${refId}/${treeId ? treeId : ""}`
+    );
   }
   return description;
 };

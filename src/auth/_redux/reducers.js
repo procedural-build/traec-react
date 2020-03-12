@@ -9,7 +9,6 @@ const initialState = Im.fromJS({
 });
 
 export default function(state = initialState, action) {
-  //console.log("Reducing auth data")
   switch (action.type) {
     case types.LOGIN_SUCCESS:
       let token = action.payload.token;

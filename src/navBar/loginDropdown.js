@@ -19,8 +19,8 @@ export class DropdownLogin extends React.Component {
   }
 
   getUserLabel() {
-    let { tokenData } = this.props;
-    let label = tokenData ? tokenData.get("username") : "User Menu";
+    let { user } = this.props;
+    let label = user ? user.get("username") : "User Menu";
     //label = label.split("@")[0]
     return label;
   }
@@ -79,7 +79,4 @@ const mapStateToProps = state => {
   return { isAuthenticated, tokenData, user };
 };
 
-export default connect(
-  mapStateToProps,
-  null
-)(DropdownLogin);
+export default connect(mapStateToProps, null)(DropdownLogin);

@@ -7,19 +7,22 @@ export class DocumentStatus extends Component {
   }
   render() {
     let { docStatus } = this.props;
-    let style = {
-      minHeight: "2rem"
+    let divStyle = {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
     };
     let name = "Nothing Recieved";
     if (!docStatus) {
-      style["backgroundColor"] = "rgb(255,150,150)";
+      divStyle["backgroundColor"] = "rgb(255,150,150)";
     } else {
-      style["backgroundColor"] = docStatus.getInPath("status.color");
+      divStyle["backgroundColor"] = docStatus.getInPath("status.color");
       name = docStatus.getInPath("status.name");
     }
+
     return (
-      <div className="col-md-2 text-center" style={style}>
-        <a className="abs-center BS-btn-sm-text">{name}</a>
+      <div className="col-md-2 text-center" style={divStyle}>
+        <h6>{name}</h6>
       </div>
     );
   }

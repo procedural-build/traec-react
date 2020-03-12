@@ -127,22 +127,39 @@ class TreeRow extends React.PureComponent {
     Traec.fetchRequired.bind(this)();
   }
 
-  dropDownLinks() {
-    let thisItems = [
+  getRootDropdownLinks() {
+    let dropdownLinks = [
       { name: "Edit Category", onClick: this.editTree },
-      { name: "Add a new revision", onClick: this.addCategoryRef },
-      { name: "Add a new sub-category", onClick: this.addTree },
+      { name: "Add a new revision", onClick: this.addRevision },
+      { name: "Add a new sub-category", onClick: this.addCategoryRef },
+      { name: "Add a new package", onClick: this.addTree },
       { name: "Add a new document", onClick: this.addDocument },
       { label: null },
       { name: "Delete category", onClick: this.deleteTree }
     ];
-    let extraDropDowns = this.props.extraDropDowns || [];
-    return extraDropDowns.concat(thisItems);
+    return dropdownLinks;
+  }
+
+  getTreeDropdownLinks() {
+    let dropdownLinks = [
+      { name: "Edit package", onClick: this.editTree },
+      { name: "Add a new revision", onClick: this.addRevision },
+      { name: "Add a new sub-category", onClick: this.addCategoryRef },
+      { name: "Add a new package", onClick: this.addTree },
+      { name: "Add a new document", onClick: this.addDocument },
+      { label: null },
+      { name: "Delete package", onClick: this.deleteTree }
+    ];
+    return dropdownLinks;
   }
 
   showDocs(e) {
     e.preventDefault();
     this.setState({ showDocs: !this.state.showDocs });
+  }
+
+  addRevision() {
+    alert("Not implemented");
   }
 
   addTree(e) {
@@ -204,12 +221,10 @@ class TreeRow extends React.PureComponent {
             }
           };
         }
-        console.log("POSTING DOCUMENT", newBody);
         return newBody;
       }
     });
     this.setState({ nameFormParams: fetch.params });
-    console.log(this.state.nameFormParams);
     fetch.toggleForm();
   }
 
@@ -236,6 +251,11 @@ class TreeRow extends React.PureComponent {
     });
   }
 
+  deleteCategory(e) {
+    e.preventDefault();
+    alert("Not implemented");
+  }
+
   addCategoryRef(e) {
     e.preventDefault();
     let { trackerId, refId, commitId, treeId } = this.getUrlParams();
@@ -259,7 +279,8 @@ class TreeRow extends React.PureComponent {
             description: {
               title: body.title,
               text: body.description
-            }
+            },
+            commit: commitId
           };
         }
         return newBody;
@@ -333,7 +354,7 @@ class TreeRow extends React.PureComponent {
     return selection.has(treeId);
   }
 
-  render_doc_count() {
+  renderDocCount() {
     let { documentIds } = this.props;
     if (!documentIds) {
       return null;
@@ -341,12 +362,12 @@ class TreeRow extends React.PureComponent {
     return `(${documentIds.count()})  `;
   }
 
-  has_description(tree) {
+  hasDescription(tree) {
     let descriptions = tree.get("descriptions");
     return descriptions.size > 0;
   }
 
-  get_tree_name(tree) {
+  getTreeName(tree) {
     // Render a name if passed in through props
     if (this.props.renderName) {
       return this.props.renderName;
@@ -360,7 +381,7 @@ class TreeRow extends React.PureComponent {
     return tree.get("name");
   }
 
-  get_bgColor() {
+  getBgColor() {
     // Get the Selection type
     let bgColor = "";
     if (this.isActiveSelection()) {
@@ -371,16 +392,25 @@ class TreeRow extends React.PureComponent {
     return bgColor;
   }
 
-  render_row() {
-    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
+  renderDropdownMenu() {
+    let { treeIds, commitBranches } = this.props;
+    let dropdownLinks = treeIds || commitBranches ? this.getRootDropdownLinks() : this.getTreeDropdownLinks();
+    return (
+      <div className="col-sm-1 m-0 p-0">
+        <BSBtnDropdown links={dropdownLinks} header={<React.Fragment>{this.renderDocCount()}</React.Fragment>} />
+      </div>
+    );
+  }
 
+  renderRow() {
+    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions, treeIds, commitBranches } = this.props;
     // Skip rendering if there is no description
-    if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.has_description(tree)) {
+    if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.hasDescription(tree)) {
       return null;
     }
 
-    const name = this.get_tree_name(tree);
-    const bgColor = this.get_bgColor();
+    const name = this.getTreeName(tree);
+    const bgColor = this.getBgColor();
     return (
       <div className={`row m-0 p-0 ${bgColor}`} style={{ borderTop: "1px solid #F6F6F6" }}>
         <div className="col-sm-11 m-0 p-0">
@@ -389,7 +419,7 @@ class TreeRow extends React.PureComponent {
             style={{ display: "inline-block", verticalAlign: "middle" }}
             onClick={this.clickedName}
           >
-            {isRoot ? (
+            {treeIds || commitBranches ? (
               <b>
                 <Octicon
                   name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
@@ -401,25 +431,17 @@ class TreeRow extends React.PureComponent {
                 {name}
               </b>
             ) : (
-              <React.Fragment>
-                {/*<Octicon name="triangle-right" />*/}
-                {name}
-              </React.Fragment>
+              <React.Fragment>{name}</React.Fragment>
             )}
           </p>
           {this.props.extraContent}
         </div>
-        <div className="col-sm-1 m-0 p-0">
-          <BSBtnDropdown
-            links={this.dropDownLinks()}
-            header={<React.Fragment>{this.render_doc_count()}</React.Fragment>}
-          />
-        </div>
+        {this.renderDropdownMenu()}
       </div>
     );
   }
 
-  render_sub_items() {
+  renderSubItems() {
     if (this.state.isCollapsed) {
       return null;
     }
@@ -434,28 +456,24 @@ class TreeRow extends React.PureComponent {
 
   render() {
     let { tree, tracker, extraRowClass, addWithDescriptions, formFields } = this.props;
-
-    //console.log("Rendering tree", this.props.treeId)
     if (!tree || !tracker) {
       return null;
     }
 
     extraRowClass = extraRowClass || "ml-2";
 
-    // Return the element
     return (
       <div className={`m-0 ${extraRowClass}`}>
-        {this.render_row()}
+        {this.renderRow()}
         {/* Render the form for simple name input */}
         <BaseFormConnected
           params={this.state.nameFormParams}
-          //fields = {forms.titleFields}
           fields={
             formFields ? forms[formFields] : addWithDescriptions ? forms.titleDescriptionFields : forms.nameFormFields
           }
         />
         {/* Render the sub-elements */}
-        {this.render_sub_items()}
+        {this.renderSubItems()}
       </div>
     );
   }

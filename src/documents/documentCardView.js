@@ -115,31 +115,46 @@ export class DocumentCardView extends Component {
     }
   }
 
-  render() {
+  renderTitleAndDescription() {
     let {
       cref,
       documentId,
       description,
       assignee,
       editableTitleAndDescription,
-      editableDocument,
       showAssignee,
-      showTreeTitle
+      showTreeTitle,
+      adminDropdownLinks
     } = this.props;
+
+    const titleAndDescriptionRef = React.createRef();
+
+    adminDropdownLinks.find(element => element.name === "Edit").onClick = e => {
+      titleAndDescriptionRef.current.edit();
+    };
+
+    return (
+      <TitleAndDescription
+        ref={titleAndDescriptionRef}
+        cref={cref}
+        documentId={documentId}
+        description={description}
+        assignee={assignee}
+        TitleTag={"h5"}
+        showEdit={typeof editableTitleAndDescription === "undefined" ? true : editableTitleAndDescription}
+        showTreeTitle={showTreeTitle}
+        showAssignee={showAssignee}
+        dropdownLinks={adminDropdownLinks}
+      />
+    );
+  }
+
+  render() {
+    let { editableDocument } = this.props;
     return (
       <div className="row mb-4 mt-2">
         <div className="col-md-10" style={{ borderBottom: "1px solid lightgray" }}>
-          <TitleAndDescription
-            cref={cref}
-            documentId={documentId}
-            description={description}
-            assignee={assignee}
-            TitleTag={"h5"}
-            showEdit={typeof editableTitleAndDescription === "undefined" ? true : editableTitleAndDescription}
-            showTreeTitle={showTreeTitle}
-            showAssignee={showAssignee}
-          />
-
+          {this.renderTitleAndDescription()}
           {this.renderUploadedFile()}
 
           {typeof editableDocument === "undefined" || editableDocument ? (
