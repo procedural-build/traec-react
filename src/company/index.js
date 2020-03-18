@@ -39,7 +39,7 @@ class CompanyPage extends React.Component {
   }
 
   componentDidMount() {
-    let { companyId } = this.props.match.params;
+    let { companyId } = Traec.utils.getFullIds(state, this.props.match.params);
     companyPermissionCheck(companyId, false, []);
     Traec.fetchRequired.bind(this)();
     this.setNavBar();
@@ -185,7 +185,7 @@ class CompanyPage extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { companyId } = ownProps.match.params;
+  let { companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
 
   let company = state.getInPath(`entities.companies.byId.${companyId}`);
   let companyList = state.getInPath("entities.companies.byId");
@@ -200,7 +200,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CompanyPage);
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyPage);

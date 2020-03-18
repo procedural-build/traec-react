@@ -31,18 +31,11 @@ export class CompanyMembers extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { companyId } = ownProps.match.params;
+  const { companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
   let company = state.getInPath(`entities.companies.byId.${companyId}`);
   return { companyId, company };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
+const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CompanyMembers);
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyMembers);

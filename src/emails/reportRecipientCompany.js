@@ -112,7 +112,7 @@ class CompanyRecipientEmailReport extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { recipientId, companyId } = ownProps.match.params;
+  let { recipientId, companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
 
   let recipient = state.getInPath(`entities.companyObjects.byId.${companyId}.recipients.${recipientId}`);
   // Add this to props
