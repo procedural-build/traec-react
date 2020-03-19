@@ -39,7 +39,7 @@ class CompanyPage extends React.Component {
   }
 
   componentDidMount() {
-    let { companyId } = Traec.utils.getFullIds(state, this.props.match.params);
+    let { companyId } = this.props;
     companyPermissionCheck(companyId, false, []);
     Traec.fetchRequired.bind(this)();
     this.setNavBar();
