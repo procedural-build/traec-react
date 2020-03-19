@@ -52,6 +52,7 @@ export class BSForm extends React.Component {
         <div className={`form-group ${extraClass}`}>
           {labelBlock}
           <input
+            list={"autocompleteOff"}
             type={inputType}
             className={`form-control ${validClass}`}
             placeholder={details.placeholder || ""}
