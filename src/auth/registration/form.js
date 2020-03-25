@@ -18,7 +18,7 @@ registration and activation api endpoints only.
 // sustainabilitytool.net SITE KEY
 //const gRecaptchaSiteKey = "6LesrYYUAAAAAOSE244oWzmKo18m0YFuC-o4U9il"
 
-const getRecaptchaSiteKey = () => {
+export const getRecaptchaSiteKey = () => {
   const hostname = location.hostname;
   if (hostname.endsWith("sustainabilitytool.net")) {
     return "6LesrYYUAAAAAOSE244oWzmKo18m0YFuC-o4U9il";
@@ -28,8 +28,26 @@ const getRecaptchaSiteKey = () => {
     return "6LdViicUAAAAADRyFSQpSwJ3OBPjwC_jcrJizqsx";
   } else if (hostname.endsWith("abate.dk")) {
     return "6Lc1i8gUAAAAAIhmFXMivq-k_my-9t4JxejzWpor";
+  } else if (hostname.endsWith("procedural.build")) {
+    return "6LcpY-MUAAAAAGsdHWQsRy7VJN1iydQD95e1RRnA";
+  } else if (isIP(hostname)) {
+    return "localsite";
   } else {
     return "6LcbH3wUAAAAANJthLG_viHtCcXrDnXJ_kzH8Nga";
+  }
+};
+
+const isIP = hostname => {
+  console.log("HOST", hostname);
+  if (hostname === "localhost") {
+    return true;
+  }
+  let IPRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+
+  try {
+    return !!hostname.match(IPRegex)[0];
+  } catch (e) {
+    return false;
   }
 };
 
@@ -51,6 +69,12 @@ class RegistrationForm extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.verifyRecaptchaCallback = this.verifyRecaptchaCallback.bind(this);
+  }
+
+  componentDidMount() {
+    if (isIP(location.hostname)) {
+      this.setState({ gRecaptchaResponse: "localsite" });
+    }
   }
 
   onChange(e) {
@@ -130,6 +154,27 @@ class RegistrationForm extends React.Component {
     this.setState({ gRecaptchaResponse: response });
   }
 
+  renderRecaptcha() {
+    if (isIP(location.hostname)) {
+      return null;
+    }
+    return (
+      <Recaptcha
+        ref={e => {
+          this.recaptchaInstance = e;
+        }}
+        sitekey={getRecaptchaSiteKey()}
+        render="explicit"
+        verifyCallback={response => {
+          this.verifyRecaptchaCallback(response);
+        }}
+        onloadCallback={() => {
+          console.log("ONLOAD CALLBACK");
+        }}
+      />
+    );
+  }
+
   render() {
     let isAuthWarning = this.props.isAuthenticated ? <p>Logged in</p> : "";
 
@@ -142,20 +187,7 @@ class RegistrationForm extends React.Component {
         {this.render_item("username", "Username")}
         {this.render_item("password1", "Password", "", "password")}
         {this.render_item("password2", "Password (again)", "", "password")}
-
-        <Recaptcha
-          ref={e => {
-            this.recaptchaInstance = e;
-          }}
-          sitekey={getRecaptchaSiteKey()}
-          render="explicit"
-          verifyCallback={response => {
-            this.verifyRecaptchaCallback(response);
-          }}
-          onloadCallback={() => {
-            console.log("ONLOAD CALLBACK");
-          }}
-        />
+        {this.renderRecaptcha()}
         <div className="form-group">
           <button className="btn btn-sm btn-primary btn-block" disabled={!this.state.gRecaptchaResponse} type="submit">
             Register
