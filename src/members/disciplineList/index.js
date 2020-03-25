@@ -108,7 +108,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DisciplineList);
+export default connect(mapStateToProps, mapDispatchToProps)(DisciplineList);

@@ -150,7 +150,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TraecProjectDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(TraecProjectDetail);

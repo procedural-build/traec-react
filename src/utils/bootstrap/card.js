@@ -1,7 +1,6 @@
 import React from "react";
 
 export class BSCard extends React.Component {
-
   render() {
     return (
       <div className={this.props.widthOffset} id={this.props.id ? this.props.id : ""}>
