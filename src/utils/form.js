@@ -31,10 +31,12 @@ class BaseForm extends React.Component {
     }
     // Otherwise step through the projectFields and get what you can from initFields
     let initialFormFields = fields;
-    Object.keys(fields).map(key => {
+
+    for (let key of Object.keys(fields)) {
       initialFormFields[key].value =
         typeof initFields.get(key) !== "undefined" ? initFields.get(key) : fields[key].value;
-    });
+    }
+
     return initialFormFields;
   }
 
