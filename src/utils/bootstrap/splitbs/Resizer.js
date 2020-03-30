@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import stylePropType from 'react-style-proptype';
+import React from "react";
+import PropTypes from "prop-types";
+import stylePropType from "react-style-proptype";
 
-export const RESIZER_DEFAULT_CLASSNAME = 'Resizer';
+export const RESIZER_DEFAULT_CLASSNAME = "Resizer";
 
 class Resizer extends React.Component {
   render() {
@@ -15,14 +15,14 @@ class Resizer extends React.Component {
       onTouchStart,
       resizerClassName,
       split,
-      style,
+      style
     } = this.props;
     const classes = [resizerClassName, split, className];
 
     return (
       <span
         role="presentation"
-        className={classes.join(' ')}
+        className={classes.join(" ")}
         style={style}
         onMouseDown={event => onMouseDown(event)}
         onTouchStart={event => {
@@ -57,13 +57,13 @@ Resizer.propTypes = {
   onMouseDown: PropTypes.func.isRequired,
   onTouchStart: PropTypes.func.isRequired,
   onTouchEnd: PropTypes.func.isRequired,
-  split: PropTypes.oneOf(['vertical', 'horizontal']),
+  split: PropTypes.oneOf(["vertical", "horizontal"]),
   style: stylePropType,
-  resizerClassName: PropTypes.string.isRequired,
+  resizerClassName: PropTypes.string.isRequired
 };
 
 Resizer.defaultProps = {
-  resizerClassName: RESIZER_DEFAULT_CLASSNAME,
+  resizerClassName: RESIZER_DEFAULT_CLASSNAME
 };
 
 export default Resizer;

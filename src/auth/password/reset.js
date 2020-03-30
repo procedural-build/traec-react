@@ -95,7 +95,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PasswordResetPage);
+export default connect(mapStateToProps, mapDispatchToProps)(PasswordResetPage);

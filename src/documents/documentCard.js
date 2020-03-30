@@ -12,7 +12,7 @@ class DocumentCard extends Component {
     super(props);
     this.state = {
       dueDate: "",
-      action: "Nothing Recieved",
+      action: "Nothing Received",
       selectedFiles: []
     };
     let { trackerId, commitId } = props;

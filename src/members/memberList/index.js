@@ -223,7 +223,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MemberList);
+export default connect(mapStateToProps, mapDispatchToProps)(MemberList);

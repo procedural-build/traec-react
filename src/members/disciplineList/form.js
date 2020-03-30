@@ -97,7 +97,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DisciplineForm);
+export default connect(mapStateToProps, mapDispatchToProps)(DisciplineForm);

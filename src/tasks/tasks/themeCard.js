@@ -272,8 +272,5 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const ThemeCardConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ThemeCard);
+const ThemeCardConnected = connect(mapStateToProps, mapDispatchToProps)(ThemeCard);
 export default ThemeCardConnected;

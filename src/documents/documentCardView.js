@@ -11,7 +11,7 @@ export class DocumentCardView extends Component {
     super(props);
     this.state = {
       dueDate: "",
-      action: "Nothing Recieved"
+      action: "Nothing Received"
     };
 
     this.renderSelectedFile = this.renderSelectedFile.bind(this);

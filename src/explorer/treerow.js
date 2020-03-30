@@ -59,7 +59,12 @@ function SubTreeList({
   }
 
   return subTrees
-    .sortBy(subTree => subTree.getInPath("descriptions.0.title"))
+    .sortBy(subTree => {
+      return subTree
+        .get("descriptions")
+        .first()
+        .get("title");
+    })
     .map((subTree, i) => (
       <TreeRowConnected
         key={i}
@@ -404,6 +409,45 @@ class TreeRow extends React.PureComponent {
     return bgColor;
   }
 
+  renderTreeName(name) {
+    let { treeIds, commitBranches } = this.props;
+    if (treeIds.size || commitBranches) {
+      return (
+        <div className="col-sm-11 mt-2 pt-2">
+          <p
+            className={`m-0 p-0 mr-2 pr-2`}
+            style={{ display: "inline-block", verticalAlign: "middle" }}
+            onClick={this.clickedName}
+          >
+            <b>
+              <Octicon
+                name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
+                onClick={e => {
+                  localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
+                  this.setState({ isCollapsed: !this.state.isCollapsed });
+                }}
+              />
+              {name}
+            </b>
+          </p>
+          {this.props.extraContent}
+        </div>
+      );
+    }
+    return (
+      <div className="col-sm-11 m-0 p-0">
+        <p
+          className={`m-0 p-0 mr-2 pr-2`}
+          style={{ display: "inline-block", verticalAlign: "middle" }}
+          onClick={this.clickedName}
+        >
+          {name}
+        </p>
+        {this.props.extraContent}
+      </div>
+    );
+  }
+
   renderDropdownMenu() {
     let { treeIds, commitBranches } = this.props;
     let dropdownLinks = treeIds || commitBranches ? this.getRootDropdownLinks() : this.getTreeDropdownLinks();
@@ -415,7 +459,7 @@ class TreeRow extends React.PureComponent {
   }
 
   renderRow() {
-    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions, treeIds, commitBranches } = this.props;
+    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
     // Skip rendering if there is no description
     if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.hasDescription(tree)) {
       return null;
@@ -425,29 +469,7 @@ class TreeRow extends React.PureComponent {
     const bgColor = this.getBgColor();
     return (
       <div className={`row m-0 p-0 ${bgColor}`} style={{ borderTop: "1px solid #F6F6F6" }}>
-        <div className="col-sm-11 m-0 p-0">
-          <p
-            className={`m-0 p-0 mr-2 pr-2`}
-            style={{ display: "inline-block", verticalAlign: "middle" }}
-            onClick={this.clickedName}
-          >
-            {treeIds || commitBranches ? (
-              <b>
-                <Octicon
-                  name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
-                  onClick={e => {
-                    localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
-                    this.setState({ isCollapsed: !this.state.isCollapsed });
-                  }}
-                />
-                {name}
-              </b>
-            ) : (
-              <React.Fragment>{name}</React.Fragment>
-            )}
-          </p>
-          {this.props.extraContent}
-        </div>
+        {this.renderTreeName(name)}
         {this.renderDropdownMenu()}
       </div>
     );
@@ -471,7 +493,6 @@ class TreeRow extends React.PureComponent {
     if (!tree || !tracker) {
       return null;
     }
-
     // Set the margins (if not provided)
     extraRowClass = extraRowClass || "ml-2";
 

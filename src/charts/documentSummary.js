@@ -18,7 +18,7 @@ const Chart = props => {
   });
 
   let fills = {
-    "Nothing Recieved": "rgb(255, 150, 150)",
+    "Nothing Received": "rgb(255, 150, 150)",
     "Pending Review": "rgb(255, 214, 153)",
     "Requires Revision": "rgb(173, 194, 255)",
     "OK for Submission": "rgb(153, 235, 153)",
@@ -99,7 +99,7 @@ class DocumentSummary extends Component {
       let element = {};
       element.name = data.get("title").slice(0, 10);
       documents.map(document => {
-        let statusName = document.getInPath("status.name") ? document.getInPath("status.name") : "Nothing Recieved";
+        let statusName = document.getInPath("status.name") ? document.getInPath("status.name") : "Nothing Received";
         let occurences = element[statusName];
         element[statusName] = occurences ? occurences + element[statusName] : 1;
       });
