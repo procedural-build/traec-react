@@ -112,7 +112,6 @@ class DocumentSummary extends Component {
   render() {
     let { trackerData } = this.props;
     if (!trackerData) return "";
-    console.log(trackerData.toJS());
     return (
       <div className="container">
         <div className="row justify-content-cente">
