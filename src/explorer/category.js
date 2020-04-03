@@ -96,6 +96,7 @@ class CategoryRow extends React.PureComponent {
       addWithDescriptions,
       showTreesWithoutDescriptions = true,
       forceExpand = false,
+      forceExpandAll = false,
       isRoot = false,
       formFields = null
     } = this.props;
@@ -105,10 +106,6 @@ class CategoryRow extends React.PureComponent {
     }
     if (!cref.getInPath("latest_commit.is_staging")) {
       return null;
-    }
-
-    if (cref.get("uid") == "a0f908d3-5a2c-4ac3-9b5d-7ae8d13b1db4") {
-      console.log(`RENDERING REF ${cref.get("uid")}`);
     }
 
     // Return the element
@@ -126,6 +123,7 @@ class CategoryRow extends React.PureComponent {
         addWithDescriptions={addWithDescriptions}
         showTreesWithoutDescriptions={showTreesWithoutDescriptions}
         forceExpand={forceExpand}
+        forceExpandAll={forceExpandAll}
         // Using a generic single-input field "nameForm"
         nameFormParams={this.state.nameFormParams}
         formFields={formFields}
