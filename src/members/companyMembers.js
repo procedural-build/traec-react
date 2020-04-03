@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { companyPermissionRender } from "traec/utils/permissions/company";
-
+import Traec from "traec";
 import MemberList from "./memberList";
 import InviteList from "./inviteList";
 import AuthGroupList from "./authGroupList";
@@ -31,7 +31,7 @@ export class CompanyMembers extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { companyId } = ownProps.match.params;
+  const { companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
   let company = state.getInPath(`entities.companies.byId.${companyId}`);
   return { companyId, company };
 };
