@@ -62,7 +62,10 @@ export default class DisciplineItem extends React.Component {
   }
 
   dropDownLinks() {
-    return [{ name: "Edit", onClick: this.editItem }, { name: "Delete", onClick: this.deleteItem }];
+    return [
+      { name: "Edit", onClick: this.editItem },
+      { name: "Delete", onClick: this.deleteItem }
+    ];
   }
 
   render_edit_form() {

@@ -6,7 +6,7 @@ import Sidebar from "AppSrc/sidebar";
 import { Footer } from "AppSrc/footer";
 import { connect } from "react-redux";
 
-import { setNavbarItems } from "traec-react/navbar";
+import { setNavBarItems } from "traec/redux/actionCreators";
 import { setSidebarItems } from "AppSrc/sidebar/actionCreators";
 
 import {
@@ -16,10 +16,16 @@ import {
   companyPermissionCheck
 } from "traec/utils/permissions/company";
 import { CompanyTree } from "./tree";
-import { CompanyRouter } from "./router";
+// import { CompanyRouter } from "./router";
 
-import BootstrapSplitPane from "traec-react/utils/bootstrap/splitbs";
+import BootstrapSplitPane from "../utils/bootstrap/splitbs";
 
+/**
+ * Company Page:
+ * @namespace CompanyPage
+ * @example
+ * * <Route path="/company/:companyId" component={Company} />
+ */
 class CompanyPage extends React.Component {
   constructor(props) {
     super(props);
@@ -136,9 +142,9 @@ class CompanyPage extends React.Component {
               }}
             >
               <div>{this.render_sidebar()}</div>
-              <div>
+              {/* <div>
                 <CompanyRouter companyId={companyId} company={company} />
-              </div>
+              </div> */}
             </BootstrapSplitPane>
           </div>
         </div>

@@ -10,10 +10,12 @@ export default {
 
 export const withTitle = () => {
   let description = Im.Map({ title: "I'm a Test Document", text: null });
-  return <TitleAndDescription description={description} />;
+  return (
+    <TitleAndDescription cref={"74cb4d17-f957-42f9-86bb-acacb1a31b60"} documents={null} description={description} />
+  );
 };
 
 export const withTitleAndText = () => {
   let description = Im.Map({ title: "I'm a Test Document", text: "I have a description" });
-  return <TitleAndDescription description={description} />;
+  return <TitleAndDescription cref={"1"} documents={null} description={description} />;
 };

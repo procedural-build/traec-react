@@ -75,7 +75,7 @@ describe("mapStateToProps", () => {
         })
       }),
       projectId: "3a6f1905-2efb-400a-b305-3243f9ff657e",
-      refId: "473a1322-2391-412d-a7a7-e5514cf94902",
+      refId: "473a1322-2391-412d-a7a7-e5514cf94902"
     };
     expect(actualResult).toEqual(expectedResult);
   });
@@ -152,7 +152,7 @@ describe("mapStateToProps", () => {
         })
       }),
       projectId: "3a6f1905-2efb-400a-b305-3243f9ff657e",
-      refId: "473a1322-2391-412d-a7a7-e5514cf94902",
+      refId: "473a1322-2391-412d-a7a7-e5514cf94902"
     };
     expect(actualResult).toEqual(expectedResult);
   });
@@ -185,7 +185,7 @@ describe("mapStateToProps", () => {
       }),
       documents: undefined,
       projectId: undefined,
-      refId: undefined,
+      refId: undefined
     };
     expect(actualResult).toEqual(expectedResult);
   });

@@ -4,6 +4,14 @@ import ReactDOM from "react-dom";
 import { companyPermissionRender } from "traec/utils/permissions/company";
 import CompanyTreeRow from "./treeRow";
 
+/**
+ * CompanyTree Component:
+ * @namespace CompanyTree
+ * @memberof CompanyPage
+ * @example
+ * return <CompanyTree company={company} companyList={companyList} currentId={companyId} />
+ *
+ */
 class CompanyTree extends React.Component {
   get_root_company(company, companyList) {
     // Get the root company from a list of companies

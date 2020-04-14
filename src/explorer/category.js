@@ -30,16 +30,6 @@ class CategoryRow extends React.PureComponent {
     Traec.fetchRequired.bind(this)();
   }
 
-  dropDownLinks() {
-    return [
-      // { name: "Add Branch", onClick: this.addBranch },
-      // { name: "Rename Branch", onClick: this.editBranch },
-      // { name: "Make a Commit", onClick: this.doCommit },
-      // { name: "Show Commit Log", linkTo: `/tracker/${tid}/ref/${cid}/log` },
-      // { name: null }
-    ];
-  }
-
   getUrlParams() {
     const cref = this.props.cref;
     const refId = cref.get("uid");
@@ -121,15 +111,13 @@ class CategoryRow extends React.PureComponent {
     // Return the element
     return (
       <TreeRow
-        isRoot={true}
+        isRoot={isRoot}
         extraRowClass={extraRowClass}
         treeId={rootTreeId}
         cref={cref}
         parentCommitId={parentCommitId}
         headCommitId={headCommitId}
         extraContent={null}
-        extraDropDowns={this.dropDownLinks()}
-        //
         renderRootTree={renderRootTree}
         renderName={rootTreeName}
         addWithDescriptions={addWithDescriptions}

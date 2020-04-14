@@ -437,16 +437,8 @@ class BootstrapSplitPane extends React.Component {
           style={resizerStyle || {}}
         />
 
-        {/*
-         */}
         <div>
           <button className="jira-btn" style={{ zIndex: 100 }} onClick={this.collapseSidebar}>
-            {/*<img 
-              className='collapseButton' 
-              style={{zIndex: 100, position: 'absolute', transform: !this.state.collapseButtonIndex ? 'translateX(-10px)' : 'translateX(-10px)'}}
-              src={this.state.collapseButtonImgList[this.state.collapseButtonIndex]} 
-              
-          />*/}
             {this.state.collapseButtonIndex ? jiraExpand : jiraCollapse}
           </button>
         </div>

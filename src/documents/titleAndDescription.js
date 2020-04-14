@@ -30,7 +30,7 @@ export class TitleAndDescription extends React.Component {
           description: {
             uid: description.get("uid"),
             title: body.title,
-            text: body.description
+            text: body.text
           }
         })
       });
@@ -44,14 +44,14 @@ export class TitleAndDescription extends React.Component {
     this.setState({
       initFields: Traec.Im.Map({
         title: description.get("title") || "",
-        description: description.get("text") || ""
+        text: description.get("text") || ""
       })
     });
     this.fetch.toggleForm();
   }
 
   renderEditDropdown() {
-    let { showEdit, dropdownLinks } = this.props;
+    let { showEdit, dropdownLinks, dropdownHeader } = this.props;
     if (!showEdit) {
       return null;
     }
@@ -69,7 +69,7 @@ export class TitleAndDescription extends React.Component {
                 }
               ]
         }
-        header={"Admin"}
+        header={dropdownHeader ? dropdownHeader : "Admin"}
       />
     );
   }

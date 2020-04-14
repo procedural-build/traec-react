@@ -52,14 +52,14 @@ export class InviteForm extends BaseForm {
     let options = [];
     if (items) {
       options = objToList(items)
-        .sortBy(i => i.get('name'))
+        .sortBy(i => i.get("name"))
         .map((item, i) => {
-        return (
-          <option key={i} value={item.get("uid")}>
-            {item.get("name")}
-          </option>
-        );
-      });
+          return (
+            <option key={i} value={item.get("uid")}>
+              {item.get("name")}
+            </option>
+          );
+        });
       if (state.value === "") {
         options = options.unshift(
           <option key={-1} value={""} disabled={true}>
@@ -79,7 +79,7 @@ InviteForm.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const { companyId, projectId } = ownProps;
-  let stateParams = ownProps.stateParams || ownProps.params.stateParams
+  let stateParams = ownProps.stateParams || ownProps.params.stateParams;
   let authGroups = null;
   let disciplines = null;
 
@@ -110,7 +110,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(InviteForm);
+export default connect(mapStateToProps, mapDispatchToProps)(InviteForm);
