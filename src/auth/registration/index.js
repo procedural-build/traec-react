@@ -6,12 +6,8 @@ import { RegistrationConfirmationCard } from "./confirm";
 import { BSCard } from "traec-react/utils/bootstrap";
 
 class RegistrationPage extends React.Component {
-  navbarLinks() {
-    return [];
-  }
-
   render_card() {
-    if (this.props.redirect == "register_success_confirm") {
+    if (this.props.redirect === "register_success_confirm") {
       return <RegistrationConfirmationCard />;
     }
     return <BSCard title="Register" body={<RegistrationForm />} />;

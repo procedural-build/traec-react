@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { companyPermissionRender } from "traec/utils/permissions/company";
-
+import Traec from "traec";
 import MemberList from "./memberList";
 import InviteList from "./inviteList";
 import AuthGroupList from "./authGroupList";

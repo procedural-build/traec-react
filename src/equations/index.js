@@ -39,7 +39,10 @@ export const getMetricsFromIndicator = ({ indicator, baseMetrics }) => {
 };
 
 export function TargetValueDisplay({ targetValue, raThreshold, greenBelow }) {
-  if (!targetValue) {
+  if (targetValue == 0) {
+    // If the target value is set to 0, display 0 rather than empty/null values in the row.
+    targetValue = 0;
+  } else if (!targetValue) {
     return null;
   }
   let arrowUp = raThreshold ? raThreshold < targetValue : !greenBelow;
@@ -128,6 +131,8 @@ export default function IndicatorRow({ baseMetrics, indicator, dropDownLinks, se
   let idStr = indicator.get("uid").substring(0, 8);
 
   let outOfScope = checkScope(ops);
+  // If the indicator is not setup for the project overview panel, the indicator in the indicators panel
+  // will be greyed out and defined as 'Out of Scope'-- Jira: ASS-260
 
   return (
     <React.Fragment>

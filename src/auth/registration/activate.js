@@ -90,7 +90,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ActivationPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ActivationPage);

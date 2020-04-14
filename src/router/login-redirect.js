@@ -8,7 +8,7 @@ class LoginRedirect extends React.Component {
     //https://loading.io/css/
     return (
       <div className="text-center">
-        <div className="lds-dual-ring"></div>
+        <div className="lds-dual-ring" />
       </div>
     );
   }
@@ -64,7 +64,4 @@ const mapDispatchToProps = dispatch => {
   return { dispatch };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginRedirect);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginRedirect);

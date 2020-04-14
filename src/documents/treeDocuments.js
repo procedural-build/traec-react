@@ -24,8 +24,8 @@ export class TreacDocuments extends React.Component {
   }
 
   getUrlParams() {
-    let { trackerId, commitId, treeId, crefId } = this.props;
-    return { refId: crefId, treeId, trackerId, commitId };
+    let { trackerId, commitId, treeId, refId } = this.props;
+    return { refId, treeId, trackerId, commitId };
   }
 
   handleEvent(e, eventName) {
@@ -59,7 +59,7 @@ export class TreacDocuments extends React.Component {
   }
 
   renderSubDocuments() {
-    let { trackerId, treeId, crefId, commitId, subDocumentIds, selector, refId } = this.props;
+    let { trackerId, treeId, commitId, subDocumentIds, selector, refId } = this.props;
 
     let subDocuments = <p>Select a sub-task</p>;
     if (treeId) {
@@ -70,7 +70,6 @@ export class TreacDocuments extends React.Component {
           selector={selector}
           docId={subDocId}
           trackerId={trackerId}
-          crefId={crefId}
           commitId={commitId}
           collector={this.collectDocumentInfo}
         />
@@ -95,7 +94,7 @@ export class TreacDocuments extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { trackerId, treeId, crefId, commitId, selector } = ownProps;
+  let { trackerId, treeId, commitId, selector } = ownProps;
   let tree = state.getInPath(`entities.trees.byId.${treeId}`);
   const basePath = `entities.commitEdges.byId.${commitId}.trees.${treeId}`;
   const subTreeIds = state.getInPath(`${basePath}.trees`) || Traec.Im.List();
@@ -112,7 +111,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default TreacDocuments = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TreacDocuments);
+export default TreacDocuments = connect(mapStateToProps, mapDispatchToProps)(TreacDocuments);

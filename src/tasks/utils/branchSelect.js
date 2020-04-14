@@ -201,7 +201,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BranchSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(BranchSelect);

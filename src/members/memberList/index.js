@@ -74,7 +74,8 @@ export class MemberList extends React.Component {
       rootTreeId,
       docDescriptions,
       descriptionTitleList,
-      docStatusList
+      docStatusList,
+      seeAssignments
     } = this.props;
 
     let itemList = objToList(members)
@@ -87,7 +88,7 @@ export class MemberList extends React.Component {
           member={member}
           companyId={companyId}
           projectId={projectId}
-          seeAssignments={true}
+          seeAssignments={seeAssignments}
           disciplineList={disciplineList}
           trackerId={trackerId}
           crefId={crefId}
@@ -223,7 +224,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MemberList);
+export default connect(mapStateToProps, mapDispatchToProps)(MemberList);

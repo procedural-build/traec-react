@@ -28,7 +28,7 @@
     "react-tinymce": "^0.7.0",
     "recharts": "^1.8.5",
     "sweetalert2": "^8.19.0",
-    "traec": "^1.1.97"
+    "traec": "~1.1.116"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.5",
@@ -82,8 +82,9 @@
     "patchversion": "npm --no-git-tag-version version patch",
     "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json && cd ./src && find ./ -type f ! -name \"*.js\" -exec cp -v --parents \\{\\} ../dist \\;",
     "pub": "npm run matchversion && npm run patchversion && npm run build && npm publish ./dist",
-    "storybook": "start-storybook -p 7850",
-    "build-storybook": "build-storybook"
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "documentation": "npx babel src --out-dir ./dist && documentation serve --watch ../traec-react/dist/"
   },
   "repository": {
     "type": "git",

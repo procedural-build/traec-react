@@ -6,7 +6,7 @@ import Crypto from "crypto";
 import { targetFields } from "AppSrc/tracker/form";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import BranchSelect from "../utils/branchSelect";
-import "../styles.css";
+// import "../styles.css";
 import {
   dropDownLinks,
   dispatchAsSelected,
@@ -15,7 +15,7 @@ import {
   renderParameters,
   toggleShowDescription
 } from "../utils/cardUtils";
-import { checkIfChildrenAreLoaded, getChildrenAndScores, getScore } from "../../scores";
+import { checkIfChildrenAreLoaded, getChildrenAndScores, getScore } from "./score";
 import { projectPermissionFilter } from "traec/utils/permissions/project";
 import BaseFormConnected from "traec-react/utils/form";
 import { getMetricTarget } from "AppSrc/scores/targets";
@@ -296,8 +296,5 @@ export const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const TaskCardConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TaskCard);
+const TaskCardConnected = connect(mapStateToProps, mapDispatchToProps)(TaskCard);
 export default TaskCardConnected;

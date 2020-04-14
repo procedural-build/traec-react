@@ -1,7 +1,7 @@
 import React from "react";
 import Traec from "traec/index";
 import Moment from "moment";
-import { isOverDue } from "../documents/documentStatus";
+import { isOverDue } from "../../documents/documentStatus";
 
 export class TaskDocumentStatusBar extends React.Component {
   renderBar() {

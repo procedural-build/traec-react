@@ -2,7 +2,7 @@ import Traec from "traec";
 
 /**
  * Extracts a trees descriptions from the state.
- *
+ * @namespace getTreeDescription
  * @param {Im.Map} state - The redux state as an immutable.
  * @param {Im.Map} tree - The tree you want to get the descriptions for.
  * @param {string} commitId - The commit id of the tree.
@@ -25,7 +25,7 @@ export const getTreeDescription = function(state, tree, commitId) {
 
 /**
  * Extracts the root tree id of the commit from the state,
- *
+ * @namespace getRootTreeId
  * @param {Im} state - The redux state as an immutable.
  * @param {string} commitId - The id of the commit.
  * @param {string} crefId - The commit refrence id.
@@ -41,7 +41,7 @@ export const getRootTreeId = function(state, commitId, crefId) {
 
 /**
  * Extracts the task id from the state.
- *
+ * @namespace getTaskId
  * @param {Im} state - The redux state as an immutable.
  * @param {string} crefId - The commit refrence id
  * @returns The task id from the commit refrence with the given commit refrence id.
@@ -53,7 +53,7 @@ export const getTaskId = function(state, crefId) {
 
 /**
  * Finds the currently selected dashboard and checks if it is equal to the caller.
- *
+ * @namespace isSelected
  * @param {Im} state - The redux state as an immutable.
  * @param {string} trackerId - The id of the tracker
  * @param {number} selectionLevel - The selection level of the caller.
@@ -68,7 +68,7 @@ export const isSelected = function(state, trackerId, selectionLevel, commit) {
 
 /**
  * Extracts the project disciplines from a redux state.
- *
+ * @namespace getProjectDesciplineId
  * @param {*} state - The redux state as an immutable.
  * @param {*} projectId - The id of the project, which discipline id should be extracted.
  * @returns {Object[]} The projects discipline objects
@@ -88,7 +88,7 @@ export const getProjectDesciplineId = function(state, projectId) {
 
 /**
  * Extracts the names of the members of a project from the redux state.
- *
+ * @namespace getMembers
  * @param {Im.Map} state - The redux state as an immutable.
  * @param {string} projectId - The id of the project
  * @returns An immutable list of the names of the members of a project.
@@ -104,7 +104,7 @@ export const getMembers = function(state, projectId) {
 
 /**
  * Extracts the names of the assignees of a project from the redux state.
- *
+ * @namespace getAssignee
  * @param {*} state - The redux state as an immutable.
  * @param {*} crefId - The commit refrence id
  * @param {*} projectId - The id of the project.
@@ -127,7 +127,7 @@ export const getAssignee = function(state, crefId, projectId) {
 /**
  * Extracts the tree descriptions and the tree from a redux state,
  * The descriptions are also inserted into the tree object.
- *
+ * @namespace getTreeWithDescription
  * @param {Im.Map} state - The redux state as an immutable.
  * @param {string} treeId - The id of the tree.
  * @param {string} commitId - The commit id.
@@ -142,7 +142,7 @@ export const getTreeWithDescription = function(state, treeId, commitId) {
 
 /**
  * Extracts the commit refrence with the id parameterized by {crefId} from the redux state.
- *
+ * @namespace getCrefFromCrefId
  * @param {*} state - The redux state as an immutable.
  * @param {*} crefId - The commit refrence id.
  * @returns A commit refrence immutable map.

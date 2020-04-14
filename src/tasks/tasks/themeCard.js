@@ -1,10 +1,10 @@
 import React from "react";
 import Traec from "traec";
 
-import "../styles.css";
+// import "../styles.css";
 import { BSBtnDropdown, BSBtn } from "traec-react/utils/bootstrap";
 import { projectPermissionFilter } from "traec/utils/permissions/project";
-import { getChildrenAndScores, getPerformanceIndex, getScore } from "../../scores";
+import { getChildrenAndScores, getPerformanceIndex, getScore } from "./score";
 import { renderParameters, toggleShowDescription } from "../utils/cardUtils";
 import { connect } from "react-redux";
 import BranchSelect from "../utils/branchSelect";
@@ -272,8 +272,5 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const ThemeCardConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ThemeCard);
+const ThemeCardConnected = connect(mapStateToProps, mapDispatchToProps)(ThemeCard);
 export default ThemeCardConnected;

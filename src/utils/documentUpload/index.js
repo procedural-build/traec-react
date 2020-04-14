@@ -161,7 +161,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UploadDocumentButton);
+export default connect(mapStateToProps, mapDispatchToProps)(UploadDocumentButton);

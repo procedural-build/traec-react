@@ -13,50 +13,26 @@ export class ProjectMembers extends React.Component {
     if (!project) {
       return "";
     }
+    return (
+      <React.Fragment>
+        <h3>Project Member Admin</h3>
+        <BreadCrumb company={company} project={project} />
 
-    // Initially passed to specify which project uses this component so that this panel renders different information.
-    // Currently unused
-    if (seeAssignments) {
-      return (
-        <React.Fragment>
-          <h3>Project Member Admin</h3>
-          <BreadCrumb company={company} project={project} />
+        {/*Render the members panel if allowed */}
+        <MemberList projectId={projectId} seeAssignments={seeAssignments} />
 
-          {/*Render the members panel if allowed */}
-          <MemberList projectId={projectId} />
+        {/*Render the invites panel if allowed */}
+        <InviteList projectId={projectId} />
 
-          {/*Render the invites panel if allowed */}
-          <InviteList projectId={projectId} />
+        {/*Render the discipline panel if allowed */}
+        <DisciplineList projectId={projectId} />
 
-          {/*Render the discipline panel if allowed */}
-          <DisciplineList projectId={projectId} />
+        {/*Render the authGroup panel if allowed */}
+        {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
 
-          {/* Render the authGroup panel if allowed */}
-          {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <h3>Project Member Admin</h3>
-          <BreadCrumb company={company} project={project} />
-
-          {/*Render the members panel if allowed */}
-          <MemberList projectId={projectId} />
-
-          {/*Render the invites panel if allowed */}
-          <InviteList projectId={projectId} />
-
-          {/*Render the discipline panel if allowed */}
-          <DisciplineList projectId={projectId} />
-
-          {/*Render the authGroup panel if allowed */}
-          {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
-
-          {this.props.children}
-        </React.Fragment>
-      );
-    }
+        {this.props.children}
+      </React.Fragment>
+    );
   }
 }
 

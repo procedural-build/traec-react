@@ -5,7 +5,32 @@ import { DocumentStatus } from "./documentStatus";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap/btnDropdown";
 import DatePicker from "react-date-picker";
 import moment from "moment";
-
+/**
+ * DocumentCardView Component:
+ * @namespace DocumentCardView
+ * @memberof DocumentCard
+ * @property {string} cref the cref is an id
+ * @example
+ * return <DocumentCardView
+ * cref={cref}
+ * document={document}
+ * description={description}
+ * assignee={assignee}
+ * docStatus={docStatus}
+ * setDueDate={this.setDueDate.bind(this)}
+ * dueDate={this.state.dueDate}
+ * setAction={this.setAction.bind(this)}
+ * action={this.state.action}
+ * deleteDocument={this.deleteDocument}
+ * editDocument={this.editDocument}
+ * copyDocument={this.copyDocument}
+ * dropzoneRef={this.dropzoneRef}
+ * selectedFiles={files}
+ * currentDocObject={currentDocObject}
+ * save={this.save.bind(this)}
+ * doUpload={this.doUpload.bind(this)}
+ * >
+ */
 export class DocumentCardView extends Component {
   constructor(props) {
     super(props);
@@ -90,31 +115,46 @@ export class DocumentCardView extends Component {
     }
   }
 
-  render() {
+  renderTitleAndDescription() {
     let {
       cref,
       documentId,
       description,
       assignee,
       editableTitleAndDescription,
-      editableDocument,
       showAssignee,
-      showTreeTitle
+      showTreeTitle,
+      adminDropdownLinks
     } = this.props;
+
+    const titleAndDescriptionRef = React.createRef();
+
+    adminDropdownLinks.find(element => element.name === "Edit").onClick = e => {
+      titleAndDescriptionRef.current.edit();
+    };
+
+    return (
+      <TitleAndDescription
+        ref={titleAndDescriptionRef}
+        cref={cref}
+        documentId={documentId}
+        description={description}
+        assignee={assignee}
+        TitleTag={"h5"}
+        showEdit={typeof editableTitleAndDescription === "undefined" ? true : editableTitleAndDescription}
+        showTreeTitle={showTreeTitle}
+        showAssignee={showAssignee}
+        dropdownLinks={adminDropdownLinks}
+      />
+    );
+  }
+
+  render() {
+    let { editableDocument } = this.props;
     return (
       <div className="row mb-4 mt-2">
         <div className="col-md-10" style={{ borderBottom: "1px solid lightgray" }}>
-          <TitleAndDescription
-            cref={cref}
-            documentId={documentId}
-            description={description}
-            assignee={assignee}
-            TitleTag={"h5"}
-            showEdit={typeof editableTitleAndDescription === "undefined" ? true : editableTitleAndDescription}
-            showTreeTitle={showTreeTitle}
-            showAssignee={showAssignee}
-          />
-
+          {this.renderTitleAndDescription()}
           {this.renderUploadedFile()}
 
           {typeof editableDocument === "undefined" || editableDocument ? (
@@ -140,7 +180,7 @@ export class DocumentCardView extends Component {
           ) : null}
         </div>
 
-        <DocumentStatus docStatus={this.props.docStatus}></DocumentStatus>
+        <DocumentStatus docStatus={this.props.docStatus} />
       </div>
     );
   }

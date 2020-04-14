@@ -4,10 +4,10 @@ import Traec from "traec";
 import * as eventHandlers from "traec/eventHandlers";
 import TaskCard from "./taskCard";
 import { reconstructCommitBranches } from "../utils/utils";
-import "../styles.css";
+// import "../styles.css";
 import ThemeCard from "./themeCard";
 import { Spinner } from "traec-react/utils/entities";
-import { TaskSortBar } from "../sort/sortTasks";
+import { TaskSortBar } from "../utils/sort";
 import Im from "traec/immutable";
 import { sortComponentList } from "../utils/sort";
 import { BSBtn } from "traec-react/utils/bootstrap/btn";
@@ -227,8 +227,5 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const TaskTreeListConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TaskTreeList);
+const TaskTreeListConnected = connect(mapStateToProps, mapDispatchToProps)(TaskTreeList);
 export default TaskTreeListConnected;
