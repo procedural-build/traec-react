@@ -328,20 +328,20 @@ class TreeRow extends React.PureComponent {
     if (e.ctrlKey && !this.isActiveSelection() && this.props.activeSelection) {
       payload.uid = this.props.isRoot ? cref.get("uid") : treeId;
       this.props.dispatch({
-        type: "ENTITY_ADD_OR_REMOVE_FROM_DICT",
-        stateParams: { itemPath: "ui.explorer.selected" },
+        type: "UI_ADD_OR_REMOVE_FROM_DICT",
+        stateParams: { itemPath: "explorer.selected" },
         payload
       });
     } else {
       this.props.dispatch({
-        type: "ENTITY_SET_IN",
-        stateParams: { itemPath: "ui.explorer.activeSelection" },
+        type: "UI_SET_IN",
+        stateParams: { itemPath: "explorer.activeSelection" },
         payload
       });
       // Clear the other selection if there is no shift key held
       this.props.dispatch({
-        type: "ENTITY_SET_IN",
-        stateParams: { itemPath: "ui.explorer.selected" },
+        type: "UI_SET_IN",
+        stateParams: { itemPath: "explorer.selected" },
         payload: {}
       });
     }
@@ -352,9 +352,9 @@ class TreeRow extends React.PureComponent {
     const selection = this.props.activeSelection;
     if (this.props.isRoot) {
       const cref = this.props.cref;
-      return selection ? cref.get("uid") == selection.get("uid") : false;
+      return selection ? cref.get("uid") === selection.get("uid") : false;
     }
-    return selection ? treeId == selection.get("uid") : false;
+    return selection ? treeId === selection.get("uid") : false;
   }
 
   isSelected() {
@@ -548,8 +548,8 @@ const mapStateToProps = (state, ownProps) => {
   // Get the commit branch pointers
   const commitBranches = state.getInPath(`${basePath}.categories`);
   // UI related selections
-  const activeSelection = state.getInPath(`entities.ui.explorer.activeSelection`);
-  const allSelection = state.getInPath(`entities.ui.explorer.selected`);
+  const activeSelection = state.getInPath(`ui.explorer.activeSelection`);
+  const allSelection = state.getInPath(`ui.explorer.selected`);
   // Root objects
   let tree = getTreeWithDescriptions(state, commitId, treeId);
   const tracker = state.getInPath(`entities.trackers.byId.${trackerId}`);

@@ -42,20 +42,20 @@ class DocumentRow extends React.Component {
     if (e.ctrlKey && !this.isActiveSelection() && this.props.activeSelection) {
       payload.uid = docId;
       this.props.dispatch({
-        type: "ENTITY_ADD_OR_REMOVE_FROM_DICT",
-        stateParams: { itemPath: "ui.explorer.selected" },
+        type: "UI_ADD_OR_REMOVE_FROM_DICT",
+        stateParams: { itemPath: "explorer.selected" },
         payload
       });
     } else {
       this.props.dispatch({
-        type: "ENTITY_SET_IN",
-        stateParams: { itemPath: "ui.explorer.activeSelection" },
+        type: "UI_SET_IN",
+        stateParams: { itemPath: "explorer.activeSelection" },
         payload
       });
       // Clear the other selection if there is no ctrl key held
       this.props.dispatch({
-        type: "ENTITY_SET_IN",
-        stateParams: { itemPath: "ui.explorer.selected" },
+        type: "UI_SET_IN",
+        stateParams: { itemPath: "explorer.selected" },
         payload: {}
       });
     }
@@ -64,7 +64,7 @@ class DocumentRow extends React.Component {
   isActiveSelection() {
     const docId = this.props.document.get("uid");
     const selection = this.props.activeSelection;
-    return selection ? docId == selection.get("uid") : false;
+    return selection ? docId === selection.get("uid") : false;
   }
 
   isSelected() {
@@ -119,8 +119,8 @@ class DocumentRow extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { headCommitId: commitId, docId } = ownProps;
-  const activeSelection = state.getInPath(`entities.ui.explorer.activeSelection`);
-  const allSelection = state.getInPath(`entities.ui.explorer.selected`);
+  const activeSelection = state.getInPath(`ui.explorer.activeSelection`);
+  const allSelection = state.getInPath(`ui.explorer.selected`);
 
   let document = state.getInPath(`entities.documents.byId.${docId}`);
   // Append on any descriptions if they exist
