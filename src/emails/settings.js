@@ -219,7 +219,7 @@
 // }
 
 // const mapStateToProps = (state, ownProps) => {
-//   let { projectId } = ownProps.match.params;
+//   let { projectId } = Traec.utils.getFullIds(state, ownProps.match.params);
 //   let recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
 //   // Add this to props
 //   return {

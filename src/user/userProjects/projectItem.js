@@ -9,6 +9,8 @@ export const ProjectItem = props => {
   let projectName = project.get("name");
   let rowNum = counter.row++;
 
+  projectId = projectId ? projectId.substring(0, 8) : projectId;
+
   return (
     <React.Fragment>
       <div className="row" key={i} style={{ backgroundColor: (rowNum + 1) % 2 ? "#ddd" : "" }}>
@@ -28,6 +30,7 @@ const TrackerList = props => {
   if (!props.trackers || !props.showTrackers) {
     return null;
   }
+
   return props.trackers.toList().map((item, i) => (
     <div key={i} className="col-sm-12">
       <Link to={`/tracker/${item.get("uid")}`}>{item.get("name")}</Link>

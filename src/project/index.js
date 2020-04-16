@@ -119,7 +119,7 @@ class TraecProjectDetail extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { projectId, refId } = ownProps.match.params;
+  let { projectId, refId } = Traec.utils.getFullIds(state, ownProps.match.params);
 
   let { company, project, tracker, trackerId, cref, isRootRef, rootRef, rootRefId } = getProjectProps(
     state,

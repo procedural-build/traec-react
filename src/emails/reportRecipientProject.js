@@ -114,7 +114,7 @@ class ProjectRecipientEmailReport extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { projectId, recipientId } = ownProps.match.params;
+  let { projectId, recipientId } = Traec.utils.getFullIds(state, ownProps.match.params);
 
   let recipient = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients.${recipientId}`);
   return {

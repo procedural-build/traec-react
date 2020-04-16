@@ -37,7 +37,7 @@ export class ProjectMembers extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { projectId } = ownProps.match.params;
+  const { projectId } = Traec.utils.getFullIds(state, ownProps.match.params);
   let project = state.getInPath(`entities.projects.byId.${projectId}`);
   let company = project ? project.get("company") : null;
   return { projectId, project, company };

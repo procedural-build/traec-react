@@ -12,7 +12,7 @@ class DocumentCard extends Component {
     super(props);
     this.state = {
       dueDate: "",
-      action: "Nothing Recieved",
+      action: "Nothing Received",
       selectedFiles: []
     };
     let { trackerId, commitId } = props;
@@ -39,11 +39,11 @@ class DocumentCard extends Component {
   }
 
   componentDidUpdate() {
-    this.requiredFetches.map(fetch => fetch.dispatch());
+    Traec.fetchRequired.bind(this)();
   }
 
   componentDidMount() {
-    this.requiredFetches.map(fetch => fetch.dispatch());
+    Traec.fetchRequired.bind(this)();
     if (!this.dropzoneRef) this.forceUpdate(); // This has to be called, otherwise this.dropzoneRef won't be defined.
 
     let { docStatus } = this.props;
@@ -285,11 +285,9 @@ export const getDocumentAssignee = function(state, docId, commitId, projectId) {
   let documentAssigneeList = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Traec.Im.Map();
 
   // Check that the document uid matches with the discipline uid and then get the name of that discipline to display on the document.
-  let assignee = documentAssigneeList.toList().map(item => {
-    if (item.getInPath(`base_uid`) === docDisciplineId) {
-      return item.getInPath(`name`);
-    }
-  });
-
-  return { assignee };
+  let assignee = documentAssigneeList
+    .toList()
+    .filter(item => item.getInPath(`base_uid`) === docDisciplineId)
+    .first();
+  return assignee;
 };

@@ -22,7 +22,8 @@ function SubCategoryList({
   commitBranches,
   tracker,
   showTreesWithoutDescriptions = true,
-  formFields = null
+  formFields = null,
+  forceExpandAll = false
 }) {
   if (!commitBranches) {
     return null;
@@ -40,24 +41,39 @@ function SubCategoryList({
         refId={commitBranch.getInPath("target.ref")}
         showTreesWithoutDescriptions={showTreesWithoutDescriptions}
         formFields={formFields}
+        forceExpandAll={forceExpandAll}
       />
     ));
 }
 
-function SubTreeList({ treeIds, commitId, cref, showTreesWithoutDescriptions = true, formFields = null }) {
-  if (!treeIds) {
+function SubTreeList({
+  subTrees,
+  commitId,
+  cref,
+  showTreesWithoutDescriptions = true,
+  formFields = null,
+  forceExpandAll = false
+}) {
+  if (!subTrees) {
     return null;
   }
-  return treeIds
-    .sortBy(treeId => treeId)
-    .map((itemId, i) => (
+
+  return subTrees
+    .sortBy(subTree => {
+      return subTree
+        .get("descriptions")
+        .first()
+        .get("title");
+    })
+    .map((subTree, i) => (
       <TreeRowConnected
         key={i}
         headCommitId={commitId}
         cref={cref}
-        treeId={itemId}
+        treeId={subTree.get("uid")}
         showTreesWithoutDescriptions={showTreesWithoutDescriptions}
         formFields={formFields}
+        forceExpandAll={forceExpandAll}
       />
     ));
 }
@@ -86,7 +102,7 @@ class TreeRow extends React.PureComponent {
     // Convert the string to a boolean value
     isCollapsed = isCollapsed === "false" ? false : true;
     // Override if forceExpand is provided in the props
-    isCollapsed = props.forceExpand ? false : isCollapsed;
+    isCollapsed = props.forceExpand || props.forceExpandAll ? false : isCollapsed;
 
     this.state = {
       calledFetch: false,
@@ -312,20 +328,20 @@ class TreeRow extends React.PureComponent {
     if (e.ctrlKey && !this.isActiveSelection() && this.props.activeSelection) {
       payload.uid = this.props.isRoot ? cref.get("uid") : treeId;
       this.props.dispatch({
-        type: "ENTITY_ADD_OR_REMOVE_FROM_DICT",
-        stateParams: { itemPath: "ui.explorer.selected" },
+        type: "UI_ADD_OR_REMOVE_FROM_DICT",
+        stateParams: { itemPath: "explorer.selected" },
         payload
       });
     } else {
       this.props.dispatch({
-        type: "ENTITY_SET_IN",
-        stateParams: { itemPath: "ui.explorer.activeSelection" },
+        type: "UI_SET_IN",
+        stateParams: { itemPath: "explorer.activeSelection" },
         payload
       });
       // Clear the other selection if there is no shift key held
       this.props.dispatch({
-        type: "ENTITY_SET_IN",
-        stateParams: { itemPath: "ui.explorer.selected" },
+        type: "UI_SET_IN",
+        stateParams: { itemPath: "explorer.selected" },
         payload: {}
       });
     }
@@ -336,9 +352,9 @@ class TreeRow extends React.PureComponent {
     const selection = this.props.activeSelection;
     if (this.props.isRoot) {
       const cref = this.props.cref;
-      return selection ? cref.get("uid") == selection.get("uid") : false;
+      return selection ? cref.get("uid") === selection.get("uid") : false;
     }
-    return selection ? treeId == selection.get("uid") : false;
+    return selection ? treeId === selection.get("uid") : false;
   }
 
   isSelected() {
@@ -368,9 +384,10 @@ class TreeRow extends React.PureComponent {
   }
 
   getTreeName(tree) {
+    let { renderName } = this.props;
     // Render a name if passed in through props
-    if (this.props.renderName) {
-      return this.props.renderName;
+    if (renderName) {
+      return renderName;
     }
     // Try to get the title from the descriptions
     let descriptions = tree.get("descriptions");
@@ -392,6 +409,45 @@ class TreeRow extends React.PureComponent {
     return bgColor;
   }
 
+  renderTreeName(name) {
+    let { treeIds, commitBranches } = this.props;
+    if (treeIds.size || commitBranches) {
+      return (
+        <div className="col-sm-11 mt-2 pt-2">
+          <p
+            className={`m-0 p-0 mr-2 pr-2`}
+            style={{ display: "inline-block", verticalAlign: "middle" }}
+            onClick={this.clickedName}
+          >
+            <b>
+              <Octicon
+                name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
+                onClick={e => {
+                  localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
+                  this.setState({ isCollapsed: !this.state.isCollapsed });
+                }}
+              />
+              {name}
+            </b>
+          </p>
+          {this.props.extraContent}
+        </div>
+      );
+    }
+    return (
+      <div className="col-sm-11 m-0 p-0">
+        <p
+          className={`m-0 p-0 mr-2 pr-2`}
+          style={{ display: "inline-block", verticalAlign: "middle" }}
+          onClick={this.clickedName}
+        >
+          {name}
+        </p>
+        {this.props.extraContent}
+      </div>
+    );
+  }
+
   renderDropdownMenu() {
     let { treeIds, commitBranches } = this.props;
     let dropdownLinks = treeIds || commitBranches ? this.getRootDropdownLinks() : this.getTreeDropdownLinks();
@@ -403,7 +459,7 @@ class TreeRow extends React.PureComponent {
   }
 
   renderRow() {
-    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions, treeIds, commitBranches } = this.props;
+    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
     // Skip rendering if there is no description
     if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.hasDescription(tree)) {
       return null;
@@ -413,29 +469,7 @@ class TreeRow extends React.PureComponent {
     const bgColor = this.getBgColor();
     return (
       <div className={`row m-0 p-0 ${bgColor}`} style={{ borderTop: "1px solid #F6F6F6" }}>
-        <div className="col-sm-11 m-0 p-0">
-          <p
-            className={`m-0 p-0 mr-2 pr-2`}
-            style={{ display: "inline-block", verticalAlign: "middle" }}
-            onClick={this.clickedName}
-          >
-            {treeIds || commitBranches ? (
-              <b>
-                <Octicon
-                  name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
-                  onClick={e => {
-                    localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
-                    this.setState({ isCollapsed: !this.state.isCollapsed });
-                  }}
-                />
-                {name}
-              </b>
-            ) : (
-              <React.Fragment>{name}</React.Fragment>
-            )}
-          </p>
-          {this.props.extraContent}
-        </div>
+        {this.renderTreeName(name)}
         {this.renderDropdownMenu()}
       </div>
     );
@@ -459,7 +493,7 @@ class TreeRow extends React.PureComponent {
     if (!tree || !tracker) {
       return null;
     }
-
+    // Set the margins (if not provided)
     extraRowClass = extraRowClass || "ml-2";
 
     return (
@@ -479,6 +513,20 @@ class TreeRow extends React.PureComponent {
   }
 }
 
+const getTreeWithDescriptions = (state, commitId, treeId) => {
+  const basePath = `entities.commitEdges.byId.${commitId}.trees.${treeId}`;
+  let tree = state.getInPath(`entities.trees.byId.${treeId}`);
+  if (tree) {
+    // Add the descriptions onto the tree objects
+    const descriptionIds = state.getInPath(`${basePath}.descriptions`);
+    let descriptions = descriptionIds
+      ? descriptionIds.map(id => state.getInPath(`entities.descriptions.byId.${id}`))
+      : Im.List();
+    tree = tree.set("descriptions", descriptions);
+  }
+  return tree;
+};
+
 const mapStateToProps = (state, ownProps) => {
   const { cref, treeId } = ownProps;
   // Get the commit target
@@ -494,24 +542,18 @@ const mapStateToProps = (state, ownProps) => {
   const trackerId = cref.get("tracker");
   // Get the related items (from commit info)
   const basePath = `entities.commitEdges.byId.${commitId}.trees.${treeId}`;
-  const treeIds = state.getInPath(`${basePath}.trees`);
+  const treeIds = state.getInPath(`${basePath}.trees`) || Traec.Im.List();
+  const subTrees = treeIds.map(i => getTreeWithDescriptions(state, commitId, i));
   const documentIds = state.getInPath(`${basePath}.documents`);
   // Get the commit branch pointers
   const commitBranches = state.getInPath(`${basePath}.categories`);
   // UI related selections
-  const activeSelection = state.getInPath(`entities.ui.explorer.activeSelection`);
-  const allSelection = state.getInPath(`entities.ui.explorer.selected`);
+  const activeSelection = state.getInPath(`ui.explorer.activeSelection`);
+  const allSelection = state.getInPath(`ui.explorer.selected`);
   // Root objects
-  let tree = state.getInPath(`entities.trees.byId.${treeId}`);
+  let tree = getTreeWithDescriptions(state, commitId, treeId);
   const tracker = state.getInPath(`entities.trackers.byId.${trackerId}`);
-  // Add the descriptions onto the tree objects
-  if (tree) {
-    const descriptionIds = state.getInPath(`${basePath}.descriptions`);
-    let descriptions = descriptionIds
-      ? descriptionIds.map(id => state.getInPath(`entities.descriptions.byId.${id}`))
-      : Im.List();
-    tree = tree.set("descriptions", descriptions);
-  }
+
   return {
     trackerId,
     tracker,
@@ -521,6 +563,7 @@ const mapStateToProps = (state, ownProps) => {
     rootTree,
     tree,
     treeIds,
+    subTrees,
     documentIds,
     commitBranches,
     activeSelection,

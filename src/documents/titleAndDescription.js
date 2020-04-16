@@ -75,14 +75,17 @@ export class TitleAndDescription extends React.Component {
   }
 
   renderContent() {
-    let { description, showTreeTitle } = this.props;
+    let { description, showAssignee, showTreeTitle, assignee } = this.props;
     const TitleTag = this.props.TitleTag || "h2";
     return (
       <React.Fragment>
-        <TitleTag className="mb-0 pb-1">
+        <TitleTag className="mb-1 pb-1">
           <b>{description.get("title")}</b>
           <span style={{ fontSize: "0.875rem" }}>{this.renderEditDropdown()}</span>
         </TitleTag>
+        <p>
+          <i>{assignee ? assignee.get("name") : null}</i>
+        </p>
         <Link to={description.getInPath("tree.url") ? description.getInPath("tree.url") : "#"}>
           <i style={{ fontSize: "1rem", color: "#555" }}>{showTreeTitle ? description.getInPath("tree.title") : ""}</i>
         </Link>

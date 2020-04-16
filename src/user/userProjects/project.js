@@ -119,10 +119,6 @@ const mapStateToProps = (state, ownProps) => {
   return { projects, newItem, isAuthenticated, userRefs };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProjects);

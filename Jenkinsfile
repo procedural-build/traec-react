@@ -34,7 +34,10 @@ pipeline {
 
     stage('Publish') {
       when {
-        branch 'master'
+        anyOf {
+          branch 'master'
+          branch 'stage'
+        }
       }
       steps {
         sh 'echo $NPM_TOKEN && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
