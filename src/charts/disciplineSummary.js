@@ -27,14 +27,14 @@ export class DisciplineSummary extends React.Component {
   render() {
     let data = this.checkData();
     return (
-      <div className="line-chart-wrapper" style={{ width: "100%", height: "500px" }}>
+      <div className="line-chart-wrapper" style={{ width: "100%", height: "700px" }}>
         <ResponsiveContainer>
           <BarChart
             data={data}
             margin={{
               top: 20,
               right: 30,
-              left: 30,
+              left: 100,
               bottom: 10
             }}
             layout="vertical"
