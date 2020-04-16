@@ -296,8 +296,5 @@ export const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const TaskCardConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TaskCard);
+const TaskCardConnected = connect(mapStateToProps, mapDispatchToProps)(TaskCard);
 export default TaskCardConnected;

@@ -227,8 +227,5 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const TaskTreeListConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TaskTreeList);
+const TaskTreeListConnected = connect(mapStateToProps, mapDispatchToProps)(TaskTreeList);
 export default TaskTreeListConnected;
