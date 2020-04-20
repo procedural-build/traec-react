@@ -62,6 +62,7 @@ class UserCompanies extends React.Component {
       .toList()
       .sortBy((obj, i) => obj.get("created"))
       .filter(obj => obj.get("parentid") == null)
+      .filter(obj => obj.get("name"))
       .map((item, i) => (
         <CompanyItem
           key={i}
