@@ -309,7 +309,7 @@ class TreeRow extends React.PureComponent {
   clickedName(e) {
     e.preventDefault();
     let payload = {};
-    const { cref, headCommitId, parentCommitId } = this.props;
+    const { cref, headCommitId, parentCommitId, trackerId } = this.props;
     const treeId = this.props.tree.get("uid");
     if (this.props.isRoot) {
       payload = {
@@ -335,7 +335,7 @@ class TreeRow extends React.PureComponent {
     } else {
       this.props.dispatch({
         type: "UI_SET_IN",
-        stateParams: { itemPath: "explorer.activeSelection" },
+        stateParams: { itemPath: `explorer.activeSelection.byId.${trackerId}` },
         payload
       });
       // Clear the other selection if there is no shift key held
@@ -548,7 +548,7 @@ const mapStateToProps = (state, ownProps) => {
   // Get the commit branch pointers
   const commitBranches = state.getInPath(`${basePath}.categories`);
   // UI related selections
-  const activeSelection = state.getInPath(`ui.explorer.activeSelection`);
+  const activeSelection = state.getInPath(`ui.explorer.activeSelection.byId.${trackerId}`);
   const allSelection = state.getInPath(`ui.explorer.selected`);
   // Root objects
   let tree = getTreeWithDescriptions(state, commitId, treeId);
