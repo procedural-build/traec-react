@@ -147,7 +147,8 @@ class DocumentCard extends Component {
       editableTitleAndDescription,
       editableDocument,
       showAssignee,
-      showTreeTitle
+      showTreeTitle,
+      projectDisciplines
     } = this.props;
     if (!cref || !description) {
       return null;
@@ -182,6 +183,7 @@ class DocumentCard extends Component {
                 setAction={this.setAction.bind(this)}
                 setDueDate={this.setDueDate.bind(this)}
                 adminDropdownLinks={this.adminDropdownLinks()}
+                projectDisciplines={projectDisciplines}
               />
             </div>
           );
@@ -204,6 +206,7 @@ const mapStateToProps = (state, ownProps) => {
   let docStatus = state.getInPath(`entities.docStatuses.byId.${docStatusId}`);
   let projectId = state.getInPath(`entities.trackers.byId.${trackerId}.project.uid`);
   let assignee = getDocumentAssignee(state, docId, commitId, projectId);
+  let projectDisciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Traec.Im.Map();
 
   return {
     document,
@@ -213,7 +216,8 @@ const mapStateToProps = (state, ownProps) => {
     currentDocObject,
     docStatus,
     assignee,
-    treeId
+    treeId,
+    projectDisciplines
   };
 };
 
