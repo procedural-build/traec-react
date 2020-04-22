@@ -58,24 +58,26 @@ function SubTreeList({
     return null;
   }
 
-  return subTrees
-    .sortBy(subTree => {
-      return subTree
-        .get("descriptions")
-        .first()
-        .get("title");
-    })
-    .map((subTree, i) => (
-      <TreeRowConnected
-        key={i}
-        headCommitId={commitId}
-        cref={cref}
-        treeId={subTree.get("uid")}
-        showTreesWithoutDescriptions={showTreesWithoutDescriptions}
-        formFields={formFields}
-        forceExpandAll={forceExpandAll}
-      />
-    ));
+  return (
+    subTrees
+      //.filter(i => (i.get('descriptions').first())) // Filter out trees without descriptions
+      .sortBy(subTree => {
+        // Sort based on the description title (if exists) else tree name
+        let description = subTree.get("descriptions").first();
+        return description ? description.get("title") : subTree.get("name");
+      })
+      .map((subTree, i) => (
+        <TreeRowConnected
+          key={i}
+          headCommitId={commitId}
+          cref={cref}
+          treeId={subTree.get("uid")}
+          showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+          formFields={formFields}
+          forceExpandAll={forceExpandAll}
+        />
+      ))
+  );
 }
 
 function SubDocumentList({ treeId, commitId, cref, documentIds, formFields = null }) {
@@ -122,6 +124,7 @@ class TreeRow extends React.PureComponent {
     this.deleteTree = this.deleteTree.bind(this);
     this.addDocument = this.addDocument.bind(this);
     this.addCategoryRef = this.addCategoryRef.bind(this);
+    this.addRevision = this.addRevision.bind(this);
     this.clickedName = this.clickedName.bind(this);
     this.showDocs = this.showDocs.bind(this);
   }
@@ -174,8 +177,21 @@ class TreeRow extends React.PureComponent {
     this.setState({ showDocs: !this.state.showDocs });
   }
 
-  addRevision() {
+  addRevision(e) {
     alert("Not implemented");
+    return;
+    e.preventDefault();
+    let { trackerId, refId, commitId, treeId } = this.getUrlParams();
+    let fetch = new Traec.Fetch("tracker_ref_branch", "post", {
+      trackerId,
+      refId,
+      commitId
+    });
+    fetch.updateFetchParams({
+      preFetchHook: body => ({ name: body.title })
+    });
+    this.setState({ nameFormParams: fetch.params });
+    fetch.toggleForm();
   }
 
   addTree(e) {
@@ -273,6 +289,8 @@ class TreeRow extends React.PureComponent {
   }
 
   addCategoryRef(e) {
+    // Add a tree by default - later this can be converted to a revisionable branch
+    //return this.addTree(e)
     e.preventDefault();
     let { trackerId, refId, commitId, treeId } = this.getUrlParams();
     let fetch = new Traec.Fetch("tracker_ref_tree_branch", "post", {
@@ -413,7 +431,7 @@ class TreeRow extends React.PureComponent {
     let { treeIds, commitBranches } = this.props;
     if (treeIds.size || commitBranches) {
       return (
-        <div className="col-sm-11 mt-2 pt-2">
+        <div className="col-sm-11 mt-0 pt-0">
           <p
             className={`m-0 p-0 mr-2 pr-2`}
             style={{ display: "inline-block", verticalAlign: "middle" }}
