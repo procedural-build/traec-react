@@ -6,6 +6,7 @@ import InviteList from "./inviteList";
 import DisciplineList from "./disciplineList";
 import AuthGroupList from "./authGroupList";
 import { projectPermissionRender } from "traec/utils/permissions/project";
+import Traec from "traec";
 
 export class ProjectMembers extends React.Component {
   render() {
