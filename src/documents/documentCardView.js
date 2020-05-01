@@ -36,7 +36,7 @@ export class DocumentCardView extends Component {
     super(props);
     this.state = {
       dueDate: "",
-      action: "Nothing Recieved"
+      action: "Nothing Received"
     };
 
     this.renderSelectedFile = this.renderSelectedFile.bind(this);
@@ -124,7 +124,8 @@ export class DocumentCardView extends Component {
       editableTitleAndDescription,
       showAssignee,
       showTreeTitle,
-      adminDropdownLinks
+      adminDropdownLinks,
+      projectDisciplines
     } = this.props;
 
     const titleAndDescriptionRef = React.createRef();
@@ -132,7 +133,6 @@ export class DocumentCardView extends Component {
     adminDropdownLinks.find(element => element.name === "Edit").onClick = e => {
       titleAndDescriptionRef.current.edit();
     };
-
     return (
       <TitleAndDescription
         ref={titleAndDescriptionRef}
@@ -145,6 +145,7 @@ export class DocumentCardView extends Component {
         showTreeTitle={showTreeTitle}
         showAssignee={showAssignee}
         dropdownLinks={adminDropdownLinks}
+        disciplines={projectDisciplines}
       />
     );
   }

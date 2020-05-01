@@ -12,6 +12,7 @@ class AccountsRouter extends React.Component {
   render() {
     const baseUrl = this.props.match.url;
     let { UserProfile } = this.props;
+
     return (
       <React.Fragment>
         <Switch>

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import { loading } from "traec-react/utils/entities";
 import ReportBarPlot from "traec-react/emails/reportBarChart";
+import Im from "traec/immutable";
 
 export const EMAIL_TYPES = [
   "project_invite",
@@ -148,11 +149,17 @@ class ProjectEmailReport extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let { projectId } = Traec.utils.getFullIds(state, ownProps.match.params);
+  try {
+    var { projectId } = Traec.utils.getFullIds(state, ownProps.match.params);
+  } catch (e) {
+    var { projectId } = ownProps;
+  }
 
+  let recipients = Im.Map();
+  let emails = Im.Map();
   if (projectId) {
-    var recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
-    var emails = state.getInPath(`entities.projectObjects.byId.${projectId}.emails`);
+    recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
+    emails = state.getInPath(`entities.projectObjects.byId.${projectId}.emails`);
   }
 
   // Add this to props

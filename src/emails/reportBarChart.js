@@ -1,11 +1,6 @@
 import React from "react";
 import Traec from "traec";
 import * as d3 from "d3";
-// import { scaleLinear, scaleBand } from "d3-scale";
-// import { max } from "d3-array";
-// import { select } from "d3-selection";
-// import { cluster, stratify } from "d3-hierarchy";
-// import { fromJS } from "immutable";
 import d3Tip from "d3-tip";
 
 export default class ReportBarPlot extends React.Component {

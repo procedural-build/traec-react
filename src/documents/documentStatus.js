@@ -12,7 +12,7 @@ export class DocumentStatus extends Component {
       alignItems: "center",
       justifyContent: "center"
     };
-    let name = "Nothing Recieved";
+    let name = "Nothing Received";
     if (!docStatus) {
       divStyle["backgroundColor"] = "rgb(255,150,150)";
     } else {
