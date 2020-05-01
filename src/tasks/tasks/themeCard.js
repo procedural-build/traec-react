@@ -1,14 +1,18 @@
 import React from "react";
 import Traec from "traec";
-
 // import "../styles.css";
-import { BSBtnDropdown, BSBtn } from "traec-react/utils/bootstrap";
+import { BSBtn, BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { projectPermissionFilter } from "traec/utils/permissions/project";
 import { getChildrenAndScores, getPerformanceIndex, getScore } from "./score";
-import { renderParameters, toggleShowDescription } from "../utils/cardUtils";
+import {
+  dispatchAsSelected,
+  dropDownLinks,
+  renderParameters,
+  saveToRedux,
+  toggleShowDescription
+} from "../utils/cardUtils";
 import { connect } from "react-redux";
 import BranchSelect from "../utils/branchSelect";
-import { dispatchAsSelected, dropDownLinks, saveToRedux } from "../utils/cardUtils";
 import Octicon from "react-octicon";
 import { getThemeTarget } from "AppSrc/scores/targets";
 import { getProjectProps } from "AppSrc/project/utils";

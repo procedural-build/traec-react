@@ -2,39 +2,25 @@ import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
 import Octicon from "react-octicon";
-import Crypto from "crypto";
-import { targetFields } from "AppSrc/tracker/form";
-import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import BranchSelect from "../utils/branchSelect";
 // import "../styles.css";
-import {
-  dropDownLinks,
-  dispatchAsSelected,
-  getTreeDescription,
-  saveToRedux,
-  renderParameters,
-  toggleShowDescription
-} from "../utils/cardUtils";
-import { checkIfChildrenAreLoaded, getChildrenAndScores, getScore } from "./score";
+import { dispatchAsSelected, dropDownLinks, renderParameters, toggleShowDescription } from "../utils/cardUtils";
+import TaskScore, { checkIfChildrenAreLoaded, getChildrenAndScores, getScore } from "./score";
 import { projectPermissionFilter } from "traec/utils/permissions/project";
-import BaseFormConnected from "traec-react/utils/form";
 import { getMetricTarget } from "AppSrc/scores/targets";
-import Moment from "moment";
 import { TargetForm } from "AppSrc/tasks/tasks/targets";
 import { GearDropdown } from "AppSrc/tasks/utils/gearDropdown";
-import TaskDocumentStatusContainer from "AppSrc/tasks/taskStatus/taskDocumentStatusContainer";
 import { TaskStatusContainer } from "AppSrc/tasks/taskStatus";
 import { TaskAssignForm } from "./taskAssignForm";
-import TaskScore from "./score";
 
 import {
+  getAssignee,
+  getMembers,
+  getProjectDesciplineId,
   getRootTreeId,
   getTaskId,
-  isSelected,
-  getProjectDesciplineId,
-  getMembers,
-  getAssignee,
-  getTreeWithDescription
+  getTreeWithDescription,
+  isSelected
 } from "../utils/dataExtraction";
 
 export class TaskCard extends React.Component {

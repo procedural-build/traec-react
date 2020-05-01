@@ -4,7 +4,6 @@ import Traec from "traec";
 import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
 import Moment from "moment";
-import category from "traec-react/explorer/category";
 import { confirmDelete } from "traec-react/utils/sweetalert";
 
 class DocumentCard extends Component {

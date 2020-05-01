@@ -10,14 +10,22 @@ export class TrackerItem extends React.Component {
     this.state = {};
 
     this.onClick = this.onClick.bind(this);
+    this.addFromTemplate = this.addFromTemplate.bind(this);
   }
 
   onClick(e) {
     e.preventDefault();
   }
 
+  addFromTemplate(e) {
+    e.preventDefault();
+  }
+
   dropDownLinks() {
-    return [{ name: "Edit", onClick: this.onClick }];
+    return [
+      { name: "Edit", onClick: this.onClick },
+      { name: "Add from template", linkTo: `/tracker/${this.props.tracker.get("uid")}/template` }
+    ];
   }
 
   render() {
@@ -26,11 +34,11 @@ export class TrackerItem extends React.Component {
 
     return (
       <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
-        <div className="col-sm-12">
+        <div className="col-sm-10">
           <Link to={`/tracker/${item.get("uid")}`}>{item.get("name")}</Link>
         </div>
-        <div className="col-sm-4">
-          <BSBtnDropdown />
+        <div className="col-sm-2">
+          <BSBtnDropdown links={this.dropDownLinks()} />
         </div>
       </div>
     );

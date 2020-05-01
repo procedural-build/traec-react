@@ -63,7 +63,7 @@ export class BSBtnDropdown extends React.Component {
   }
 
   hasItems(links) {
-    return links.length == 0 || links.size == 0 ? false : true;
+    return links.length === 0 || links.size === 0 ? false : true;
   }
 
   buttonSize() {
