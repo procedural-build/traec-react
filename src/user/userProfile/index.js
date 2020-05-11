@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { authFailed } from "traec-react/auth/utils";
-import { setNavBarItems } from "traec-react/navBar";
 
 import CompanyInvites from "../userCompanies/companyInvite";
 import UserCompanies from "../userCompanies/company";

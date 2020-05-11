@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
-import TreeRow from "./treerow";
+import TreeRow from "../treeRow";
 
 class CategoryRow extends React.PureComponent {
   constructor(props) {
@@ -98,7 +98,8 @@ class CategoryRow extends React.PureComponent {
       forceExpand = false,
       forceExpandAll = false,
       isRoot = false,
-      formFields = null
+      formFields = null,
+      history
     } = this.props;
 
     if (!cref) {
@@ -127,6 +128,7 @@ class CategoryRow extends React.PureComponent {
         // Using a generic single-input field "nameForm"
         nameFormParams={this.state.nameFormParams}
         formFields={formFields}
+        history={history}
       />
     );
   }

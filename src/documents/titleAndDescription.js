@@ -76,7 +76,7 @@ export class TitleAndDescription extends React.Component {
   }
 
   renderContent() {
-    let { description, showAssignee, showTreeTitle, assignee, disciplines, documentId, cref } = this.props;
+    let { description, showAssingee, showTreeTitle, assignee, disciplines, documentId, cref } = this.props;
     const TitleTag = this.props.TitleTag || "h2";
     const trackerId = cref ? cref.get("tracker") : null;
     const commitId = cref ? cref.getInPath("latest_commit.uid") : null;

@@ -8,92 +8,12 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import BaseFormConnected from "traec-react/utils/form";
 import { confirmDelete } from "traec-react/utils/sweetalert";
 
-import DocumentRow from "./docrow";
-import CategoryRow from "./category";
 import Octicon from "react-octicon";
-import * as forms from "./form";
-
-/*
-Functional components
-*/
-
-function SubCategoryList({
-  commitId,
-  commitBranches,
-  tracker,
-  showTreesWithoutDescriptions = true,
-  formFields = null,
-  forceExpandAll = false
-}) {
-  if (!commitBranches) {
-    return null;
-  }
-  return commitBranches
-    .toList()
-    .map((commitBranch, i) => (
-      <CategoryRow
-        key={i}
-        parentCommitId={commitId}
-        tracker={tracker}
-        renderRootTree={false}
-        commitId={commitBranch.get("commit")}
-        branchId={null}
-        refId={commitBranch.getInPath("target.ref")}
-        showTreesWithoutDescriptions={showTreesWithoutDescriptions}
-        formFields={formFields}
-        forceExpandAll={forceExpandAll}
-      />
-    ));
-}
-
-function SubTreeList({
-  subTrees,
-  commitId,
-  cref,
-  showTreesWithoutDescriptions = true,
-  formFields = null,
-  forceExpandAll = false
-}) {
-  if (!subTrees) {
-    return null;
-  }
-
-  return (
-    subTrees
-      //.filter(i => (i.get('descriptions').first())) // Filter out trees without descriptions
-      .sortBy(subTree => {
-        // Sort based on the description title (if exists) else tree name
-        let description = subTree.get("descriptions").first();
-        return description ? description.get("title") : subTree.get("name");
-      })
-      .map((subTree, i) => (
-        <TreeRowConnected
-          key={i}
-          headCommitId={commitId}
-          cref={cref}
-          treeId={subTree.get("uid")}
-          showTreesWithoutDescriptions={showTreesWithoutDescriptions}
-          formFields={formFields}
-          forceExpandAll={forceExpandAll}
-        />
-      ))
-  );
-}
-
-function SubDocumentList({ treeId, commitId, cref, documentIds, formFields = null }) {
-  if (!subDocuments) {
-    return null;
-  }
-  return documentIds
-    .sortBy(docId => docId)
-    .map((item, i) => (
-      <DocumentRow key={i} headCommitId={commitId} cref={cref} treeId={treeId} docId={item} formFields={formFields} />
-    ));
-}
-
-/*
-TreeRow Connected to Redux
-*/
+import * as forms from "../form";
+import { SubTrees } from "traec-react/explorer/treeRow/subTrees";
+import { SubDocuments } from "traec-react/explorer/documentRow/subDocuments";
+import { SubCategories } from "traec-react/explorer/categoryRow/subCategories";
+import { TemplateItem } from "traec-react/explorer/treeRow/templateItem";
 
 class TreeRow extends React.PureComponent {
   constructor(props) {
@@ -109,6 +29,7 @@ class TreeRow extends React.PureComponent {
     this.state = {
       calledFetch: false,
       showDocs: false,
+      showDescription: false,
       isCollapsed: isCollapsed,
       nameFormParams: {
         stateParams: {},
@@ -125,8 +46,10 @@ class TreeRow extends React.PureComponent {
     this.addDocument = this.addDocument.bind(this);
     this.addCategoryRef = this.addCategoryRef.bind(this);
     this.addRevision = this.addRevision.bind(this);
+    this.addFromTemplate = this.addFromTemplate.bind(this);
     this.clickedName = this.clickedName.bind(this);
     this.showDocs = this.showDocs.bind(this);
+    this.showDescription = this.showDescription.bind(this);
   }
 
   getUrlParams() {
@@ -147,28 +70,58 @@ class TreeRow extends React.PureComponent {
   }
 
   getRootDropdownLinks() {
-    let dropdownLinks = [
-      { name: "Edit Category", onClick: this.editTree },
-      { name: "Add a new revision", onClick: this.addRevision },
-      { name: "Add a new sub-category", onClick: this.addCategoryRef },
-      { name: "Add a new package", onClick: this.addTree },
-      { name: "Add a new document", onClick: this.addDocument },
-      { label: null },
-      { name: "Delete category", onClick: this.deleteTree }
-    ];
+    let { documentIds } = this.props;
+    let dropdownLinks = [];
+    if (this.props.template) {
+      dropdownLinks = [
+        { name: "Show Description", onClick: this.showDescription },
+        documentIds
+          ? {
+              name: "Show Documents",
+              onClick: this.showDocs
+            }
+          : { label: null }
+      ];
+    } else {
+      dropdownLinks = [
+        { name: "Edit Category", onClick: this.editTree },
+        //{ name: "Add a new revision", onClick: this.addRevision },
+        //{ name: "Add a new sub-category", onClick: this.addCategoryRef },
+        { name: "Add a new package", onClick: this.addTree },
+        { name: "Add a new document", onClick: this.addDocument },
+        { name: "Add from template", onClick: this.addFromTemplate },
+        { label: null },
+        { name: "Delete category", onClick: this.deleteTree }
+      ];
+    }
     return dropdownLinks;
   }
 
   getTreeDropdownLinks() {
-    let dropdownLinks = [
-      { name: "Edit package", onClick: this.editTree },
-      { name: "Add a new revision", onClick: this.addRevision },
-      { name: "Add a new sub-category", onClick: this.addCategoryRef },
-      { name: "Add a new package", onClick: this.addTree },
-      { name: "Add a new document", onClick: this.addDocument },
-      { label: null },
-      { name: "Delete package", onClick: this.deleteTree }
-    ];
+    let { documentIds } = this.props;
+    let dropdownLinks = [];
+    if (this.props.template) {
+      dropdownLinks = [
+        { name: "Show Description", onClick: this.showDescription },
+        documentIds
+          ? {
+              name: "Show Documents",
+              onClick: this.showDocs
+            }
+          : { label: null }
+      ];
+    } else {
+      dropdownLinks = [
+        { name: "Edit package", onClick: this.editTree },
+        //{ name: "Add a new revision", onClick: this.addRevision },
+        //{ name: "Add a new sub-category", onClick: this.addCategoryRef },
+        { name: "Add a new package", onClick: this.addTree },
+        { name: "Add a new document", onClick: this.addDocument },
+        { label: null },
+        { name: "Delete package", onClick: this.deleteTree }
+      ];
+    }
+
     return dropdownLinks;
   }
 
@@ -177,21 +130,13 @@ class TreeRow extends React.PureComponent {
     this.setState({ showDocs: !this.state.showDocs });
   }
 
+  showDescription(e) {
+    e.preventDefault();
+    this.setState({ showDescription: !this.state.showDescription });
+  }
+
   addRevision(e) {
     alert("Not implemented");
-    return;
-    e.preventDefault();
-    let { trackerId, refId, commitId, treeId } = this.getUrlParams();
-    let fetch = new Traec.Fetch("tracker_ref_branch", "post", {
-      trackerId,
-      refId,
-      commitId
-    });
-    fetch.updateFetchParams({
-      preFetchHook: body => ({ name: body.title })
-    });
-    this.setState({ nameFormParams: fetch.params });
-    fetch.toggleForm();
   }
 
   addTree(e) {
@@ -258,6 +203,11 @@ class TreeRow extends React.PureComponent {
     });
     this.setState({ nameFormParams: fetch.params });
     fetch.toggleForm();
+  }
+
+  addFromTemplate(e) {
+    e.preventDefault();
+    this.props.history.push(`/tracker/${this.props.trackerId}/template`);
   }
 
   editTree(e) {
@@ -427,11 +377,24 @@ class TreeRow extends React.PureComponent {
     return bgColor;
   }
 
+  renderTreeDescription() {
+    if (!this.state.showDescription) {
+      return null;
+    }
+    let { tree } = this.props;
+    let descriptions = tree.get("descriptions");
+    if (descriptions.size) {
+      let description = descriptions.first().get("text");
+      return <div className="m-3" dangerouslySetInnerHTML={{ __html: description }} />;
+    }
+  }
+
   renderTreeName(name) {
-    let { treeIds, commitBranches } = this.props;
+    let { treeIds, commitBranches, template } = this.props;
+    let columnSize = template ? "10" : "11";
     if (treeIds.size || commitBranches) {
       return (
-        <div className="col-sm-11 mt-0 pt-0">
+        <div className={`col-sm-${columnSize} mt-0 pt-0`}>
           <p
             className={`m-0 p-0 mr-2 pr-2`}
             style={{ display: "inline-block", verticalAlign: "middle" }}
@@ -448,12 +411,12 @@ class TreeRow extends React.PureComponent {
               {name}
             </b>
           </p>
-          {this.props.extraContent}
+          {this.renderTreeDescription()}
         </div>
       );
     }
     return (
-      <div className="col-sm-11 m-0 p-0">
+      <div className={`col-sm-${columnSize} mt-0 pt-0`}>
         <p
           className={`m-0 p-0 mr-2 pr-2`}
           style={{ display: "inline-block", verticalAlign: "middle" }}
@@ -461,7 +424,7 @@ class TreeRow extends React.PureComponent {
         >
           {name}
         </p>
-        {this.props.extraContent}
+        {this.renderTreeDescription()}
       </div>
     );
   }
@@ -477,7 +440,18 @@ class TreeRow extends React.PureComponent {
   }
 
   renderRow() {
-    let { isRoot, renderRootTree, tree, showTreesWithoutDescriptions } = this.props;
+    let {
+      isRoot,
+      renderRootTree,
+      tree,
+      showTreesWithoutDescriptions,
+      template,
+      copyToCommit,
+      treeId,
+      parentTreeId,
+      templateTracker
+    } = this.props;
+    let { commitId: fromCommitId } = this.getUrlParams();
     // Skip rendering if there is no description
     if (!(isRoot && renderRootTree) && !showTreesWithoutDescriptions && !this.hasDescription(tree)) {
       return null;
@@ -489,19 +463,48 @@ class TreeRow extends React.PureComponent {
       <div className={`row m-0 p-0 ${bgColor}`} style={{ borderTop: "1px solid #F6F6F6" }}>
         {this.renderTreeName(name)}
         {this.renderDropdownMenu()}
+        <TemplateItem
+          template={template}
+          copyToCommit={copyToCommit}
+          parentTreeId={parentTreeId}
+          treeId={treeId}
+          fromCommitId={fromCommitId}
+          templateTracker={templateTracker}
+          delteTree={this.deleteTree}
+        />
       </div>
     );
   }
 
   renderSubItems() {
+    if (this.state.isCollapsed && this.state.showDocs) {
+      return (
+        <React.Fragment>
+          <SubDocuments
+            documentIds={this.props.documentIds}
+            treeId={this.props.treeId}
+            cref={this.props.cref}
+            commitId={this.props.commitId}
+            show={this.state.showDocs}
+          />
+        </React.Fragment>
+      );
+    }
     if (this.state.isCollapsed) {
       return null;
     }
     return (
       <React.Fragment>
-        <SubTreeList {...this.props} />
-        {this.state.showDocs ? <SubDocumentList {...this.props} /> : null}
-        <SubCategoryList {...this.props} extraRowClass={null} />
+        <SubTrees {...this.props} />
+        <SubDocuments
+          documentIds={this.props.documentIds}
+          treeId={this.props.treeId}
+          cref={this.props.cref}
+          commitId={this.props.commitId}
+          showDropdown={!this.props.template}
+          show={this.state.showDocs}
+        />
+        <SubCategories {...this.props} extraRowClass={null} />
       </React.Fragment>
     );
   }
@@ -592,5 +595,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-const TreeRowConnected = connect(mapStateToProps, mapDispatchToProps)(TreeRow);
-export default TreeRowConnected;
+export default connect(mapStateToProps, mapDispatchToProps)(TreeRow);

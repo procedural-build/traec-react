@@ -1,9 +1,106 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
 import ReportBarPlot from "traec-react/emails/reportBarChart";
 import { loading } from "traec-react/utils/entities";
+import { EmailBarChart } from "traec-react/emails/emailBarChart";
+
+class CompanyEmailReport extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: true
+    };
+
+    this.requiredFetches = [
+      new Traec.Fetch("company_email_recipient", "list"),
+      new Traec.Fetch("company_email", "list")
+    ];
+    // action bindings
+  }
+
+  componentDidMount() {
+    Traec.fetchRequired.bind(this)();
+  }
+
+  componentDidUpdate() {
+    Traec.fetchRequired.bind(this)();
+  }
+
+  displayEmpty() {
+    if (!this.props.recipients && !this.props.emails) {
+      return loading("report");
+    } else if (!this.props.recipients.size && !this.props.emails.size) {
+      return (
+        <div>
+          <h3>No emails have been sent to any recipients.</h3>
+          <h5>Ensure there are members associated to this company first</h5>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  displayEmailData({ recipients, emails }) {
+    return (
+      <div>
+        <h2>Email Recipients</h2>
+
+        <p>The following email addresses have received notifications on this project.</p>
+        <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null} </div>
+        <RecipientTableHeaders />
+      </div>
+    );
+  }
+
+  render() {
+    let { recipients, companyId, emails } = this.props;
+    if (!recipients) {
+      return null;
+    }
+
+    let rows = null;
+
+    rows = recipients
+      .toList()
+      .map((recipient, i) => <CompanyEmailRecipient key={i} recipient={recipient} companyId={companyId} />);
+
+    return (
+      <React.Fragment>
+        {this.displayEmpty()}
+        <EmailBarChart
+          emails={this.props.emails}
+          title={"Email Recipients"}
+          text={"The following email addresses have received notifications on this company."}
+          company={true}
+        />
+        <div className="m-3 p-3">
+          <RecipientTableHeaders />
+          <hr className="m-1 p-0" />
+          {rows}
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  let { companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
+
+  let recipients = state.getInPath(`entities.companyObjects.byId.${companyId}.recipients`);
+  let emails = state.getInPath(`entities.companyObjects.byId.${companyId}.emails`);
+
+  // Add this to props
+  return {
+    companyId,
+    recipients,
+    emails
+  };
+};
+
+export default connect(mapStateToProps)(CompanyEmailReport);
 
 export const EMAIL_TYPES = ["company_invite"];
 
@@ -30,11 +127,12 @@ function CompanyEmailRecipient({ recipient, companyId }) {
   );
 
   return (
-    <div className="row" style={{ borderTop: "1px solid grey" }}>
-      <div className="col-sm-9">
-        <Link to={`/company/${companyId}/email/report/${recipient.get("uid")}`}>{recipient.get("email")}</Link>
+    <div>
+      <div className="row">
+        <div className="col-sm-9">{recipient.get("email")}</div>
+        {cols}
       </div>
-      {cols}
+      <hr className="m-1 p-0" />
     </div>
   );
 }
@@ -55,105 +153,3 @@ function RecipientTableHeaders() {
     </div>
   );
 }
-
-class CompanyEmailReport extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isLoading: true
-    };
-
-    this.requiredFetches = [
-      new Traec.Fetch("company_email_recipient", "list"),
-      new Traec.Fetch("company_email", "list")
-    ];
-    // action bindings
-  }
-
-  componentDidMount() {
-    Traec.fetchRequired.bind(this)();
-  }
-
-  componentDidUpdate() {
-    Traec.fetchRequired.bind(this)();
-    this.setIsLoading();
-  }
-
-  displayEmpty() {
-    return (
-      <div>
-        <h3>No emails have been sent to any recipients.</h3>
-        <h5>Ensure there are members associated to this project first</h5>
-        <RecipientTableHeaders />
-      </div>
-    );
-  }
-
-  displayEmailData({ recipients, emails }) {
-    return (
-      <div>
-        <h2>Email Recipients</h2>
-
-        <p>The following email addresses have received notifications on this project.</p>
-        <div className="emailPlot">{recipients ? <ReportBarPlot emails={emails} /> : null} </div>
-        <RecipientTableHeaders />
-      </div>
-    );
-  }
-
-  setIsLoading() {
-    let { recipients, emails } = this.props;
-    if (!recipients && !emails) {
-      // if (!recipients) {
-      return null;
-    } else if (recipients && this.state.isLoading) {
-      this.setState({ isLoading: false });
-    }
-  }
-
-  render() {
-    let { recipients, companyId, emails } = this.props;
-    if (!recipients) {
-      return null;
-    }
-
-    let rows = null;
-
-    rows = recipients
-      .toList()
-      .map((recipient, i) => <CompanyEmailRecipient key={i} recipient={recipient} companyId={companyId} />);
-
-    return (
-      <React.Fragment>
-        {this.state.isLoading ? loading("report") : null}
-
-        {(!this.state.isLoading && recipients.toList().size == 0) || !emails
-          ? this.displayEmpty()
-          : (!this.state.isLoading && emails.toList().size == 0) || !emails
-          ? this.displayEmpty()
-          : !this.state.isLoading && recipients.toList().size !== 0 && emails
-          ? this.displayEmailData({ recipients, emails })
-          : null}
-
-        {rows}
-      </React.Fragment>
-    );
-  }
-}
-
-const mapStateToProps = (state, ownProps) => {
-  let { companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
-
-  let recipients = state.getInPath(`entities.companyObjects.byId.${companyId}.recipients`);
-  let emails = state.getInPath(`entities.companyObjects.byId.${companyId}.emails`);
-
-  // Add this to props
-  return {
-    companyId,
-    recipients,
-    emails
-  };
-};
-
-export default connect(mapStateToProps)(CompanyEmailReport);

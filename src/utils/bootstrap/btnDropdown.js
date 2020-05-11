@@ -63,7 +63,7 @@ export class BSBtnDropdown extends React.Component {
   }
 
   hasItems(links) {
-    return links.length == 0 || links.size == 0 ? false : true;
+    return links.length === 0 || links.size === 0 ? false : true;
   }
 
   buttonSize() {
@@ -77,9 +77,12 @@ export class BSBtnDropdown extends React.Component {
     if (!this.hasItems(links)) {
       return "";
     }
-    //style={{ maxHeight: "40rem", overflowY: "scroll" }}
     return (
-      <div className="dropdown-menu dropdown-menu-right" aria-labelledby="btnDropdown">
+      <div
+        className="dropdown-menu dropdown-menu-right"
+        //style={{ maxHeight: "40rem", overflowY: "scroll" }}
+        aria-labelledby="btnDropdown"
+      >
         {links}
       </div>
     );

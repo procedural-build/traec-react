@@ -10,7 +10,7 @@ export class BSCard extends React.Component {
             {this.props.button}
           </div>
 
-          <div className="card-body">
+          <div className={`card-body ${this.props.extraBodyClass}`}>
             {this.props.form}
             {this.props.body}
           </div>
@@ -34,7 +34,7 @@ export class BSCardGrid extends React.Component {
             {this.props.button}
           </div>
 
-          <div className="card-body">
+          <div className={`card-body ${this.props.extraBodyClass}`}>
             {this.form()}
             <div className="row">{this.props.body}</div>
           </div>

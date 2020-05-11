@@ -3,15 +3,22 @@ import { connect } from "react-redux";
 import Im from "traec/immutable";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import Octicon from "react-octicon";
+import { DocumentDescription } from "traec-react/explorer/documentRow/documentDescription";
 
 class DocumentRow extends React.Component {
   constructor(props) {
     super(props);
     this.editDoc = this.editDoc.bind(this);
     this.clickedName = this.clickedName.bind(this);
+    this.state = { showDescription: false };
+
+    this.showDescription = this.showDescription.bind(this);
   }
 
   dropDownLinks() {
+    if (!this.props.template) {
+      return [{ name: "Show Description", onClick: this.showDescription }];
+    }
     return [{ name: "Rename", onClick: this.editDoc }];
   }
 
@@ -26,8 +33,12 @@ class DocumentRow extends React.Component {
 
   editDoc(e) {
     e.preventDefault();
-    console.log(e);
     this.props.dispatch(toggleForm(this.treeDocFormStateParams()));
+  }
+
+  showDescription(e) {
+    e.preventDefault();
+    this.setState({ showDescription: !this.state.showDescription });
   }
 
   clickedName(e) {
@@ -84,6 +95,14 @@ class DocumentRow extends React.Component {
     return document.get("name");
   }
 
+  renderDropdown() {
+    return (
+      <div className="col-sm-2">
+        <BSBtnDropdown links={this.dropDownLinks()} header={<Octicon name="gear" />} />
+      </div>
+    );
+  }
+
   render() {
     const document = this.props.document;
     if (!document) {
@@ -106,11 +125,10 @@ class DocumentRow extends React.Component {
             <p className="m-0 p-0" onClick={this.clickedName}>
               <Octicon name="file" />
               {this.get_document_name(document)}
+              <DocumentDescription document={document} show={this.state.showDescription} />
             </p>
           </div>
-          <div className="col-sm-2">
-            <BSBtnDropdown links={this.dropDownLinks()} header={<Octicon name="gear" />} />
-          </div>
+          {this.renderDropdown()}
         </div>
       </div>
     );

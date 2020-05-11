@@ -50,7 +50,11 @@ export class LoginForm extends React.Component {
     const attr = "detail";
     const errors = this.props.errors;
     if (errors && errors.has(attr)) {
-      return <div className="alert alert-danger p-2">{errors.get(attr)}</div>;
+      let errorMessage = errors.get(attr);
+      if (errorMessage.startsWith("No active account")) {
+        errorMessage = "Unable to log in with provided credentials.";
+      }
+      return <div className="alert alert-danger p-2">{errorMessage}</div>;
     }
     return "";
   }

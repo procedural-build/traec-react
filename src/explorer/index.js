@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
-import CategoryRow from "./category";
+import CategoryRow from "traec-react/explorer/categoryRow";
 
 class TrackerTree extends React.PureComponent {
   constructor(props) {
@@ -58,7 +58,8 @@ class TrackerTree extends React.PureComponent {
       renderRootTree = true,
       showTreesWithoutDescriptions = true,
       formFields = null,
-      forceExpandAll = false
+      forceExpandAll = false,
+      history
     } = this.props;
 
     if (!tracker) {
@@ -82,6 +83,7 @@ class TrackerTree extends React.PureComponent {
           forceExpandAll={forceExpandAll}
           addWithDescriptions={false}
           formFields={formFields}
+          history={history}
         />
       </React.Fragment>
     );

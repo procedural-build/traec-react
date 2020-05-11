@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
-import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
+import { BSBtn, BSCard } from "traec-react/utils/bootstrap";
 import BaseFormConnected from "traec-react/utils/form";
 import CompanyItem from "./companyItem";
 import { isSuperuser } from "traec-react/utils";

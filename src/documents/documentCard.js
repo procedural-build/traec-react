@@ -4,7 +4,6 @@ import Traec from "traec";
 import { DocumentCardView } from "./documentCardView";
 import Dropzone from "react-dropzone";
 import Moment from "moment";
-import category from "traec-react/explorer/category";
 import { confirmDelete } from "traec-react/utils/sweetalert";
 
 class DocumentCard extends Component {
@@ -15,8 +14,8 @@ class DocumentCard extends Component {
       action: "Nothing Received",
       selectedFiles: []
     };
-    let { trackerId, commitId } = props;
-    this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read", { trackerId, commitId })];
+
+    this.requiredFetches = [new Traec.Fetch("tracker_commit_edge", "read")];
 
     this.deleteDocument = this.deleteDocument.bind(this);
     this.copyDocument = this.copyDocument.bind(this);

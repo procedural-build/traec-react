@@ -7,9 +7,7 @@ import { reconstructCommitBranches } from "../utils/utils";
 // import "../styles.css";
 import ThemeCard from "./themeCard";
 import { Spinner } from "traec-react/utils/entities";
-import { TaskSortBar } from "../utils/sort";
-import Im from "traec/immutable";
-import { sortComponentList } from "../utils/sort";
+import { sortComponentList, TaskSortBar } from "../utils/sort";
 import { BSBtn } from "traec-react/utils/bootstrap/btn";
 
 export class TaskTreeList extends React.Component {
