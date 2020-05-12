@@ -26,7 +26,7 @@ export const DocumentFilter = props => {
         <Select
           options={disciplineOptions}
           labelField={"label"}
-          valueField={"label"}
+          valueField={"value"}
           multi={true}
           clearable={true}
           placeholder="Filter by Discipline"

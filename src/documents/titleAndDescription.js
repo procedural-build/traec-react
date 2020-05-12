@@ -1,7 +1,6 @@
 import React from "react";
 import Traec from "traec";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
-import { toggleShowDescription } from "../tasks/utils/cardUtils";
 import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
 import { Link } from "react-router-dom";
@@ -88,6 +87,7 @@ export class TitleAndDescription extends React.Component {
           <span style={{ fontSize: "0.875rem" }}>{this.renderEditDropdown()}</span>
         </TitleTag>
         <Assignee
+          show={!!documentId}
           assignee={assignee}
           disciplines={disciplines}
           documentId={documentId}

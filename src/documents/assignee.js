@@ -3,6 +3,10 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import Traec from "traec";
 
 export const Assignee = props => {
+  if (!props.show) {
+    return null;
+  }
+
   let links = [{ name: null }];
   if (props.disciplines) {
     links = props.disciplines
@@ -11,12 +15,19 @@ export const Assignee = props => {
         return {
           name: discipline.get("name"),
           onClick: e =>
-            updateDiscipline(e, discipline.get("uid"), props.trackerId, props.refId, props.commitId, props.documentId)
+            updateDiscipline(
+              e,
+              discipline.get("base_uid"),
+              props.trackerId,
+              props.refId,
+              props.commitId,
+              props.documentId
+            )
         };
       })
       .toJS();
   }
-  let name = props.assignee ? props.assignee.get("name") : null;
+  let name = props.assignee ? props.assignee.get("name") : "Unassigned";
   if (!name) {
     return null;
   }
@@ -32,7 +43,7 @@ const updateDiscipline = (e, disciplineId, trackerId, refId, commitId, documentI
   e.preventDefault();
   let fetch = new Traec.Fetch("tracker_ref_document", "put", { trackerId, refId, commitId, documentId });
   fetch.updateFetchParams({
-    body: { discipline_id: disciplineId },
+    body: { discipline_id: disciplineId, commit_id: commitId },
     headers: { "content-type": "application/json" },
     rawBody: false
   });
