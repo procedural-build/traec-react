@@ -134,15 +134,13 @@ class UserDocuments extends React.Component {
       let statusId = document.get("status");
       let status = docStatuses ? docStatuses.get(statusId) : undefined;
       let refId = document.get("refId");
+      let disciplineName = "Unassigned";
       if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
-        let disciplineName = status
-          ? disciplines
-              .filter(d => d.get("base_uid") === status.get("discipline_id"))
-              .first()
-              .get("name")
-          : "Unassigned";
+        if (status) {
+          let discipline = disciplines.filter(d => d.get("base_uid") === status.get("discipline_id")).first();
+          disciplineName = discipline ? discipline.get("name") : "Unassigned";
+        }
 
-        disciplineName = disciplineName ? disciplineName : "Unassigned";
         let documentComponent = (
           <this.props.documentComponent
             docId={document.get("uid")}
