@@ -19,7 +19,12 @@ export const SubTrees = props => {
   }
 
   return subTrees
-    .sortBy(subTree => subTree.getInPath("descriptions.0.title"))
+    .sortBy(subTree =>
+      subTree
+        .get("descriptions")
+        .first()
+        .get("title")
+    )
     .map((subTree, i) => (
       <TreeRow
         key={i}
