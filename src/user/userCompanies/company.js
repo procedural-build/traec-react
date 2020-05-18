@@ -54,26 +54,27 @@ class UserCompanies extends React.Component {
 
   render() {
     let { items, dispatch, user } = this.props;
-    if (!items) {
-      return null;
-    }
 
-    let itemList = items
-      .toList()
-      .sortBy((obj, i) => obj.get("created"))
-      .filter(obj => obj.get("parentid") == null)
-      .filter(obj => obj.get("name"))
-      .map((item, i) => (
-        <CompanyItem
-          key={i}
-          index={i}
-          indentLevel={0}
-          company={item}
-          allCompanies={items}
-          dispatch={dispatch}
-          user={user}
-        />
-      ));
+    let itemList = items ? (
+      items
+        .toList()
+        .sortBy((obj, i) => obj.get("created"))
+        .filter(obj => obj.get("parentid") == null)
+        .filter(obj => obj.get("name"))
+        .map((item, i) => (
+          <CompanyItem
+            key={i}
+            index={i}
+            indentLevel={0}
+            company={item}
+            allCompanies={items}
+            dispatch={dispatch}
+            user={user}
+          />
+        ))
+    ) : (
+      <div>No companies found</div>
+    );
 
     counter.row = 0;
     return (

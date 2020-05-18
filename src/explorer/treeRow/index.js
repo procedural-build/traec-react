@@ -394,15 +394,11 @@ class TreeRow extends React.PureComponent {
     let columnSize = template ? "10" : "11";
     if (treeIds.size || commitBranches) {
       return (
-        <div className={`col-sm-${columnSize} mt-0 pt-0`}>
-          <p
-            className={`m-0 p-0 mr-2 pr-2`}
-            style={{ display: "inline-block", verticalAlign: "middle" }}
-            onClick={this.clickedName}
-          >
+        <div className={`col-sm-${columnSize} mt-0 pt-0`} onClick={this.clickedName}>
+          <p className={`m-0 p-0 mr-2 pr-2`} style={{ display: "inline-block", verticalAlign: "middle" }}>
             <b>
               <Octicon
-                name={this.state.isCollapsed ? "triangle-right" : "triangle-down"}
+                name={this.state.isCollapsed ? "chevron-right" : "chevron-down"}
                 onClick={e => {
                   localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
                   this.setState({ isCollapsed: !this.state.isCollapsed });
@@ -416,12 +412,8 @@ class TreeRow extends React.PureComponent {
       );
     }
     return (
-      <div className={`col-sm-${columnSize} mt-0 pt-0`}>
-        <p
-          className={`m-0 p-0 mr-2 pr-2`}
-          style={{ display: "inline-block", verticalAlign: "middle" }}
-          onClick={this.clickedName}
-        >
+      <div className={`col-sm-${columnSize} mt-0 pt-0`} onClick={this.clickedName}>
+        <p className={`m-0 p-0 mr-2 pr-2`} style={{ display: "inline-block", verticalAlign: "middle" }}>
           {name}
         </p>
         {this.renderTreeDescription()}

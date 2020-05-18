@@ -95,6 +95,7 @@ export class TitleAndDescription extends React.Component {
           trackerId={trackerId}
           commitId={commitId}
         />
+        {this.props.scoreComponent}
         <Link to={description.getInPath("tree.url") ? description.getInPath("tree.url") : "#"}>
           <i style={{ fontSize: "1rem", color: "#555" }}>{showTreeTitle ? description.getInPath("tree.title") : ""}</i>
         </Link>
