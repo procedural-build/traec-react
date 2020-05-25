@@ -462,7 +462,7 @@ class TreeRow extends React.PureComponent {
           treeId={treeId}
           fromCommitId={fromCommitId}
           templateTracker={templateTracker}
-          delteTree={this.deleteTree}
+          deleteTree={this.deleteTree}
         />
       </div>
     );
