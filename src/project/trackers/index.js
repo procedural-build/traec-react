@@ -7,6 +7,7 @@ import { TrackerItem } from "./trackerItem";
 import { BSBtn, BSCard } from "traec-react/utils/bootstrap";
 import Swal from "sweetalert2";
 import Im from "traec/immutable";
+import { projectPermissionRender } from "traec/utils/permissions/project";
 
 export const counter = { row: 0 };
 
@@ -78,12 +79,18 @@ class TraecUserTrackers extends React.Component {
   }
 
   render() {
+    let { projectId } = this.props;
     return (
       <div className="row">
         <BSCard
           widthOffset="col-sm-12"
           title={this.title()}
-          button={<BSBtn onClick={this.onClick} text={this.addButtonText()} />}
+          button={projectPermissionRender(
+            projectId,
+            true,
+            [],
+            <BSBtn onClick={this.onClick} text={this.addButtonText()} />
+          )}
           body={this.render_tracker_list()}
           form={
             <BaseFormConnected params={this.state.formParams} fields={trackerFields(this.props.trackerTemplates)} />
