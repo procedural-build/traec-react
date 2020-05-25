@@ -4,7 +4,7 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
 import { Link } from "react-router-dom";
-import { Assignee } from "traec-react/documents/assignee";
+import Assignee from "traec-react/documents/assignee";
 
 export class TitleAndDescription extends React.Component {
   constructor(props) {
@@ -75,7 +75,7 @@ export class TitleAndDescription extends React.Component {
   }
 
   renderContent() {
-    let { description, showAssingee, showTreeTitle, assignee, disciplines, documentId, cref } = this.props;
+    let { description, showTreeTitle, assignee, disciplines, documentId, cref } = this.props;
     const TitleTag = this.props.TitleTag || "h2";
     const trackerId = cref ? cref.get("tracker") : null;
     const commitId = cref ? cref.getInPath("latest_commit.uid") : null;
