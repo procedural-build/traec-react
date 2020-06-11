@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import Traec from "traec";
+import { projectPermissionCheck } from "traec/utils/permissions/project";
+import { connect } from "react-redux";
 
 export const Assignee = props => {
   if (!props.show) {
     return null;
   }
+
+  useEffect(() => {
+    Traec.fetchRequired.bind({
+      props,
+      requiredFetches: [new Traec.Fetch("project_permission", "list")]
+    })();
+  });
 
   let links = [{ name: null }];
   if (props.disciplines) {
@@ -32,11 +41,21 @@ export const Assignee = props => {
     return null;
   }
 
-  return (
-    <div className="mb-3 pb-3">
-      <BSBtnDropdown floatStyle={"float-left"} header={<i>{name}</i>} links={links} />
-    </div>
-  );
+  if (props.hasPermission) {
+    return (
+      <div className="mb-3 pb-3">
+        <BSBtnDropdown floatStyle={"float-left"} header={<i>{name}</i>} links={links} />
+      </div>
+    );
+  } else {
+    return (
+      <div className="mb-3 pb-3">
+        <div className="float-left">
+          <i>{name}</i>
+        </div>
+      </div>
+    );
+  }
 };
 
 const updateDiscipline = (e, disciplineId, trackerId, refId, commitId, documentId) => {
@@ -49,3 +68,16 @@ const updateDiscipline = (e, disciplineId, trackerId, refId, commitId, documentI
   });
   fetch.dispatch();
 };
+
+const mapStateToProps = (state, ownProps) => {
+  let { trackerId } = ownProps;
+  let tracker = state.getInPath(`entities.trackers.byId.${trackerId}`);
+  let projectId = tracker ? tracker.getInPath("project.uid") : null;
+  let hasPermission = projectPermissionCheck(projectId, true, [], false);
+  return {
+    projectId,
+    hasPermission
+  };
+};
+
+export default connect(mapStateToProps)(Assignee);
