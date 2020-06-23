@@ -248,6 +248,7 @@ export class BSForm extends React.Component {
     const label = details.label || camelCaseToSentence(item.name);
     const labelBlock = details.label === "" ? "" : <label>{label}</label>;
     const setNewValue = details.setNewValue || (d => d.value);
+    const initValue = details.value || null;
     return (
       <React.Fragment key={keyIndex}>
         <div className={`form-group ${extraClass}`}>
@@ -269,6 +270,7 @@ export class BSForm extends React.Component {
               });
             }}
             options={details.options}
+            defaultValue={((details.options || []).filter(i => i.value == initValue) || [])[0]}
           />
         </div>
         {rowBreakDiv}
