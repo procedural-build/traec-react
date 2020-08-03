@@ -22,7 +22,7 @@ export default function(state = initialState, action) {
       return state.merge(Im.fromJS(action.payload));
     case types.LOGIN_FAILURE:
       //console.log("LOGIN FAILURE", action.payload)
-      localStorage.removeItem("token");
+      localStorage.setItem("token", "failed");
       return state.merge(
         Im.fromJS(action.payload),
         Im.fromJS({
@@ -32,6 +32,14 @@ export default function(state = initialState, action) {
           status: "failed"
         })
       );
+    case types.LOGOUT_SUCCESS:
+      console.log("LOGOUT SUCCESSFUL");
+      localStorage.setItem("token", "undefined");
+      return Im.fromJS({});
+    case types.LOGOUT_FAILURE:
+      console.log("LOGOUT FAILURE");
+      alert("Error logging out");
+      return state;
     case types.REGISTER_SUCCESS:
       return state.mergeIn(
         ["registration"],
