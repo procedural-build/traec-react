@@ -18,9 +18,9 @@ class LoginRedirect extends React.Component {
     const nextUrl = this.props.location.pathname;
     //console.log("LOGIN REDIRECT: ", isAuthenticated, authStatus, nextUrl)
     if (!isAuthenticated) {
-      if (!authStatus || authStatus == "pending") {
+      if (authStatus == "pending") {
         return this.render_spinner();
-      } else if (authStatus == "failed") {
+      } else if (!authStatus || authStatus == "failed") {
         // Redirect the user to login if they are not Authenticated
         if (
           !(
