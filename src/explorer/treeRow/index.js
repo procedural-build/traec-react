@@ -15,6 +15,88 @@ import { SubDocuments } from "traec-react/explorer/documentRow/subDocuments";
 import { SubCategories } from "traec-react/explorer/categoryRow/subCategories";
 import { TemplateItem } from "traec-react/explorer/treeRow/templateItem";
 
+/*
+Functional components
+*/
+
+function SubCategoryList({
+  commitId,
+  commitBranches,
+  tracker,
+  showTreesWithoutDescriptions = true,
+  formFields = null,
+  forceExpandAll = false
+}) {
+  if (!commitBranches) {
+    return null;
+  }
+  return commitBranches
+    .toList()
+    .map((commitBranch, i) => (
+      <CategoryRow
+        key={i}
+        parentCommitId={commitId}
+        tracker={tracker}
+        renderRootTree={false}
+        commitId={commitBranch.get("commit")}
+        branchId={null}
+        refId={commitBranch.getInPath("target.ref")}
+        showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+        formFields={formFields}
+        forceExpandAll={forceExpandAll}
+      />
+    ));
+}
+
+function SubTreeList({
+  subTrees,
+  commitId,
+  cref,
+  showTreesWithoutDescriptions = true,
+  formFields = null,
+  forceExpandAll = false
+}) {
+  if (!subTrees) {
+    return null;
+  }
+
+  return (
+    subTrees
+      //.filter(i => (i.get('descriptions').first())) // Filter out trees without descriptions
+      .sortBy(subTree => {
+        // Sort based on the description title (if exists) else tree name
+        let description = subTree.get("descriptions").first();
+        return description ? description.get("title") : subTree.get("name");
+      })
+      .map((subTree, i) => (
+        <TreeRowConnected
+          key={i}
+          headCommitId={commitId}
+          cref={cref}
+          treeId={subTree.get("uid")}
+          showTreesWithoutDescriptions={showTreesWithoutDescriptions}
+          formFields={formFields}
+          forceExpandAll={forceExpandAll}
+        />
+      ))
+  );
+}
+
+function SubDocumentList({ treeId, commitId, cref, documentIds, formFields = null }) {
+  if (!subDocuments) {
+    return null;
+  }
+  return documentIds
+    .sortBy(docId => docId)
+    .map((item, i) => (
+      <DocumentRow key={i} headCommitId={commitId} cref={cref} treeId={treeId} docId={item} formFields={formFields} />
+    ));
+}
+
+/*
+TreeRow Connected to Redux
+*/
+
 class TreeRow extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -408,15 +490,21 @@ class TreeRow extends React.PureComponent {
             </b>
           </p>
           {this.renderTreeDescription()}
+          {this.props.extraContent}
         </div>
       );
     }
     return (
-      <div className={`col-sm-${columnSize} mt-0 pt-0`} onClick={this.clickedName}>
-        <p className={`m-0 p-0 mr-2 pr-2`} style={{ display: "inline-block", verticalAlign: "middle" }}>
+      <div className={`col-sm-${columnSize} mt-0 pt-0`}>
+        <p
+          className={`m-0 p-0 mr-2 pr-2`}
+          style={{ display: "inline-block", verticalAlign: "middle" }}
+          onClick={this.clickedName}
+        >
           {name}
         </p>
         {this.renderTreeDescription()}
+        {this.props.extraContent}
       </div>
     );
   }
