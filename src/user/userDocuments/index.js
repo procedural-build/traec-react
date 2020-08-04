@@ -42,11 +42,11 @@ class UserDocuments extends React.Component {
 
   getStatuses() {
     let statuses = [
-      { label: "Nothing Received" },
-      { label: "Pending Review" },
-      { label: "Requires Revision" },
-      { label: "OK for Submission" },
-      { label: "Not for Submission" }
+      { label: "Nothing Received", value: "Nothing Received" },
+      { label: "Pending Review", value: "Pending Review" },
+      { label: "Requires Revision", value: "Requires Revision" },
+      { label: "OK for Submission", value: "OK for Submission" },
+      { label: "Not for Submission", value: "Not for Submission" }
     ];
     return statuses;
   }
@@ -61,7 +61,7 @@ class UserDocuments extends React.Component {
 
   setFilter(values, key) {
     let newState = {};
-    newState[key] = values.map(v => v.label);
+    newState[key] = values.map(v => v.value);
     this.setState(newState);
   }
 
@@ -83,7 +83,6 @@ class UserDocuments extends React.Component {
     }
 
     let orderedDocumentComponents = this.getOrderedDocumentComponents();
-
     return (
       <div className="mt-4">
         {Object.keys(orderedDocumentComponents).map((disciplineName, disciplineIndex) => {
@@ -135,12 +134,13 @@ class UserDocuments extends React.Component {
       let statusId = document.get("status");
       let status = docStatuses ? docStatuses.get(statusId) : undefined;
       let refId = document.get("refId");
+      let disciplineName = "Unassigned";
       if (this.checkStatusFilter(status) && this.checkDueDateFilter(status ? status.get("due_date") : "")) {
-        let disciplineName = status
-          ? disciplines.filter(d => d.get("uid") === status.get("discipline_id")).get("name")
-          : "Unassigned";
+        if (status) {
+          let discipline = disciplines.filter(d => d.get("base_uid") === status.get("discipline_id")).first();
+          disciplineName = discipline ? discipline.get("name") : "Unassigned";
+        }
 
-        disciplineName = disciplineName ? disciplineName : "Unassigned";
         let documentComponent = (
           <this.props.documentComponent
             docId={document.get("uid")}
@@ -158,6 +158,7 @@ class UserDocuments extends React.Component {
 
   checkStatusFilter(status) {
     let { statusFilter } = this.state;
+
     if (statusFilter.length === 0 || (!status && statusFilter.includes("Nothing Received"))) {
       return true;
     } else if (status && statusFilter.includes(status.getInPath("status.name"))) {

@@ -1,10 +1,10 @@
 import React from "react";
 import { camelCaseToSentence } from "traec/utils/index";
-//import TinyMCE from "@tinymce/tinymce-react";
 import TinyMCE from "react-tinymce";
 import DatePicker from "react-date-picker";
 import Crypto from "crypto";
 import Moment from "moment";
+import CreatableSelect, { makeCreatableSelect } from "react-select/creatable";
 
 export class BSForm extends React.Component {
   constructor(props) {
@@ -240,6 +240,43 @@ export class BSForm extends React.Component {
     );
   }
 
+  renderCreateableSelect(item, keyIndex) {
+    const details = item.details;
+    const extraClass = details.class || "col";
+    const rowBreakDiv = details.endRow ? <div className="w-100" /> : "";
+    const label = details.label || camelCaseToSentence(item.name);
+    const labelBlock = details.label === "" ? "" : <label>{label}</label>;
+    const setNewValue = details.setNewValue || (d => d.value);
+    const initValue = details.value || null;
+    return (
+      <React.Fragment key={keyIndex}>
+        <div className={`form-group ${extraClass}`}>
+          {labelBlock}
+          <CreatableSelect
+            isClearable
+            placeholder="Start typing to select or create..."
+            onChange={data => {
+              let value = data ? data.value : null;
+              if (data && data.__isNew__) {
+                value = setNewValue(data);
+              }
+              console.log("Handling change to value", value, data);
+              this.handleChange({
+                target: {
+                  name: item.name,
+                  value: value
+                }
+              });
+            }}
+            options={details.options}
+            defaultValue={((details.options || []).filter(i => i.value == initValue) || [])[0]}
+          />
+        </div>
+        {rowBreakDiv}
+      </React.Fragment>
+    );
+  }
+
   renderFormItem(item, keyIndex) {
     let inputType = item.details.inputType || "text";
     switch (inputType) {
@@ -257,6 +294,8 @@ export class BSForm extends React.Component {
         return this.renderHiddenInput(item, keyIndex);
       case "checkbox":
         return this.renderCheckboxType(item, keyIndex);
+      case "createableSelect":
+        return this.renderCreateableSelect(item, keyIndex);
       default:
         return this.renderTextInput(item, keyIndex);
     }

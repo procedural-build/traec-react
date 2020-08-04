@@ -11,7 +11,7 @@ export const titleDescriptionFields = {
   description: {
     value: "",
     inputType: "tinymce",
-    rows: "3",
+    rows: "5",
     class: "col mb-1 mt-1",
     label: "",
     placeholder: "Body",
@@ -19,10 +19,10 @@ export const titleDescriptionFields = {
       menubar: false,
       statusbar: false,
       content_css: "/static/bootstrap/css/bootstrap.css",
-      plugins: "autolink link image lists print preview",
-      block_formats: "Paragraph=p;Header 3=h3;Header 4=h4;Header 5=h5;",
+      plugins: "autolink link image lists print preview table",
+      block_formats: "Paragraph=p;Header 1=h3;Header 2=h4;Header 3=h5;",
       toolbar:
-        "bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | sup sub | formatselect | removeformat"
+        "bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | sup sub | table | formatselect | removeformat"
     },
     endRow: true
   }

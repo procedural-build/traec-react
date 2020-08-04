@@ -1,11 +1,10 @@
 import React from "react";
 import Traec from "traec";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
-import { toggleShowDescription } from "../tasks/utils/cardUtils";
 import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
 import { Link } from "react-router-dom";
-import { Assignee } from "traec-react/documents/assignee";
+import Assignee from "traec-react/documents/assignee";
 
 export class TitleAndDescription extends React.Component {
   constructor(props) {
@@ -76,7 +75,7 @@ export class TitleAndDescription extends React.Component {
   }
 
   renderContent() {
-    let { description, showAssignee, showTreeTitle, assignee, disciplines, documentId, cref } = this.props;
+    let { description, showTreeTitle, assignee, disciplines, documentId, cref } = this.props;
     const TitleTag = this.props.TitleTag || "h2";
     const trackerId = cref ? cref.get("tracker") : null;
     const commitId = cref ? cref.getInPath("latest_commit.uid") : null;
@@ -88,6 +87,7 @@ export class TitleAndDescription extends React.Component {
           <span style={{ fontSize: "0.875rem" }}>{this.renderEditDropdown()}</span>
         </TitleTag>
         <Assignee
+          show={!!documentId}
           assignee={assignee}
           disciplines={disciplines}
           documentId={documentId}
@@ -95,6 +95,7 @@ export class TitleAndDescription extends React.Component {
           trackerId={trackerId}
           commitId={commitId}
         />
+        {this.props.scoreComponent}
         <Link to={description.getInPath("tree.url") ? description.getInPath("tree.url") : "#"}>
           <i style={{ fontSize: "1rem", color: "#555" }}>{showTreeTitle ? description.getInPath("tree.title") : ""}</i>
         </Link>
