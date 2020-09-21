@@ -1,21 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Traec from "traec";
 
 import { EMAIL_TYPE_HEADERS, EMAIL_TYPES } from "traec-react/emails/reportProject";
+import { Spinner } from "../utils/entities";
 
 const EMAIL_DEFAULT_FREQS = {
-  project_invite: 7,
-  project_ref_near_due: -1,
-  project_ref_overdue: 1,
-  project_commit_committed: -1,
-  project_commit_rejected: -1,
-  project_commit_approved: -1
+  project_invite: { value: 7, type: "number" },
+  project_ref_near_due: { value: -1, type: "number" },
+  project_ref_overdue: { value: 1, type: "number" },
+  project_ref_submitted: { value: -1, type: "number" },
+  project_ref_rejected: { value: -1, type: "number" },
+  project_ref_approved: { value: -1, type: "checkbox" }
 };
 
-function EmailSettingsTableHeaders() {
-  let cols = ["Block All"].concat(EMAIL_TYPE_HEADERS.concat(["Save"])).map((header, i) => (
+const EmailSettingsTableHeaders = props => {
+  let cols = ["Block All"].concat(EMAIL_TYPE_HEADERS).map((header, i) => (
     <div key={i} className="col-sm-1 text-center">
       <b>{header}</b>
     </div>
@@ -29,9 +30,9 @@ function EmailSettingsTableHeaders() {
       {cols}
     </div>
   );
-}
+};
 
-class ProjectEmailSettingRow extends React.Component {
+class ProjectEmailSettingRowOld extends React.Component {
   constructor(props) {
     super(props);
 
@@ -155,68 +156,45 @@ class ProjectEmailSettingRow extends React.Component {
   }
 }
 
-class TraecProjectEmailSettings extends React.Component {
-  constructor(props) {
-    super(props);
+const TraecProjectEmailSettings = props => {
+  useEffect(() => {
+    Traec.fetchRequired.bind({
+      props,
+      requiredFetches: [new Traec.Fetch("project_email_recipient", "list")]
+    })();
+  });
 
-    this.state = {};
+  let { recipients, projectId } = props;
 
-    this.requiredFetches = [new Traec.Fetch("project_email_recipient", "list")];
-
-    // action bindings
+  if (!recipients) {
+    return <Spinner />;
   }
 
-  componentDidMount() {
-    Traec.fetchRequired.bind(this)();
-  }
+  let rows = recipients
+    .toList()
+    .map((recipient, i) => <ProjectEmailSettingRow key={i} recipient={recipient} projectId={projectId} />);
 
-  componentDidUpdate() {
-    Traec.fetchRequired.bind(this)();
-  }
-
-  render() {
-    let { recipients, projectId } = this.props;
-    console.log("EMAILS");
-    if (!recipients) {
-      return null;
-    }
-
-    let rows = null;
-
-    // If we have nothing then set a message
-    if (recipients.toList().size == 0) {
-      rows = (
-        <p>
-          <b>No notifications sent for this project yet</b>
-        </p>
-      );
-    }
-
-    rows = recipients
-      .toList()
-      .map((recipient, i) => <ProjectEmailSettingRow key={i} recipient={recipient} projectId={projectId} />);
-    console.log("EMAILS");
-    return (
-      <React.Fragment>
-        <h2>Email Settings</h2>
-
-        <br />
-        <p>
-          Adjust the numbers below to set the frequency that recipients recieve various email types. 1=daily, 7=weekly,
-          etc.
-        </p>
-        <p>
-          Type "once", "na" or "-1" to set a recipient to recieve the email only once. Selecting "Block All" will
-          prevent this user from receving any email notifications on this project.
-        </p>
-        <br />
-
-        <EmailSettingsTableHeaders />
-        {rows}
-      </React.Fragment>
+  if (rows.size === 0) {
+    rows = (
+      <p>
+        <b>No notifications sent for this project yet</b>
+      </p>
     );
   }
-}
+
+  return (
+    <div>
+      <h3>Email Settings</h3>
+      <div>
+        Adjust the numbers below to set the frequency that recipients receive various email types. 1=daily, 7=weekly,
+        etc.
+      </div>
+      <br />
+      <EmailSettingsTableHeaders />
+      {rows}
+    </div>
+  );
+};
 
 const mapStateToProps = (state, ownProps) => {
   let { projectId } = Traec.utils.getFullIds(state, ownProps.match.params);
@@ -229,3 +207,57 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default connect(mapStateToProps)(TraecProjectEmailSettings);
+
+const ProjectEmailSettingRow = props => {
+  const [state, setState] = React.useState({
+    blockAll: false
+  });
+
+  const handleChange = (e, name) => {
+    setState({ ...state, [name]: e.target.value });
+  };
+
+  let { recipient, projectId } = props;
+
+  let inputs = EMAIL_TYPES.map((emailType, i) => {
+    let frequency = recipient.getInPath(`settings.${emailType}`) || EMAIL_DEFAULT_FREQS[emailType].value;
+    let frequencyType = EMAIL_DEFAULT_FREQS[emailType].type;
+    return (
+      <div className="col-sm-1">
+        <input
+          className="form-control text-center align-middle"
+          type={frequencyType}
+          name={emailType}
+          value={frequency}
+          onChange={e => handleChange(e, emailType)}
+        />
+      </div>
+    );
+  });
+
+  inputs.unshift(
+    <div className="col-sm-1">
+      <input
+        className="form-check-input align-middle"
+        type="checkbox"
+        name="blockAll"
+        checked={state.blockAll}
+        onChange={e => handleChange(e, "blockAll")}
+      />
+    </div>
+  );
+
+  return (
+    <div>
+      <div className="row">
+        <div className="col-sm-4">
+          <Link to={`/project/${projectId}/email/report/${recipient.get("uid")}`}>
+            {recipient.get("email").toLowerCase()}
+          </Link>
+        </div>
+        {inputs}
+      </div>
+      <hr className="m-1 p-0" />
+    </div>
+  );
+};
