@@ -7,8 +7,8 @@ export const EmailBarChart = props => {
     return null;
   }
   let emails = [];
-  let { company } = props;
-  if (company) {
+  let { emailType } = props;
+  if (emailType === "company") {
     emails = formatCompanyEmails(props.emails);
   } else {
     emails = formatProjectEmails(props.emails);
@@ -35,12 +35,12 @@ export const EmailBarChart = props => {
             <YAxis />
             <Tooltip />
             <Legend />
-            {<Bar dataKey={`${company ? "Company" : "Project"} Invite`} fill="#D9A691" />}
-            {company ? null : <Bar dataKey="Report Approved" fill="#D9CF9C" />}
-            {company ? null : <Bar dataKey="Report Near Due" fill="#D971CB" />}
-            {company ? null : <Bar dataKey="Report Over Due" fill="#71D9CA" />}
-            {company ? null : <Bar dataKey="Report Submitted" fill="#2081C5" />}
-            {company ? null : <Bar dataKey="Report Rejected" fill="#DB4D52" />}
+            {<Bar dataKey={`${emailType === "company" ? "Company" : "Project"} Invite`} fill="#D9A691" />}
+            {emailType === "company" ? null : <Bar dataKey="Report Approved" fill="#D9CF9C" />}
+            {emailType === "company" ? null : <Bar dataKey="Report Near Due" fill="#D971CB" />}
+            {emailType === "company" ? null : <Bar dataKey="Report Over Due" fill="#71D9CA" />}
+            {emailType === "company" ? null : <Bar dataKey="Report Submitted" fill="#2081C5" />}
+            {emailType === "company" ? null : <Bar dataKey="Report Rejected" fill="#DB4D52" />}
           </BarChart>
         </ResponsiveContainer>
       </div>
