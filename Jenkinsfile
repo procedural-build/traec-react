@@ -15,7 +15,7 @@ pipeline {
   stages {
     stage('NPM Install') {
       steps {
-        sh 'npm install'
+        sh 'npm ci && npm install -g documentation'
       }
     }
     stage('Test') {
