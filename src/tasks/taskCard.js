@@ -6,7 +6,7 @@ import Crypto from "crypto";
 import { targetFields } from "AppSrc/tracker/form";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import BranchSelect from "./utils/branchSelect";
-import "../styles.css";
+//import "../styles.css";
 import {
   dropDownLinks,
   dispatchAsSelected,

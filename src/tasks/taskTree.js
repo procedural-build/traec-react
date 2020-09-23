@@ -4,7 +4,7 @@ import Traec from "traec";
 import * as eventHandlers from "traec/eventHandlers";
 import TaskCard from "./taskCard";
 import { reconstructCommitBranches } from "./utils/utils";
-import "../styles.css";
+//import "../styles.css";
 import ThemeCard from "./themeCard";
 import { Spinner } from "traec-react/utils/entities";
 import { TaskSortBar } from "../sort/sortTasks";
