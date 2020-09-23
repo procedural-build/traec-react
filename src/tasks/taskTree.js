@@ -7,7 +7,7 @@ import { reconstructCommitBranches } from "./utils/utils";
 //import "../styles.css";
 import ThemeCard from "./themeCard";
 import { Spinner } from "traec-react/utils/entities";
-import { TaskSortBar } from "../sort/sortTasks";
+//import { TaskSortBar } from "../sort/sortTasks";
 import Im from "traec/immutable";
 import { sortComponentList } from "./utils/sort";
 import { BSBtn } from "traec-react/utils/bootstrap/btn";

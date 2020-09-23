@@ -15,7 +15,7 @@ import {
   renderParameters,
   toggleShowDescription
 } from "./utils/cardUtils";
-import { checkIfChildrenAreLoaded, getChildrenAndScores, getScore } from "../../scores";
+import { checkIfChildrenAreLoaded, getChildrenAndScores, getScore } from "./score";
 import { projectPermissionFilter } from "traec/utils/permissions/project";
 import BaseFormConnected from "traec-react/utils/form";
 import { getMetricTarget } from "AppSrc/scores/targets";
@@ -24,7 +24,7 @@ import { TargetForm } from "AppSrc/tasks/tasks/targets";
 import { GearDropdown } from "AppSrc/tasks/utils/gearDropdown";
 import TaskDocumentStatusContainer from "AppSrc/tasks/taskStatus/taskDocumentStatusContainer";
 import { TaskStatusContainer } from "AppSrc/tasks/taskStatus";
-import { TaskAssignForm } from "./taskAssignForm";
+import { TaskAssignForm } from "./tasks/taskAssignForm";
 import TaskScore from "./score";
 
 import {
