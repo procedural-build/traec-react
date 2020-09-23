@@ -49,6 +49,7 @@ pipeline {
           env.S3_DOCS_PATH = "docs.procedural.build/dev/traec-react/${DOCKER_TAG}/"
         }
 
+        sh 'documentation build src/** -f html -o docs'
         sh 'echo $NPM_TOKEN && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
 
         echo "Uploading documentation files to ${S3_DOCS_PATH}"
