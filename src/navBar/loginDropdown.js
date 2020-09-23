@@ -28,7 +28,7 @@ export class DropdownLogin extends React.Component {
   userDropDownItems() {
     let { user } = this.props;
     let menu = [
-      { label: this.getUserLabel(), to: "#" },
+      { label: this.getUserLabel(), to: "/user/", octicon: "person" },
       { label: "My Profile", to: "/accounts/profile", octicon: "home" }
     ];
     // Superuser-related menus
