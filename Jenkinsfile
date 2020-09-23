@@ -2,6 +2,7 @@ pipeline {
   agent {
     docker {
       image 'node:10.14-slim'
+      args '-u 0:0'
     }
 
   }
@@ -15,19 +16,18 @@ pipeline {
   stages {
     stage('NPM Install') {
       steps {
-        sh 'npm ci && sudo npm install -g documentation'
+        sh 'npm ci && npm install -g documentation'
       }
     }
     stage('Test') {
-      post {
-        always {
-          junit 'jest-test-results.xml'
-        }
-      }
-
       steps {
         withEnv(overrides: ["JEST_JUNIT_OUTPUT=./jest-test-results.xml"]) {
           sh 'npm test -- --ci --coverage --testResultsProcessor="jest-junit"'
+        }
+      }
+      post {
+        always {
+          junit 'jest-test-results.xml'
         }
       }
     }
@@ -63,6 +63,10 @@ pipeline {
   }
 
   post {
+    always {
+      cleanWs()
+    }
+
     success {
       slackSend(message: "SUCCESS\nJob: ${env.JOB_NAME} \nBuild ${env.BUILD_DISPLAY_NAME} \n URL: ${env.RUN_DISPLAY_URL} \n Master Test Coverage Report: https://docs.procedural.build/traec-react/coverage/", color: 'good', token: "${SLACK}", baseUrl: 'https://traecker.slack.com/services/hooks/jenkins-ci/', channel: '#jenkins-ci')
 
