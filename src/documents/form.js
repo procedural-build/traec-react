@@ -1,4 +1,4 @@
-import { tinyMCEImagePicker } from "../../../../traec-react/src/utils/tinyMCEImagePicker";
+import { tinyMCEImagePicker } from "../utils/tinyMCEImagePicker";
 
 export const titleDescriptionFields = {
   title: { value: "", class: "col", endRow: true },
