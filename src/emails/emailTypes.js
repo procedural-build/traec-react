@@ -10,6 +10,12 @@ export const emailDefaultFrequencies = type => {
       project_ref_rejected: { value: 7, type: "number" },
       project_ref_approved: { value: 0, type: "checkbox" }
     };
+  } else if (type === "compute") {
+    return {
+      company_invite: { value: 7, type: "number" },
+      parent_task_completed: { value: 0, type: "checkbox" },
+      task_completed: { value: -1, type: "checkbox" }
+    };
   } else {
     return null;
   }
@@ -27,6 +33,10 @@ export const emailTypes = type => {
       "project_ref_rejected",
       "project_ref_approved"
     ];
+  } else if (type === "compute") {
+    return ["company_invite", "parent_task_completed", "task_completed"];
+  } else {
+    return [];
   }
 };
 
@@ -35,5 +45,9 @@ export const emailTypeHeaders = type => {
     return ["Invite"];
   } else if (type === "project") {
     return ["Invite", "Near Due", "Overdue", "Submitted", "Rejected", "Approved"];
+  } else if (type === "compute") {
+    return ["Invite", "Parent Task Completed", "Task Completed"];
+  } else {
+    return [];
   }
 };

@@ -12,13 +12,15 @@ const EmailReport = props => {
   let emailSettingType = getEmailSettingType(projectId, companyId);
 
   useEffect(() => {
-    Traec.fetchRequired.bind({
-      props,
-      requiredFetches: [
-        new Traec.Fetch(`${emailSettingType}_email`, "list"),
-        new Traec.Fetch(`${emailSettingType}_email_recipient`, "list")
-      ]
-    })();
+    if (emailSettingType !== "unknown") {
+      Traec.fetchRequired.bind({
+        props,
+        requiredFetches: [
+          new Traec.Fetch(`${emailSettingType}_email`, "list"),
+          new Traec.Fetch(`${emailSettingType}_email_recipient`, "list")
+        ]
+      })();
+    }
   });
 
   if (!recipients) {

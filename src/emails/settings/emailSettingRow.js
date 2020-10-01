@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
 import React from "react";
 import { emailDefaultFrequencies, emailTypes } from "../emailTypes";
 import Traec from "traec";
 import { ReportLink } from "../report/utils";
 
 export const EmailSettingRow = props => {
-  let { recipient, projectId, companyId } = props;
-  let emailSettingType = getEmailSettingType(projectId, companyId);
+  let { recipient, projectId, companyId, compute } = props;
+  let emailSettingType = getEmailSettingType(projectId, companyId, compute);
 
   const handleChange = (e, name) => {
     let recipientId = recipient.get("uid");
@@ -102,7 +101,10 @@ const SettingsInput = props => {
   );
 };
 
-export const getEmailSettingType = (projectId, companyId) => {
+export const getEmailSettingType = (projectId, companyId, compute) => {
+  if (compute) {
+    return "compute";
+  }
   if (projectId) {
     return "project";
   }
