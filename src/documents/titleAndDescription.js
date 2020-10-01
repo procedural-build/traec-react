@@ -5,6 +5,7 @@ import BaseFormConnected from "traec-react/utils/form";
 import { titleDescriptionFields } from "./form";
 import { Link } from "react-router-dom";
 import Assignee from "traec-react/documents/assignee";
+import { HTMLText } from "traec/utils/html";
 
 export class TitleAndDescription extends React.Component {
   constructor(props) {
@@ -99,7 +100,7 @@ export class TitleAndDescription extends React.Component {
         <Link to={description.getInPath("tree.url") ? description.getInPath("tree.url") : "#"}>
           <i style={{ fontSize: "1rem", color: "#555" }}>{showTreeTitle ? description.getInPath("tree.title") : ""}</i>
         </Link>
-        <div className="tinymce_html" dangerouslySetInnerHTML={{ __html: description.get("text") }} />
+        <HTMLText extraClassName={"tinymce_html"} text={description.get("text")} />
       </React.Fragment>
     );
   }
