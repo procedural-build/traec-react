@@ -8,16 +8,22 @@ import { EmailRecipient } from "./emailRecipient";
 import { Spinner } from "../../utils/entities";
 
 const EmailReport = props => {
-  let { projectId, companyId, recipients } = props;
-  let emailSettingType = getEmailSettingType(projectId, companyId);
+  let { projectId, companyId, recipients, compute, className } = props;
+  let emailSettingType = getEmailSettingType(projectId, companyId, compute);
+  let APICall = projectId ? "project" : "company";
 
   useEffect(() => {
     if (emailSettingType !== "unknown") {
       Traec.fetchRequired.bind({
         props,
         requiredFetches: [
-          new Traec.Fetch(`${emailSettingType}_email`, "list"),
-          new Traec.Fetch(`${emailSettingType}_email_recipient`, "list")
+          new Traec.Fetch(APICall, "read"),
+          (projectId && projectId.length > 8) || (companyId && companyId.length > 8)
+            ? new Traec.Fetch(`${APICall}_email`, "list")
+            : null,
+          (projectId && projectId.length > 8) || (companyId && companyId.length > 8)
+            ? new Traec.Fetch(`${APICall}_email_recipient`, "list")
+            : null
         ]
       })();
     }
@@ -31,14 +37,14 @@ const EmailReport = props => {
     .toList()
     .sortBy(recipient => recipient.get("email").toLowerCase())
     .map((recipient, i) => (
-      <EmailRecipient key={i} recipient={recipient} projectId={projectId} companyId={companyId} />
+      <EmailRecipient key={i} recipient={recipient} projectId={projectId} companyId={companyId} compute={compute} />
     ));
 
   if (!rows || !rows.size) {
     return <div>No email data found.</div>;
   }
   return (
-    <div className="container">
+    <div className={className}>
       <EmailBarChart
         emails={props.emails}
         title={"Email Recipients"}
@@ -55,6 +61,7 @@ const EmailReport = props => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  let { _projectId, _companyId } = ownProps.match.params;
   let { projectId, companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
 
   let recipients = null;
@@ -66,6 +73,14 @@ const mapStateToProps = (state, ownProps) => {
   if (companyId) {
     recipients = state.getInPath(`entities.companyObjects.byId.${companyId}.recipients`);
     emails = state.getInPath(`entities.companyObjects.byId.${companyId}.emails`);
+  }
+
+  if (_projectId && !projectId) {
+    projectId = _projectId;
+  }
+
+  if (_companyId && !companyId) {
+    companyId = _companyId;
   }
 
   // Add this to props

@@ -6,15 +6,21 @@ import { connect } from "react-redux";
 import { emailTypeHeaders } from "../emailTypes";
 
 const EmailSettings = props => {
+  let { recipients, projectId, companyId, compute, className } = props;
+
   useEffect(() => {
-    let APICall = props.projectId ? "project_email_recipient" : "company_email_recipient";
+    let APICall = projectId ? "project_email_recipient" : "company_email_recipient";
+    let APIRead = projectId ? "project" : "company";
     Traec.fetchRequired.bind({
       props,
-      requiredFetches: [new Traec.Fetch(APICall, "list")]
+      requiredFetches: [
+        new Traec.Fetch(APIRead, "read"),
+        (projectId && projectId.length > 8) || (companyId && companyId.length > 8)
+          ? new Traec.Fetch(APICall, "list")
+          : null
+      ]
     })();
   });
-
-  let { recipients, projectId, companyId } = props;
 
   if (!recipients) {
     return <Spinner />;
@@ -24,7 +30,7 @@ const EmailSettings = props => {
     .toList()
     .sortBy(recipient => recipient.get("email").toLowerCase())
     .map((recipient, i) => (
-      <EmailSettingRow key={i} recipient={recipient} projectId={projectId} companyId={companyId} />
+      <EmailSettingRow key={i} recipient={recipient} projectId={projectId} companyId={companyId} compute={compute} />
     ));
 
   if (rows.size === 0) {
@@ -36,20 +42,21 @@ const EmailSettings = props => {
   }
 
   return (
-    <div className="container">
+    <div className={className}>
       <h3>Email Settings</h3>
       <div>
         Adjust the numbers below to set the frequency that recipients receive various email types. 1=daily, 7=weekly,
         etc.
       </div>
       <br />
-      <EmailSettingsHeaders emailSettingsType={getEmailSettingType(projectId, companyId)} />
+      <EmailSettingsHeaders emailSettingsType={getEmailSettingType(projectId, companyId, compute)} />
       {rows}
     </div>
   );
 };
 
 const mapStateToProps = (state, ownProps) => {
+  let { _projectId, _companyId } = ownProps.match.params;
   let { projectId, companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
 
   let recipients = null;
@@ -57,6 +64,14 @@ const mapStateToProps = (state, ownProps) => {
     recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);
   } else {
     recipients = state.getInPath(`entities.companyObjects.byId.${companyId}.recipients`);
+  }
+
+  if (_projectId && !projectId) {
+    projectId = _projectId;
+  }
+
+  if (_companyId && !companyId) {
+    companyId = _companyId;
   }
 
   return {
