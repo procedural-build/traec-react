@@ -36,7 +36,7 @@ const EmailSettings = props => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h3>Email Settings</h3>
       <div>
         Adjust the numbers below to set the frequency that recipients receive various email types. 1=daily, 7=weekly,
@@ -51,6 +51,7 @@ const EmailSettings = props => {
 
 const mapStateToProps = (state, ownProps) => {
   let { projectId, companyId } = Traec.utils.getFullIds(state, ownProps.match.params);
+
   let recipients = null;
   if (projectId) {
     recipients = state.getInPath(`entities.projectObjects.byId.${projectId}.recipients`);

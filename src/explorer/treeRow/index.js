@@ -14,10 +14,8 @@ import { SubTrees } from "traec-react/explorer/treeRow/subTrees";
 import { SubDocuments } from "traec-react/explorer/documentRow/subDocuments";
 import { SubCategories } from "traec-react/explorer/categoryRow/subCategories";
 import { TemplateItem } from "traec-react/explorer/treeRow/templateItem";
-
-/*
-Functional components
-*/
+import { HTMLText } from "traec/utils/html";
+import { DocumentCount } from "./documentCount";
 
 function SubCategoryList({
   commitId,
@@ -467,7 +465,7 @@ class TreeRow extends React.PureComponent {
     let descriptions = tree.get("descriptions");
     if (descriptions.size) {
       let description = descriptions.first().get("text");
-      return <div className="m-3" dangerouslySetInnerHTML={{ __html: description }} />;
+      return <HTMLText text={description} extraClassName={"m-3"} />;
     }
   }
 
@@ -476,20 +474,19 @@ class TreeRow extends React.PureComponent {
     let columnSize = template ? "10" : "11";
     if (treeIds.size || commitBranches) {
       return (
-        <div className={`col-sm-${columnSize} mt-0 pt-0`} onClick={this.clickedName}>
+        <div className={`col-sm-${columnSize} mt-0 pt-0`}>
           <p className={`m-0 p-0 mr-2 pr-2`} style={{ display: "inline-block", verticalAlign: "middle" }}>
-            <b>
-              <Octicon
-                name={this.state.isCollapsed ? "chevron-right" : "chevron-down"}
-                onClick={e => {
-                  localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
-                  this.setState({ isCollapsed: !this.state.isCollapsed });
-                }}
-              />
-              {name}
-            </b>
+            <Octicon
+              name={this.state.isCollapsed ? "chevron-right" : "chevron-down"}
+              onClick={e => {
+                localStorage.setItem(`isCollapsed_tree_${this.props.treeId}`, !this.state.isCollapsed);
+                this.setState({ isCollapsed: !this.state.isCollapsed });
+              }}
+            />
+            <b onClick={this.clickedName}>{name}</b>
           </p>
           {this.renderTreeDescription()}
+
           {this.props.extraContent}
         </div>
       );
@@ -514,7 +511,10 @@ class TreeRow extends React.PureComponent {
     let dropdownLinks = treeIds || commitBranches ? this.getRootDropdownLinks() : this.getTreeDropdownLinks();
     return (
       <div className="col-sm-1 m-0 p-0">
-        <BSBtnDropdown links={dropdownLinks} header={<React.Fragment>{this.renderDocCount()}</React.Fragment>} />
+        <BSBtnDropdown
+          links={dropdownLinks}
+          header={<DocumentCount documentStatuses={this.props.documentStatuses} />}
+        />
       </div>
     );
   }
@@ -614,7 +614,7 @@ class TreeRow extends React.PureComponent {
   }
 }
 
-const getTreeWithDescriptions = (state, commitId, treeId) => {
+export const getTreeWithDescriptions = (state, commitId, treeId) => {
   const basePath = `entities.commitEdges.byId.${commitId}.trees.${treeId}`;
   let tree = state.getInPath(`entities.trees.byId.${treeId}`);
   if (tree) {
@@ -646,6 +646,8 @@ const mapStateToProps = (state, ownProps) => {
   const treeIds = state.getInPath(`${basePath}.trees`) || Traec.Im.List();
   const subTrees = treeIds.map(i => getTreeWithDescriptions(state, commitId, i));
   const documentIds = state.getInPath(`${basePath}.documents`);
+  let documentStatuses = getDocumentStatuses(state, commitId, documentIds);
+
   // Get the commit branch pointers
   const commitBranches = state.getInPath(`${basePath}.categories`);
   // UI related selections
@@ -669,10 +671,22 @@ const mapStateToProps = (state, ownProps) => {
     commitBranches,
     activeSelection,
     allSelection,
-    latestCommitId
+    latestCommitId,
+    documentStatuses
   };
 };
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TreeRow);
+
+const getDocumentStatuses = (state, commitId, documentIds) => {
+  if (!documentIds) {
+    return null;
+  }
+
+  return documentIds.toList().map(documentId => {
+    let statusId = state.getInPath(`entities.commitEdges.byId.${commitId}.documents.${documentId}.status`);
+    return state.getInPath(`entities.docStatuses.byId.${statusId}.status`);
+  });
+};

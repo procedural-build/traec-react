@@ -38,7 +38,7 @@ const EmailReport = props => {
     return <div>No email data found.</div>;
   }
   return (
-    <div>
+    <div className="container">
       <EmailBarChart
         emails={props.emails}
         title={"Email Recipients"}
