@@ -68,12 +68,16 @@ export default class CompanyItem extends React.Component {
   render() {
     let { company, indentLevel, index: i } = this.props;
     let rowNum = counter.row++;
+
+    let companyId = company.get("uid");
+    companyId = companyId ? companyId.substring(0, 8) : companyId;
+
     return (
       <React.Fragment>
         <div className="row" key={i} style={{ backgroundColor: (rowNum + 1) % 2 ? "#ddd" : "" }}>
           <div className="col-sm-12">
             <span style={{ marginLeft: `${indentLevel * 1}em` }}>
-              <Link to={"/company/" + company.get("uid")}>{company.get("name")}</Link>
+              <Link to={`/company/${companyId}`}>{company.get("name")}</Link>
             </span>
             {this.renderMenu()}
           </div>
