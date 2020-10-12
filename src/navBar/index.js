@@ -37,7 +37,7 @@ export class NavBar extends React.Component {
           className={`navbar navbar-expand-lg navbar-light bg-light navbar-static-top ${extraClass}`}
           role="navigation"
         >
-          <div className="container-fluid">
+          <div className="container-fluid m-0 p-0">
             <Link to="/" className="navbar-brand">
               {this.renderBrand()}
             </Link>
