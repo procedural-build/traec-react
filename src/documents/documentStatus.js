@@ -27,3 +27,5 @@ export class DocumentStatus extends Component {
     );
   }
 }
+
+export default DocumentStatus;

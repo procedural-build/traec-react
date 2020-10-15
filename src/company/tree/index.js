@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { companyPermissionRender } from "traec/utils/permissions/company";
+import { CompanyPermission } from "traec/utils/permissions/company";
 import CompanyTreeRow from "./treeRow";
 
 /**
@@ -28,8 +28,8 @@ class CompanyTree extends React.Component {
     }
   }
 
-  render_main() {
-    let { company, companyList, fromHere } = this.props;
+  render() {
+    let { company, companyList, fromHere, currentId: companyId } = this.props;
     if (!company || !companyList) {
       return <p>No company defined</p>;
     }
@@ -37,16 +37,13 @@ class CompanyTree extends React.Component {
     let rootCompany = fromHere ? company : this.get_root_company(company, companyList);
 
     return (
-      <div className="container-fluid m-0 p-0">
-        <h5>Business Units</h5>
-        <CompanyTreeRow company={rootCompany} companyList={this.props.companyList} currentId={this.props.currentId} />
-      </div>
+      <CompanyPermission companyId={companyId} requiresAdmin={false} requiredActions={["READ_COMPANY_COMPANY"]}>
+        <div className="container-fluid m-0 p-0">
+          <h5>Business Units</h5>
+          <CompanyTreeRow company={rootCompany} companyList={this.props.companyList} currentId={this.props.currentId} />
+        </div>
+      </CompanyPermission>
     );
-  }
-
-  render() {
-    // Check the User permissions for this company
-    return companyPermissionRender(this.props.currentId, false, ["READ_COMPANY_COMPANY"], this.render_main());
   }
 }
 

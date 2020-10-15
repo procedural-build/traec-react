@@ -6,10 +6,11 @@ import { BSCard, BSBtn, BSBtnDropdown } from "traec-react/utils/bootstrap";
 
 import { objToList } from "traec-react/utils";
 import InviteForm, { companyInviteFields, projectInviteFields } from "./form";
-import { companyPermissionRender } from "traec/utils/permissions/company";
-import { projectPermissionRender } from "traec/utils/permissions/project";
+import { CompanyPermission } from "traec/utils/permissions/company";
+import { ProjectPermission } from "traec/utils/permissions/project";
 import MemberItem from "./item";
 import { getProjectProps } from "../../project/utils";
+
 export class MemberList extends React.Component {
   constructor(props) {
     super(props);
@@ -61,57 +62,25 @@ export class MemberList extends React.Component {
   /* RENDERING */
 
   render() {
-    let {
-      companyId,
-      projectId,
-      members,
-      dispatch,
-      disciplineList,
-      trackerId,
-      crefId,
-      commitId,
-      commit,
-      rootTreeId,
-      docDescriptions,
-      descriptionTitleList,
-      docStatusList,
-      seeAssignments
-    } = this.props;
+    let { companyId, projectId, members } = this.props;
 
     let itemList = objToList(members)
       .sortBy(i => i.getIn(["user", "first_name"]))
-      .map((member, i) => (
-        <MemberItem
-          key={i}
-          index={i}
-          dispatch={dispatch}
-          member={member}
-          companyId={companyId}
-          projectId={projectId}
-          seeAssignments={seeAssignments}
-          disciplineList={disciplineList}
-          trackerId={trackerId}
-          crefId={crefId}
-          commitId={commitId}
-          commit={commit}
-          treeId={rootTreeId}
-          docDescriptions={docDescriptions}
-          descriptionTitleList={descriptionTitleList}
-          docStatusList={docStatusList}
-        />
-      ));
+      .map((member, i) => <MemberItem {...this.props} key={i} index={i} member={member} />);
 
-    let permObjId = projectId ? projectId : companyId;
-    let permRenderFunc = projectId ? projectPermissionRender : companyPermissionRender;
     let inviteFields = projectId ? projectInviteFields : companyInviteFields;
-    let permissionRender = permRenderFunc(permObjId, true, [], <BSBtn onClick={this.onClick} text="Send Invite" />);
+    let PermissionRender = projectId ? ProjectPermission : CompanyPermission;
 
     return (
       <div className="row">
         <BSCard
           widthOffset="col-sm-12"
           title="Members"
-          button={permissionRender}
+          button={
+            <PermissionRender {...this.props} requiresAdmin={true}>
+              <BSBtn onClick={this.onClick} text="Send Invite" />
+            </PermissionRender>
+          }
           body={itemList}
           form={
             <InviteForm
@@ -218,10 +187,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MemberList);
+export default connect(mapStateToProps)(MemberList);

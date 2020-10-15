@@ -1,7 +1,7 @@
 import React from "react";
 import Traec from "traec";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
-import { projectPermissionRender } from "traec/utils/permissions/project";
+import { ProjectPermission } from "traec/utils/permissions/project";
 import { confirmDelete } from "traec-react/utils/sweetalert";
 import DisciplineForm, { disciplineFields } from "./form";
 
@@ -111,7 +111,9 @@ export default class DisciplineItem extends React.Component {
           </div>
           <div className="col-sm-4">{item.getIn(["auth", "name"])}</div>
           <div className="col-sm-2">
-            {projectPermissionRender(projectId, true, [], <BSBtnDropdown links={this.dropDownLinks()} />)}
+            <ProjectPermission projectId={projectId} requiresAdmin={true}>
+              <BSBtnDropdown links={this.dropDownLinks()} />
+            </ProjectPermission>
           </div>
         </div>
         {this.render_edit_form()}

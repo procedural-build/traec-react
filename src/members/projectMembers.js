@@ -5,12 +5,13 @@ import MemberList from "./memberList";
 import InviteList from "./inviteList";
 import DisciplineList from "./disciplineList";
 import AuthGroupList from "./authGroupList";
-import { projectPermissionRender } from "traec/utils/permissions/project";
+import { ProjectPermission } from "traec/utils/permissions/project";
 import Traec from "traec";
+import { ErrorBoundary } from "../errors";
 
 export class ProjectMembers extends React.Component {
   render() {
-    const { projectId, project, company, seeAssignments } = this.props;
+    const { children, projectId, project, company, seeAssignments } = this.props;
     if (!project) {
       return "";
     }
@@ -20,18 +21,29 @@ export class ProjectMembers extends React.Component {
         <BreadCrumb company={company} project={project} />
 
         {/*Render the members panel if allowed */}
-        <MemberList projectId={projectId} seeAssignments={seeAssignments} />
+
+        <ErrorBoundary>
+          <MemberList projectId={projectId} seeAssignments={seeAssignments} />
+        </ErrorBoundary>
 
         {/*Render the invites panel if allowed */}
-        <InviteList projectId={projectId} />
+        <ErrorBoundary>
+          <InviteList projectId={projectId} />
+        </ErrorBoundary>
 
         {/*Render the discipline panel if allowed */}
-        <DisciplineList projectId={projectId} />
+        <ErrorBoundary>
+          <DisciplineList projectId={projectId} />
+        </ErrorBoundary>
 
         {/*Render the authGroup panel if allowed */}
-        {projectPermissionRender(this.props.projectId, true, [], <AuthGroupList projectId={projectId} />)}
+        <ErrorBoundary>
+          <ProjectPermission projectId={projectId} requiredAdmin={true}>
+            <AuthGroupList projectId={projectId} />
+          </ProjectPermission>
+        </ErrorBoundary>
 
-        {this.props.children}
+        {children}
       </React.Fragment>
     );
   }
@@ -44,10 +56,4 @@ const mapStateToProps = (state, ownProps) => {
   return { projectId, project, company };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectMembers);
+export default connect(mapStateToProps)(ProjectMembers);

@@ -41,11 +41,14 @@ export default class ProjectItem extends React.Component {
 
   render() {
     let { project, index: i } = this.props;
-    let projectShortId = project.get("uid").slice(0, 8);
+
+    let projectId = project.get("uid");
+    projectId = projectId ? projectId.substring(0, 8) : projectId;
+
     return (
       <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
         <div className="col-sm-12">
-          <Link to={"/project/" + projectShortId}>{project.get("name")}</Link>
+          <Link to={`/project/${projectId}`}>{project.get("name")}</Link>
           {this.render_menu()}
         </div>
       </div>

@@ -7,7 +7,7 @@ import { setSideBarItems } from "traec-react/sideBar";
 import TraecProjectTrackers from "./trackers";
 import { getProjectProps, BreadCrumb } from "./utils";
 import {
-  projectPermissionRender,
+  ProjectPermission,
   getProjectPermissions,
   projectPermissionFilter,
   projectPermissionCheck
@@ -91,7 +91,7 @@ class TraecProjectDetail extends React.Component {
     return projectPermissionFilter(projectId, links);
   }
 
-  renderMain() {
+  render() {
     let { company, project, projectId } = this.props;
     if (!project) {
       return null;
@@ -109,12 +109,6 @@ class TraecProjectDetail extends React.Component {
         </div>
       </React.Fragment>
     );
-  }
-
-  render() {
-    // Check the User permissions for this project
-    return this.renderMain();
-    //return projectPermissionRender(this.props.projectId, false, ["READ_PROJECT_REPORT"], this.renderMain(), true);
   }
 }
 

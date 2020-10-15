@@ -119,6 +119,4 @@ const mapStateToProps = (state, ownProps) => {
   return { projects, newItem, isAuthenticated, userRefs };
 };
 
-const mapDispatchToProps = dispatch => ({ dispatch });
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserProjects);
+export default connect(mapStateToProps)(UserProjects);

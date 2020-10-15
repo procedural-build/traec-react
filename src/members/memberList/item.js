@@ -2,9 +2,26 @@ import React from "react";
 import Traec from "traec";
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 
-import { companyPermissionRender } from "traec/utils/permissions/company";
-import { projectPermissionRender } from "traec/utils/permissions/project";
+import { CompanyPermission } from "traec/utils/permissions/company";
+import { ProjectPermission } from "traec/utils/permissions/project";
 import { confirmDelete } from "traec-react/utils/sweetalert";
+
+function LastColumns(props) {
+  let { projectId, companyId, item, links } = props;
+  let Permission = projectId ? ProjectPermission : CompanyPermission;
+  let text = projectId ? item.getInPath("project_discipline.name") : item.getInPath("auth.name");
+
+  return (
+    <React.Fragment>
+      <div className="col-sm-2">{text}</div>
+      <div className="col-sm-2">
+        <Permission {...props} requiresAdmin={true}>
+          <BSBtnDropdown links={links} />
+        </Permission>
+      </div>
+    </React.Fragment>
+  );
+}
 
 export default class MemberItem extends React.Component {
   constructor(props) {
@@ -76,30 +93,12 @@ export default class MemberItem extends React.Component {
 
   get_member_name() {
     let { member: item } = this.props;
-    return `${item.getIn(["user", "first_name"])} ${item.getIn(["user", "last_name"])}`;
+    if (!item) {
+      return "undefined";
+    }
+    return `${item.getInPath("user.first_name")} ${item.getInPath("user.last_name")}`;
   }
 
-  renderCompany(companyId, item) {
-    return (
-      <React.Fragment>
-        <div className="col-sm-2">{item.getIn(["auth", "name"])}</div>
-        <div className="col-sm-2">
-          {companyPermissionRender(companyId, true, [], <BSBtnDropdown links={this.dropDownLinks()} />)}
-        </div>
-      </React.Fragment>
-    );
-  }
-
-  renderProject(projectId, item) {
-    return (
-      <React.Fragment>
-        <div className="col-sm-2">{item.getIn(["project_discipline", "name"])}</div>
-        <div className="col-sm-2">
-          {projectPermissionRender(projectId, true, [], <BSBtnDropdown links={this.dropDownLinks()} />)}
-        </div>
-      </React.Fragment>
-    );
-  }
   renderDocuments(descriptionTitleList, docDescriptions, docStatusList, item) {
     let descriptionToDisplay = [];
     // This list will hold the UID's of the descriptions to display for the selected user, based on the documents they are assigned to.
@@ -157,16 +156,7 @@ export default class MemberItem extends React.Component {
   }
 
   render() {
-    let {
-      projectId,
-      companyId,
-      member: item,
-      index: i,
-      task: task,
-      docDescriptions,
-      descriptionTitleList,
-      docStatusList
-    } = this.props;
+    let { member: item, index: i, docDescriptions, descriptionTitleList, docStatusList } = this.props;
 
     if (this.state.showAssignments) {
       return (
@@ -174,9 +164,9 @@ export default class MemberItem extends React.Component {
           <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
             <div className="col-sm-4">{this.get_member_name()}</div>
             <div className="col-sm-4" ref={this.emailRef}>
-              {item.getIn(["user", "email"])}
+              {item.getInPath("user.email")}
             </div>
-            {projectId ? this.renderProject(projectId, item) : this.renderCompany(companyId, item)}
+            <LastColumns {...this.props} item={item} links={this.dropDownLinks()} />
           </div>
 
           <div className="row" style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
@@ -192,9 +182,9 @@ export default class MemberItem extends React.Component {
         <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
           <div className="col-sm-4">{this.get_member_name()}</div>
           <div className="col-sm-4" ref={this.emailRef}>
-            {item.getIn(["user", "email"])}
+            {item.getInPath("user.email")}
           </div>
-          {projectId ? this.renderProject(projectId, item) : this.renderCompany(companyId, item)}
+          <LastColumns {...this.props} item={item} links={this.dropDownLinks()} />
         </div>
       );
     }

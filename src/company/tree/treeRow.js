@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
 
 import Octicon from "react-octicon";
-import { companyPermissionRender } from "traec/utils/permissions/company";
+import { CompanyPermission } from "traec/utils/permissions/company";
 
 /**
  * CompanyTreeRow Component:
@@ -66,7 +66,7 @@ export default class CompanyTreeRow extends React.Component {
   }
 
   render() {
-    let { company } = this.props;
+    let { company, currentId: companyId } = this.props;
     let isCurrent = this.isCurrent();
     let bgColor = isCurrent ? "bg-info" : "";
     return (
@@ -81,13 +81,11 @@ export default class CompanyTreeRow extends React.Component {
 
           {this.render_project_count()}
         </div>
+
         {/* Project list */}
-        {companyPermissionRender(
-          this.props.currentId,
-          false,
-          ["READ_COMPANY_PROJECT"],
+        <CompanyPermission companyId={companyId} requiresAdmin={false} requiredActions={["READ_COMPANY_PROJECT"]}>
           <div className="m-0 p-0 ml-2">{this.render_project_list()}</div>
-        )}
+        </CompanyPermission>
 
         {/* Render the sub-elements */}
         {this.render_subtree_list()}

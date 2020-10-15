@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { companyPermissionRender } from "traec/utils/permissions/company";
+import { CompanyPermission } from "traec/utils/permissions/company";
 import Traec from "traec";
 import MemberList from "./memberList";
 import InviteList from "./inviteList";
 import AuthGroupList from "./authGroupList";
+import { ErrorBoundary } from "../errors";
 
 export class CompanyMembers extends React.Component {
   render() {
@@ -18,13 +19,25 @@ export class CompanyMembers extends React.Component {
         <p>{company.get("name")}</p>
 
         {/*Render the members panel if allowed */}
-        {companyPermissionRender(companyId, false, ["READ_COMPANY_MEMBER"], <MemberList companyId={companyId} />)}
+        <ErrorBoundary>
+          <CompanyPermission companyId={companyId} requiresAdmin={false} requiredActions={["READ_COMPANY_MEMBER"]}>
+            <MemberList companyId={companyId} />
+          </CompanyPermission>
+        </ErrorBoundary>
 
         {/*Render the invites panel if allowed */}
-        {companyPermissionRender(companyId, true, [], <InviteList companyId={companyId} />)}
+        <ErrorBoundary>
+          <CompanyPermission companyId={companyId} requiresAdmin={true}>
+            <InviteList companyId={companyId} />
+          </CompanyPermission>
+        </ErrorBoundary>
 
         {/*Render the authGroup panel if allowed */}
-        {companyPermissionRender(companyId, true, [], <AuthGroupList companyId={companyId} />)}
+        <ErrorBoundary>
+          <CompanyPermission companyId={companyId} requiresAdmin={true}>
+            <AuthGroupList companyId={companyId} />
+          </CompanyPermission>
+        </ErrorBoundary>
       </React.Fragment>
     );
   }

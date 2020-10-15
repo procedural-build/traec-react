@@ -10,7 +10,7 @@ import { setNavBarItems } from "traec/redux/actionCreators";
 import { setSidebarItems } from "AppSrc/sidebar/actionCreators";
 
 import {
-  companyPermissionRender,
+  CompanyPermission,
   getCompanyPermissions,
   companyPermissionFilter,
   companyPermissionCheck
@@ -117,14 +117,48 @@ class CompanyPage extends React.Component {
     return companyPermissionFilter(companyId, items);
   }
 
-  render_main() {
+  render_sidebar() {
+    let { companyId, companyList, company } = this.props;
+    let companyBase = `/company/${companyId}`;
+
+    if (!this.state.showSideBar) {
+      return null;
+    }
+    return (
+      <React.Fragment>
+        <Sidebar />
+        <hr />
+        <CompanyTree company={company} companyList={companyList} currentId={companyId} />
+      </React.Fragment>
+    );
+  }
+
+  sidebarLinks() {
+    let { companyId } = this.props;
+    let companyBase = `/company/${companyId}`;
+    let items = [
+      { label: "Company Dashboard", to: companyBase, octicon: "home" },
+      {
+        label: "Members",
+        to: `${companyBase}/members`,
+        octicon: "organization",
+        requiresAdmin: false,
+        requiredActions: ["READ_COMPANY_MEMBER"]
+      },
+      { label: "Indicators", to: `${companyBase}/indicators`, octicon: "issue-closed", requiresAdmin: true },
+      { label: "Settings", to: `${companyBase}/details`, octicon: "gear", requiresAdmin: true }
+    ];
+    return companyPermissionFilter(companyId, items);
+  }
+
+  render() {
     let { companyId, company, companyList } = this.props;
     if (!company) {
       return "";
     }
 
     return (
-      <React.Fragment>
+      <CompanyPermission companyId={companyId} requiresAdmin={false} requiredActions={["READ_COMPANY_REPORT"]}>
         <div className="container-fluid">
           <div className="row">
             <BootstrapSplitPane
@@ -149,44 +183,8 @@ class CompanyPage extends React.Component {
           </div>
         </div>
         <Footer />
-      </React.Fragment>
+      </CompanyPermission>
     );
-  }
-  render_sidebar() {
-    let { companyId, companyList, company } = this.props;
-    let companyBase = `/company/${companyId}`;
-
-    if (!this.state.showSideBar) {
-      return null;
-    }
-    return (
-      <React.Fragment>
-        <Sidebar />
-        <hr />
-        <CompanyTree company={company} companyList={companyList} currentId={companyId} />
-      </React.Fragment>
-    );
-  }
-  sidebarLinks() {
-    let { companyId } = this.props;
-    let companyBase = `/company/${companyId}`;
-    let items = [
-      { label: "Company Dashboard", to: companyBase, octicon: "home" },
-      {
-        label: "Members",
-        to: `${companyBase}/members`,
-        octicon: "organization",
-        requiresAdmin: false,
-        requiredActions: ["READ_COMPANY_MEMBER"]
-      },
-      { label: "Indicators", to: `${companyBase}/indicators`, octicon: "issue-closed", requiresAdmin: true },
-      { label: "Settings", to: `${companyBase}/details`, octicon: "gear", requiresAdmin: true }
-    ];
-    return companyPermissionFilter(companyId, items);
-  }
-  render() {
-    // Check the User permissions for this company
-    return companyPermissionRender(this.props.companyId, false, ["READ_COMPANY_REPORT"], this.render_main(), true);
   }
 }
 

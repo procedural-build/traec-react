@@ -4,23 +4,36 @@ import { BSForm } from "./bootstrap";
 import { connect } from "react-redux";
 import { fetchToState, toggleForm } from "traec/redux/actionCreators";
 
+function eqSet(as, bs) {
+  if (as.size !== bs.size) return false;
+  for (var a of as) if (!bs.has(a)) return false;
+  return true;
+}
+
 class BaseForm extends React.Component {
   constructor(props) {
     super(props);
+    let { fields, initFields, forceShowForm } = props;
 
     this.state = {
-      formFields: this.initialiseFormFields(props.fields, props.initFields),
+      formFields: this.initialiseFormFields(fields, initFields),
       formErrors: null,
-      forceShowForm: props.forceShowForm || false
+      forceShowForm: forceShowForm || false
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidUpdate(prevPros) {
-    if (!prevPros.showForm && this.props.showForm) {
-      this.setState({ formFields: this.initialiseFormFields(this.props.fields, this.props.initFields) });
+  componentDidUpdate(prevProps, prevState) {
+    let { fields, initFields, showForm } = this.props;
+    // Check if the fields are different
+    let sameFields = eqSet(new Set(Object.keys(prevState.formFields)), new Set(Object.keys(fields)));
+    // Check if the
+    if (!sameFields || (!prevProps.showForm && showForm)) {
+      this.setState({
+        formFields: this.initialiseFormFields(fields, initFields)
+      });
     }
   }
 
@@ -148,7 +161,7 @@ class BaseForm extends React.Component {
   }
 
   render() {
-    let { showForm, forceShowForm, disabled } = this.props;
+    let { showForm, forceShowForm, disabled, hideUnderline } = this.props;
     if (!showForm && !forceShowForm) {
       return "";
     }
@@ -175,7 +188,7 @@ class BaseForm extends React.Component {
           {this.render_close()}
           {this.render_submit()}
           <div style={{ clear: "both" }} />
-          {this.props.hideUnderline ? null : <hr />}
+          {hideUnderline ? null : <hr />}
         </form>
       </div>
     );
