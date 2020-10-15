@@ -4,10 +4,10 @@ import { emailTypes } from "../emailTypes";
 import { getEmailSettingType } from "../settings/emailSettingRow";
 
 export const EmailRecipient = props => {
-  let { recipient, projectId, companyId } = props;
+  let { recipient, projectId, companyId, compute } = props;
   let total = 0;
 
-  let emailRecipientType = getEmailSettingType(projectId, companyId);
+  let emailRecipientType = getEmailSettingType(projectId, companyId, compute);
 
   let cols = emailTypes(emailRecipientType).map((emailType, i) => {
     let num = recipient.getInPath(`sent_summary.email_types.${emailType}`) || 0;

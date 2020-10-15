@@ -80,7 +80,7 @@ const SettingsInput = props => {
     : emailDefaultFrequencies(emailSettingType)[emailType].value;
 
   let frequencyType = emailDefaultFrequencies(emailSettingType)[emailType].type;
-  if (emailType === "project_ref_approved") {
+  if (["project_ref_approved", "parent_task_completed", "task_completed"].indexOf(emailType) > -1) {
     frequency = frequency === 0;
   }
 

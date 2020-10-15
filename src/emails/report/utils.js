@@ -11,8 +11,9 @@ export const ReportLink = props => {
     );
   }
   if (companyId) {
+    let shortId = companyId.slice(0, 8);
     return (
-      <Link to={`/company/${companyId}/email/report/${recipient.get("uid")}`}>
+      <Link to={`/company/${shortId}/email/report/${recipient.get("uid")}`}>
         {recipient.get("email").toLowerCase()}
       </Link>
     );

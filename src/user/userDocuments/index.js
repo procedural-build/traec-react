@@ -90,7 +90,8 @@ class UserDocuments extends React.Component {
           if (this.checkDisciplineFilter(documentComponents, disciplineName)) {
             return (
               <div key={disciplineIndex}>
-                <h2>{disciplineName}</h2>
+                <br />
+                <h2 className="mb-3">{disciplineName}</h2>
 
                 {documentComponents.map((component, componentIndex) => {
                   return <div key={componentIndex}>{component}</div>;
@@ -178,7 +179,7 @@ class UserDocuments extends React.Component {
     if (!disciplines) return null;
     return (
       <div className="container">
-        <h2 style={{ fontSize: "30px" }}>{title ? title : "My Documents"}</h2>
+        <h2 className="mt-3 mb-3">{title ? title : "My Documents"}</h2>
         <DocumentFilter
           disciplines={disciplines}
           statuses={this.getStatuses()}

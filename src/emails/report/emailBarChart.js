@@ -10,6 +10,8 @@ export const EmailBarChart = props => {
   let { emailType } = props;
   if (emailType === "company") {
     emails = formatCompanyEmails(props.emails);
+  } else if (emailType === "compute") {
+    emails = formatComputeEmails(props.emails);
   } else {
     emails = formatProjectEmails(props.emails);
   }
@@ -36,11 +38,13 @@ export const EmailBarChart = props => {
             <Tooltip />
             <Legend />
             {<Bar dataKey={`${emailType === "company" ? "Company" : "Project"} Invite`} fill="#D9A691" />}
-            {emailType === "company" ? null : <Bar dataKey="Report Approved" fill="#D9CF9C" />}
-            {emailType === "company" ? null : <Bar dataKey="Report Near Due" fill="#D971CB" />}
-            {emailType === "company" ? null : <Bar dataKey="Report Over Due" fill="#71D9CA" />}
-            {emailType === "company" ? null : <Bar dataKey="Report Submitted" fill="#2081C5" />}
-            {emailType === "company" ? null : <Bar dataKey="Report Rejected" fill="#DB4D52" />}
+            {emailType === "project" ? <Bar dataKey="Report Approved" fill="#D9CF9C" /> : null}
+            {emailType === "project" ? <Bar dataKey="Report Near Due" fill="#D971CB" /> : null}
+            {emailType === "project" ? <Bar dataKey="Report Over Due" fill="#71D9CA" /> : null}
+            {emailType === "project" ? <Bar dataKey="Report Submitted" fill="#2081C5" /> : null}
+            {emailType === "project" ? <Bar dataKey="Report Rejected" fill="#DB4D52" /> : null}
+            {emailType === "compute" ? <Bar dataKey="Parent Task Completed" fill="#2081C5" /> : null}
+            {emailType === "compute" ? <Bar dataKey="Task Completed" fill="#DB4D52" /> : null}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -70,6 +74,19 @@ export const formatCompanyEmails = emails => {
       return {
         name: Moment(item.get("min_date")).format("MMM YYYY"),
         "Company Invite": item.getInPath("email_types.company_invite") || 0
+      };
+    })
+    .toJS();
+};
+
+export const formatComputeEmails = emails => {
+  return emails
+    .map(item => {
+      return {
+        name: Moment(item.get("min_date")).format("MMM YYYY"),
+        "Company Invite": item.getInPath("email_types.company_invite") || 0,
+        "Parent Task Completed": item.getInPath("email_types.parent_task_completed") || 0,
+        "Task Completed": item.getInPath("email_types.task_completed") || 0
       };
     })
     .toJS();

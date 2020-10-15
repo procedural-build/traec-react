@@ -24,7 +24,7 @@ export class TrackerItem extends React.Component {
   dropDownLinks() {
     return [
       { name: "Edit", onClick: this.onClick },
-      { name: "Add from template", linkTo: `/tracker/${this.props.tracker.get("uid")}/template` }
+      { name: "Add from template", linkTo: `/tracker/${this.props.tracker.get("uid").slice(0, 8)}/template` }
     ];
   }
 

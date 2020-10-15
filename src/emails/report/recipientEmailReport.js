@@ -8,12 +8,14 @@ import { EmailBarChart } from "./emailBarChart";
 import { getEmailSettingType } from "../settings/emailSettingRow";
 
 const RecipientEmailReport = props => {
-  let { projectId, companyId, recipient } = props;
-  let emailSettingType = getEmailSettingType(projectId, companyId);
+  let { projectId, companyId, recipient, compute, className } = props;
+  let emailSettingType = getEmailSettingType(projectId, companyId, compute);
+  let APICall = projectId ? "project" : "company";
+
   useEffect(() => {
     Traec.fetchRequired.bind({
       props,
-      requiredFetches: [new Traec.Fetch(`${emailSettingType}_email_recipient`, "read")]
+      requiredFetches: [new Traec.Fetch(`${APICall}_email_recipient`, "read")]
     })();
   });
 
@@ -27,7 +29,7 @@ const RecipientEmailReport = props => {
     .map((sentItem, i) => <SentEmail key={i} item={sentItem} recipient={recipient} projectId={projectId} />);
 
   return (
-    <div>
+    <div className={className}>
       <EmailBarChart
         emails={parseRecipientEmails(recipient)}
         title={`Email Report for: ${recipient.get("email")}`}
@@ -93,6 +95,10 @@ const formatEmailName = email => {
     return "Report Submitted";
   } else if (email === "project_ref_rejected") {
     return "Report Rejected";
+  } else if (email === "parent_task_completed") {
+    return "Parent Task Completed";
+  } else if (email === "task_completed") {
+    return "Task Completed";
   } else {
     return email;
   }
