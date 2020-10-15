@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class DocumentStatus extends Component {
+export class DocumentStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -27,3 +27,5 @@ export default class DocumentStatus extends Component {
     );
   }
 }
+
+export default DocumentStatus;

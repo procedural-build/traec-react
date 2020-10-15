@@ -49,7 +49,6 @@ export function BSModalButton({ id, text, className }) {
 
 export function BSModal(props) {
   let { id, body } = props;
-  console.log("RENDERING MODAL", id, body);
   return (
     <div className="modal fade" id={id} tabIndex="-1" role="dialog" aria-labelledby={`${id}Label`} aria-hidden="true">
       <div className="modal-dialog modal-lg modal-dialog-centered" role="document">

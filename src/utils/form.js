@@ -161,13 +161,12 @@ class BaseForm extends React.Component {
   }
 
   render() {
-    let { showForm, forceShowForm, disabled } = this.props;
+    let { showForm, forceShowForm, disabled, hideUnderline } = this.props;
     if (!showForm && !forceShowForm) {
       return "";
     }
 
     let stateFormFields = this.getFormFields();
-    console.log("ZZZZZZZZZZZZZZZZZZZZZZ", stateFormFields);
     let formFields = Object.keys(stateFormFields).map(key => {
       return {
         name: key,
@@ -189,7 +188,7 @@ class BaseForm extends React.Component {
           {this.render_close()}
           {this.render_submit()}
           <div style={{ clear: "both" }} />
-          {this.props.hideUnderline ? null : <hr />}
+          {hideUnderline ? null : <hr />}
         </form>
       </div>
     );

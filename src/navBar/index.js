@@ -38,9 +38,7 @@ export class NavBar extends React.Component {
           role="navigation"
         >
           <div className="container-fluid m-0 p-0">
-            <Link to="/" className="navbar-brand">
-              {this.renderBrand()}
-            </Link>
+            <div className="navbar-brand">{this.renderBrand()}</div>
 
             <button
               className="navbar-toggler border-0"

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
 import DisciplineForm, { disciplineFields } from "./form";
-import { projectPermissionRender } from "traec/utils/permissions/project";
+import { ProjectPermission } from "traec/utils/permissions/project";
 import DisciplineItem from "./item";
 
 export class DisciplineList extends React.Component {
@@ -63,7 +63,11 @@ export class DisciplineList extends React.Component {
         <BSCard
           widthOffset="col-sm-12"
           title="Project Suppliers"
-          button={projectPermissionRender(projectId, true, [], <BSBtn onClick={this.onClick} text="Add a Supplier" />)}
+          button={
+            <ProjectPermission projectId={projectId} requiresAdmin={true}>
+              <BSBtn onClick={this.onClick} text="Add a Supplier" />
+            </ProjectPermission>
+          }
           body={itemList}
           form={
             <DisciplineForm
