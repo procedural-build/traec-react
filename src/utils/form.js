@@ -15,10 +15,13 @@ class BaseForm extends React.Component {
     super(props);
     let { fields, initFields, forceShowForm } = props;
 
+    console.log("Calling constructor on BaseForm");
+
     this.state = {
       formFields: this.initialiseFormFields(fields, initFields),
       formErrors: null,
-      forceShowForm: forceShowForm || false
+      forceShowForm: forceShowForm || false,
+      requiresRefresh: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -45,9 +48,12 @@ class BaseForm extends React.Component {
     // Otherwise step through the projectFields and get what you can from initFields
     let initialFormFields = fields;
 
-    for (let key of Object.keys(fields)) {
-      initialFormFields[key].value =
-        typeof initFields.get(key) !== "undefined" ? initFields.get(key) : fields[key].value;
+    for (let [key, value] of Object.entries(fields)) {
+      if (value === null) {
+        continue;
+      } // Skip if the value is null
+      let initValue = typeof initFields.get(key) !== "undefined" ? initFields.get(key) : fields[key].value;
+      initialFormFields[key].value = initValue;
     }
 
     return initialFormFields;
@@ -96,6 +102,17 @@ class BaseForm extends React.Component {
     return newState;
   }
 
+  stripFormFields(fields) {
+    // Eliminate field keys that have undefined (null) configs
+    let _fields = {};
+    for (let [key, value] of Object.entries(fields)) {
+      if (value) {
+        _fields[key] = value;
+      }
+    }
+    return _fields;
+  }
+
   getFormFields() {
     return this.props.stateFormFields || this.state.formFields;
   }
@@ -105,8 +122,9 @@ class BaseForm extends React.Component {
       return this.props.onChange(e);
     }
     let stateFormFields = this.getFormFields();
+    let value = e.target.type == "checkbox" ? e.target.checked : e.target.value;
     let formFields = Object.assign({}, stateFormFields, {
-      [e.target.name]: Object.assign({}, stateFormFields[e.target.name], { value: e.target.value })
+      [e.target.name]: Object.assign({}, stateFormFields[e.target.name], { value })
     });
     this.setState({ formFields });
     // Hook in an action post-change
@@ -118,7 +136,7 @@ class BaseForm extends React.Component {
   onSubmit(e) {
     e.preventDefault();
     let { prePostHook, dispatchHandler, dispatch } = this.props;
-    const formFields = this.getFormFields();
+    const formFields = this.stripFormFields(this.getFormFields());
     let post = {};
     Object.keys(formFields).map(key => {
       if (formFields[key].value) {
@@ -166,7 +184,7 @@ class BaseForm extends React.Component {
       return "";
     }
 
-    let stateFormFields = this.getFormFields();
+    let stateFormFields = this.stripFormFields(this.getFormFields());
     let formFields = Object.keys(stateFormFields).map(key => {
       return {
         name: key,

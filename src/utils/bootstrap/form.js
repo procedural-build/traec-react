@@ -1,10 +1,12 @@
 import React from "react";
 import { camelCaseToSentence } from "traec/utils/index";
-import TinyMCE from "react-tinymce";
+import { Editor } from "@tinymce/tinymce-react";
 import DatePicker from "react-date-picker";
 import Crypto from "crypto";
 import Moment from "moment";
 import CreatableSelect, { makeCreatableSelect } from "react-select/creatable";
+
+const TinyMCE = Editor;
 
 export class BSForm extends React.Component {
   constructor(props) {
@@ -101,10 +103,14 @@ export class BSForm extends React.Component {
     );
   }
 
-  handleTinyMceChange(e, itemName) {
-    //console.log("HANDLING TNYMCE CHANGE")
-    e.target.value = e.target.getContent();
-    e.target.name = itemName;
+  handleTinyMceChange(value, itemName) {
+    //console.log("HANDLING TNYMCE CHANGE", value, itemName)
+    let e = {
+      target: {
+        value,
+        name: itemName
+      }
+    };
     this.props.onChange(e);
   }
 
@@ -119,16 +125,19 @@ export class BSForm extends React.Component {
     const extraClass = details.class || "col";
     const rowBreakDiv = details.endRow ? <div className="w-100" /> : "";
     const labelBlock = details.label === "" ? "" : <label>{label}</label>;
-    //console.log("RENDERING TINYMCE COMPONENT", details, details.initialContent, value)
+
+    let initalContent = details.initialContent || value;
+    //console.log("RENDERING TINYMCE COMPONENT", initalContent)
+
     return (
       <React.Fragment key={keyIndex}>
         <div className={`form-group ${extraClass}`}>
           {labelBlock}
           <TinyMCE
             name={item.name}
-            content={details.initialContent || value}
-            config={details.config}
-            onChange={e => this.handleTinyMceChange(e, item.name)}
+            initialValue={initalContent}
+            init={details.config}
+            onEditorChange={v => this.handleTinyMceChange(v, item.name)}
           />
           {error}
         </div>
@@ -189,10 +198,11 @@ export class BSForm extends React.Component {
           <br />
           <DatePicker
             className="form-control datepicker-fullwidth"
+            disabled={details.disabled || false}
             onChange={value =>
               this.handleChange({
                 target: {
-                  value: Moment.utc(Moment(value).format("YYYY-MM-DDTHH:mm:ss")).toDate(),
+                  value: value ? Moment.utc(Moment(value).format("YYYY-MM-DDTHH:mm:ss")).toDate() : null,
                   name: item.name
                 }
               })
@@ -219,7 +229,7 @@ export class BSForm extends React.Component {
     let id = Crypto.randomBytes(4).toString("hex");
     return (
       <React.Fragment key={keyIndex}>
-        <div className={`${extraClass} align-middle`}>
+        <div className={`${extraClass} form-group align-middle`}>
           <div className={`form-check `}>
             <input
               className="form-check-input"

@@ -25,7 +25,6 @@ export default class AuthGroupItem extends React.Component {
       }
     };
 
-    this.dropDownLinks = this.dropDownLinks.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.editItem = this.editItem.bind(this);
     this.showFormHandler = this.showFormHandler.bind(this);
@@ -33,16 +32,25 @@ export default class AuthGroupItem extends React.Component {
 
   deleteItem(e) {
     e.preventDefault();
-    this.fetch.toggleForm();
+    let { item, projectId, companyId } = this.props;
+    let authGroupId = item.get("uid");
+    let fetch = null;
+    if (projectId) {
+      fetch = new Traec.Fetch("project_authgroup", "delete", { projectId, authGroupId });
+    } else if (companyId) {
+      fetch = new Traec.Fetch("company_authgroup", "delete", { companyId, authGroupId });
+    }
+    fetch.updateFetchParams({
+      postSuccessHook: () => {
+        location.reload();
+      }
+    });
+    fetch.dispatch();
   }
 
   editItem(e) {
     e.preventDefault();
     this.setState({ showForm: !this.state.showForm }, () => console.log("STATE", this.state));
-  }
-
-  dropDownLinks() {
-    return [{ name: "Edit", onClick: this.editItem }];
   }
 
   showFormHandler(e, showForm) {
@@ -95,9 +103,23 @@ export default class AuthGroupItem extends React.Component {
     );
   }
 
+  inUse() {
+    let { item, disciplines } = this.props;
+    if (!disciplines) {
+      return true;
+    }
+    return disciplines.toList().filter(d => d.getInPath("auth.uid") == item.get("uid")).size > 0;
+  }
+
   render() {
-    const i = this.props.index;
-    const item = this.props.item;
+    let { item, index: i } = this.props;
+
+    let inUse = this.inUse();
+
+    let links = [{ name: "Edit", onClick: this.editItem }];
+    if (!inUse) {
+      links.push({ name: "Delete", onClick: this.deleteItem });
+    }
 
     return (
       <React.Fragment>
@@ -105,8 +127,9 @@ export default class AuthGroupItem extends React.Component {
           <div className="col-sm-8">
             <p className="m-0 p-0">{item.get("name")}</p>
           </div>
-          <div className="col-sm-4">
-            <BSBtnDropdown links={this.dropDownLinks()} />
+          <div className="col-sm-4 text-right">
+            {!inUse ? <span className="badge badge-pill badge-info mr-3">Unused</span> : null}
+            <BSBtnDropdown floatStyle={" "} links={links} />
           </div>
         </div>
         {this.renderForm()}

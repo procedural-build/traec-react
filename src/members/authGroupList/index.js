@@ -13,7 +13,10 @@ export class AuthGroupList extends React.Component {
     if (props.projectId) {
       const projectId = props.projectId;
       this.fetch = new Traec.Fetch("project_authgroup", "post", { projectId });
-      this.requiredFetches = [new Traec.Fetch("project_authgroup", "list")];
+      this.requiredFetches = [
+        new Traec.Fetch("project_authgroup", "list"),
+        new Traec.Fetch("project_discipline", "list")
+      ];
     } else if (props.companyId) {
       const companyId = props.companyId;
       this.fetch = new Traec.Fetch("company_authgroup", "post", { companyId });
@@ -85,7 +88,7 @@ export class AuthGroupList extends React.Component {
   }
 
   render() {
-    let { authGroups, projectId, companyId, dispatch } = this.props;
+    let { authGroups } = this.props;
     if (!authGroups) {
       return null;
     }
@@ -93,9 +96,7 @@ export class AuthGroupList extends React.Component {
     let itemList = authGroups
       .toList()
       .sortBy((obj, i) => obj.get("name"))
-      .map((item, i) => (
-        <AuthGroupItem key={i} index={i} item={item} projectId={projectId} companyId={companyId} dispatch={dispatch} />
-      ));
+      .map((item, i) => <AuthGroupItem key={i} index={i} item={item} {...this.props} />);
 
     return (
       <div className="row">
@@ -117,10 +118,12 @@ const mapStateToProps = (state, ownProps) => {
   let project = null;
   let company = null;
   let authGroups = null;
+  let disciplines = null;
 
   if (projectId) {
     project = state.getInPath(`entities.projects.byId.${projectId}`);
     authGroups = state.getInPath(`entities.projectObjects.byId.${projectId}.authGroups`);
+    disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`);
   }
 
   if (companyId) {
@@ -128,13 +131,7 @@ const mapStateToProps = (state, ownProps) => {
     authGroups = state.getInPath(`entities.companyObjects.byId.${companyId}.authGroups`);
   }
   let isAuthenticated = state.getInPath("auth.isAuthenticated");
-  return { project, company, authGroups, isAuthenticated };
+  return { project, company, authGroups, disciplines, isAuthenticated };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AuthGroupList);
+export default connect(mapStateToProps)(AuthGroupList);

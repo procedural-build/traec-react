@@ -121,7 +121,6 @@ const mapStateToProps = (state, ownProps) => {
   let docStatus = null;
 
   if (projectId) {
-    disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
     project = state.getInPath(`entities.projects.byId.${projectId}`);
     members = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
     disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`) || Traec.Im.Map();

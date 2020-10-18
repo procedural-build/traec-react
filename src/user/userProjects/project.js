@@ -103,6 +103,12 @@ const mapStateToProps = (state, ownProps) => {
   let commits = state.getInPath("entities.commits.byId");
   if (projects && commits) {
     for (let [commitId, commit] of commits) {
+      if (!commit) {
+        continue;
+      }
+      if (!Traec.Im.Map.isMap(commit)) {
+        commit = Traec.Im.fromJS(commit);
+      }
       if (!commit.getInPath("meta_json.actionRequiredBy")) {
         continue;
       }

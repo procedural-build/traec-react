@@ -48,15 +48,22 @@ export class ErrorBoundary extends React.Component {
       </div>
     );
 
-    let { title = "Error loading component", msg = defaultMsg } = this.props;
+    let {
+      title = "Error loading component",
+      TitleTag = "h3",
+      ContainerTag = "div",
+      msg = defaultMsg,
+      className = "alert alert-warning"
+    } = this.props;
+
+    let _title = title ? <TitleTag>{title}</TitleTag> : null;
 
     if (hasError) {
-      // You can render any custom fallback UI
       return (
-        <div className="alert alert-warning">
-          <h3>{title}</h3>
+        <ContainerTag className={className}>
+          {_title}
           {msg}
-        </div>
+        </ContainerTag>
       );
     }
     return this.props.children;
