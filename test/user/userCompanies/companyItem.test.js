@@ -58,7 +58,7 @@ describe("SideBar", () => {
   });
 
   it("should contain the company link", () => {
-    expect(wrapper.find("Link").get(0).props.to).toEqual("/company/" + company.get("uid"));
+    expect(wrapper.find("Link").get(0).props.to).toEqual("/company/" + company.get("uid").slice(0, 8));
   });
 
   it("should have a dropdown", () => {

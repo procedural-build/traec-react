@@ -8,7 +8,7 @@ describe("NavBar", () => {
   beforeEach(() => (wrapper = shallow(<NavBar />)));
 
   it("should render three <div />s", () => {
-    expect(wrapper.find("div").length).toEqual(3);
+    expect(wrapper.find("div").length).toEqual(4);
   });
 
   it("should render a <nav />", () => {
