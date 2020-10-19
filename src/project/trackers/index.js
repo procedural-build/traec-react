@@ -38,7 +38,7 @@ class TraecUserTrackers extends React.Component {
     let { projectId } = this.props;
     let fetch = new Traec.Fetch("tracker", "post", { projectId });
     this.setState({ formParams: fetch.params });
-    fetch.updateFetchParams({
+    /*fetch.updateFetchParams({
       postSuccessHook: data => {
         return Swal.fire({
           title: "Tracker Created!",
@@ -56,7 +56,7 @@ class TraecUserTrackers extends React.Component {
           }
         });
       }
-    });
+    });*/
     fetch.toggleForm();
   }
 
