@@ -1,12 +1,10 @@
 import React from "react";
 import { camelCaseToSentence } from "traec/utils/index";
-import { Editor } from "@tinymce/tinymce-react";
+import { Editor as TinyMCE } from "@tinymce/tinymce-react";
 import DatePicker from "react-date-picker";
 import Crypto from "crypto";
 import Moment from "moment";
 import CreatableSelect, { makeCreatableSelect } from "react-select/creatable";
-
-const TinyMCE = Editor;
 
 export class BSForm extends React.Component {
   constructor(props) {

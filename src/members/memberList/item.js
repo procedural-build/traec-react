@@ -13,8 +13,8 @@ function LastColumns(props) {
 
   return (
     <React.Fragment>
-      <div className="col-sm-2">{text}</div>
-      <div className="col-sm-2">
+      <div className="col-sm-3">{text}</div>
+      <div className="col-sm-1">
         <Permission {...props} requiresAdmin={true}>
           <BSBtnDropdown links={links} />
         </Permission>
