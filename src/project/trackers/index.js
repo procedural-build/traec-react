@@ -11,6 +11,16 @@ import { ProjectPermission } from "traec/utils/permissions/project";
 
 export const counter = { row: 0 };
 
+function TrackerList({ trackers }) {
+  if (!trackers || !trackers.size) {
+    return <p className="text-center">No trackers. Add a Tracker to get started</p>;
+  }
+  return trackers
+    .toList()
+    .sortBy((obj, i) => obj.get("created"))
+    .map((tracker, i) => <TrackerItem key={i} index={i} tracker={tracker} />);
+}
+
 class TraecUserTrackers extends React.Component {
   constructor(props) {
     super(props);
@@ -60,40 +70,21 @@ class TraecUserTrackers extends React.Component {
     fetch.toggleForm();
   }
 
-  title() {
-    return this.props.title ? this.props.title : "Trackers";
-  }
-  addButtonText() {
-    return this.props.addButtonText ? this.props.addButtonText : "Add a Tracker";
-  }
-
-  render_tracker_list() {
-    let { trackers } = this.props;
-    if (!trackers || !trackers.size) {
-      return <p className="text-center">No trackers. Add a Tracker to get started</p>;
-    }
-    return trackers
-      .toList()
-      .sortBy((obj, i) => obj.get("created"))
-      .map((tracker, i) => <TrackerItem key={i} index={i} tracker={tracker} />);
-  }
-
   render() {
-    let { projectId } = this.props;
+    let { projectId, trackers, trackerTemplates, title, addButtonText } = this.props;
+
     return (
       <div className="row">
         <BSCard
           widthOffset="col-sm-12"
-          title={this.title()}
+          title={title || "Trackers"}
           button={
-            <ProjectPermission projectId={projectId} requiresAdmin={true}>
-              <BSBtn onClick={this.onClick} text={this.addButtonText()} />
+            <ProjectPermission projectId={projectId} _test={true} requiresAdmin={true}>
+              <BSBtn onClick={this.onClick} text={addButtonText || "Add a Tracker"} />
             </ProjectPermission>
           }
-          body={this.render_tracker_list()}
-          form={
-            <BaseFormConnected params={this.state.formParams} fields={trackerFields(this.props.trackerTemplates)} />
-          }
+          body={<TrackerList trackers={trackers} />}
+          form={<BaseFormConnected params={this.state.formParams} fields={trackerFields(trackerTemplates)} />}
         />
       </div>
     );
@@ -101,9 +92,6 @@ class TraecUserTrackers extends React.Component {
 }
 
 const trackerFields = trackerTemplates => {
-  if (!trackerTemplates || !trackerTemplates.size) {
-    return { name: "" };
-  }
   trackerTemplates = trackerTemplates.toList().insert(0, Im.Map({ uid: null, name: "Select a Template" }));
   return {
     name: { value: "", endRow: true },
@@ -121,18 +109,22 @@ const trackerFields = trackerTemplates => {
 
 const mapStateToProps = (state, ownProps) => {
   let { projectId } = ownProps;
+
   let project = state.getInPath(`entities.projects.byId.${projectId}`);
-  let trackers = state.getInPath(`entities.trackers.byId`);
-  let trackerTemplates = trackers ? trackers.filter(item => item.get("is_template")) : Im.List();
+  let trackers = state.getInPath(`entities.trackers.byId`) || Traec.Im.List();
+  let trackerTemplates = trackers.filter(item => item.get("is_template"));
   if (trackers) {
     trackers = trackers.toList().filter(i => i.getInPath("project.uid") === projectId);
   }
+  // This is used to just force refresh of the component if/when ProjectPermission fetches the permissions
+  let userPermission = state.getInPath(`entities.projectObjects.byId.${projectId}.userPermission`);
 
   return {
     project,
     trackers,
     trackerTemplates,
-    isAuthenticated: state.getInPath("auth.isAuthorized")
+    isAuthenticated: state.getInPath("auth.isAuthorized"),
+    userPermission
   };
 };
 
