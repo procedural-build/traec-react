@@ -27,6 +27,7 @@ class AccountsRouter extends React.Component {
           {/* Password reset pages */}
           <Route exact path={`${baseUrl}/password/reset`} component={PasswordResetPage} />
           <Route exact path={`${baseUrl}/password/reset/:uid/:token`} component={PasswordResetConfirmPage} />
+          <Route exact path={`${baseUrl}/reset/:uid/:token`} component={PasswordResetConfirmPage} />
         </Switch>
       </React.Fragment>
     );
