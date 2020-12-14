@@ -5,7 +5,6 @@ import DropdownLogin from "./loginDropdown";
 import { MenuItem } from "./item";
 import { DropDownItem } from "./dropdown";
 import { setNavBarItems } from "traec/redux/actionCreators";
-import { Link } from "react-router-dom";
 
 export { setNavBarItems };
 
