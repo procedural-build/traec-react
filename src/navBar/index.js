@@ -51,6 +51,7 @@ export class NavBar extends React.Component {
             <div className="collapse navbar-collapse" id="exCollapsingNavbar">
               <ul className="nav navbar-nav flex-row justify-content-between ml-auto">
                 {this.renderItems()}
+                {this.props.preUserItems}
                 <DropdownLogin />
               </ul>
             </div>
