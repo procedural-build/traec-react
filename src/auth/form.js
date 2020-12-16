@@ -65,7 +65,7 @@ export class LoginForm extends React.Component {
     }
     return (
       <div className="text-center border-top pt-3">
-        <Link to="/accounts/register/">
+        <Link to="/accounts/register/?navbar">
           <b>Create an account</b>
         </Link>
       </div>
