@@ -38,9 +38,9 @@ class ActivationPage extends React.Component {
         if (typeof error === "string" && error.includes("already_activated")) {
           extra = (
             <p>
-              Your account has already been activated. Please try to log in here:{" "}
+              Your account has already been activated. Please try to{" "}
               <Link to="/accounts/login">
-                <b>Go to Login Page</b>
+                <b>log in here</b>
               </Link>
             </p>
           );
@@ -51,8 +51,7 @@ class ActivationPage extends React.Component {
     return (
       <div>
         <p>There was an error with your account activation.</p>
-        {extra}
-        <div className="alert alert-danger">{errors}</div>
+        {extra || <div className="alert alert-danger">{errors}</div>}
       </div>
     );
   }

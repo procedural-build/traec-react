@@ -7,7 +7,15 @@ import store from "traec/redux/store";
 import LoginForm from "traec-react/auth/form";
 import { logoutToken } from "traec-react/auth/_redux/actions";
 import { DropDownItem } from "./dropdown";
-import Octicons from "react-octicon";
+
+function UserLabel({ user }) {
+  let label = user
+    ? ((user.get("first_name") || "").charAt(0) + (user.get("last_name") || "").charAt(0)).trim() ||
+      user.get("username")
+    : "User";
+  console.log("AAAAAAAAAAAAAAAAAAAAAA", label);
+  return label;
+}
 
 export class DropdownLogin extends React.Component {
   logoutClicked(e) {
@@ -18,19 +26,9 @@ export class DropdownLogin extends React.Component {
     store.dispatch(logoutToken());
   }
 
-  getUserLabel() {
-    let { user } = this.props;
-    let label = user ? user.get("username") : "User Menu";
-    //label = label.split("@")[0]
-    return label;
-  }
-
   userDropDownItems() {
     let { user } = this.props;
-    let menu = [
-      { label: this.getUserLabel(), to: "/user/", octicon: "person" },
-      { label: "My Profile", to: "/accounts/profile", octicon: "home" }
-    ];
+    let menu = [{ label: "My Profile", to: "/accounts/profile", octicon: "home" }];
     // Superuser-related menus
     if (user && user.get("is_tenant_superuser")) {
       menu = menu.concat([{ label: null }, { label: "Tenacy admin", to: "/tenant/admin/", octicon: "gear" }]);
@@ -41,8 +39,8 @@ export class DropdownLogin extends React.Component {
   }
 
   render() {
-    let label = "User";
-    if (!this.props.isAuthenticated) {
+    let { isAuthenticated, user } = this.props;
+    if (!isAuthenticated) {
       //console.log("I am not Authenticated")
       return (
         <li className="dropdown order-1">
@@ -63,7 +61,13 @@ export class DropdownLogin extends React.Component {
       );
     } else {
       //console.log("I am Authenticated")
-      return <DropDownItem label={label} items={this.userDropDownItems()} extraDropdownClass={"dropdown-menu-right"} />;
+      return (
+        <DropDownItem
+          label={<span className="user-dropdown-header">{UserLabel({ user })}</span>}
+          items={this.userDropDownItems()}
+          extraDropdownClass={"dropdown-menu-right"}
+        />
+      );
     }
   }
 }
