@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Traec from "traec";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { BSCard } from "traec-react/utils/bootstrap";
 
@@ -27,10 +29,30 @@ class ActivationPage extends React.Component {
   }
 
   render_body_failed() {
+    let errors = this.props.errors.get("non_field_errors");
+    console.log("Got activation errors", errors, Traec.Im.isList(errors));
+    // Iterate through erros to find any already_activated ones
+    let extra = null;
+    if (Traec.Im.isList(errors)) {
+      errors.map(error => {
+        if (typeof error === "string" && error.includes("already_activated")) {
+          extra = (
+            <p>
+              Your account has already been activated. Please try to log in here:{" "}
+              <Link to="/accounts/login">
+                <b>Go to Login Page</b>
+              </Link>
+            </p>
+          );
+        }
+      });
+    }
+    //
     return (
       <div>
         <p>There was an error with your account activation.</p>
-        <div className="alert alert-danger form-control-sm">{this.props.errors.get("non_field_errors")}</div>
+        {extra}
+        <div className="alert alert-danger">{errors}</div>
       </div>
     );
   }
