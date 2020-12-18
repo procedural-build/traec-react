@@ -13,7 +13,6 @@ function UserLabel({ user }) {
     ? ((user.get("first_name") || "").charAt(0) + (user.get("last_name") || "").charAt(0)).trim() ||
       user.get("username")
     : "User";
-  console.log("AAAAAAAAAAAAAAAAAAAAAA", label);
   return label;
 }
 
@@ -27,11 +26,16 @@ export class DropdownLogin extends React.Component {
   }
 
   userDropDownItems() {
-    let { user } = this.props;
-    let menu = [{ label: "My Profile", to: "/accounts/profile", octicon: "home" }];
+    let { user, include_myprofile = true } = this.props;
+    let menu = [];
+    // Include a link to myprofile
+    if (include_myprofile) {
+      menu = menu.concat([{ label: "My Profile", to: "/accounts/profile", octicon: "home" }]);
+    }
     // Superuser-related menus
     if (user && user.get("is_tenant_superuser")) {
-      menu = menu.concat([{ label: null }, { label: "Tenacy admin", to: "/tenant/admin/", octicon: "gear" }]);
+      menu = menu.length ? menu.concat([{ label: null }]) : menu;
+      menu = menu.concat([{ label: "Tenacy admin", to: "/tenant/admin/", octicon: "gear" }]);
     }
     // Logout menu
     menu = menu.concat([{ label: null }, { label: "Logout", onClick: this.logoutClicked, octicon: "sign-out" }]);

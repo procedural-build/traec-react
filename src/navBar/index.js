@@ -29,7 +29,7 @@ export class NavBar extends React.Component {
   }
 
   render() {
-    let { extraClass } = this.props;
+    let { extraClass, include_myprofile = true } = this.props;
     return (
       <div className="navbar-area">
         <nav
@@ -52,7 +52,7 @@ export class NavBar extends React.Component {
               <ul className="nav navbar-nav flex-row justify-content-between ml-auto">
                 {this.renderItems()}
                 {this.props.preUserItems}
-                <DropdownLogin />
+                <DropdownLogin include_myprofile={include_myprofile} />
               </ul>
             </div>
           </div>
@@ -79,6 +79,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({ dispatch });
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default connect(mapStateToProps)(NavBar);
