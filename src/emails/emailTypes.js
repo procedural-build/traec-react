@@ -7,7 +7,7 @@ export const emailDefaultFrequencies = type => {
       project_ref_near_due: { value: 7, type: "number" },
       project_ref_overdue: { value: 1, type: "number" },
       project_ref_submitted: { value: 3, type: "number" },
-      project_ref_rejected: { value: 7, type: "number" },
+      project_ref_rejected: { value: 1, type: "number" },
       project_ref_approved: { value: 0, type: "checkbox" }
     };
   } else if (type === "compute") {
