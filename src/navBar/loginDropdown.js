@@ -18,7 +18,6 @@ function UserLabel({ user }) {
 
 export class DropdownLogin extends React.Component {
   logoutClicked(e) {
-    console.log("Logout button clicked");
     e.preventDefault();
 
     // Call action when form submitted
@@ -26,11 +25,15 @@ export class DropdownLogin extends React.Component {
   }
 
   userDropDownItems() {
-    let { user, include_myprofile = true } = this.props;
+    let { user, include_myprofile = true, includeUser = false } = this.props;
     let menu = [];
     // Include a link to myprofile
     if (include_myprofile) {
       menu = menu.concat([{ label: "My Profile", to: "/accounts/profile", octicon: "home" }]);
+    }
+
+    if (includeUser) {
+      menu = menu.concat([{ label: this.getUserLabel(), to: "/user/", octicon: "person" }]);
     }
     // Superuser-related menus
     if (user && user.get("is_tenant_superuser")) {
