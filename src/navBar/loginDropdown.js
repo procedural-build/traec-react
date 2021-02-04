@@ -8,17 +8,16 @@ import LoginForm from "traec-react/auth/form";
 import { logoutToken } from "traec-react/auth/_redux/actions";
 import { DropDownItem } from "./dropdown";
 
-function UserLabel({ user }) {
+const UserLabel = ({ user }) => {
   let label = user
     ? ((user.get("first_name") || "").charAt(0) + (user.get("last_name") || "").charAt(0)).trim() ||
       user.get("username")
     : "User";
   return label;
-}
+};
 
 export class DropdownLogin extends React.Component {
   logoutClicked(e) {
-    console.log("Logout button clicked");
     e.preventDefault();
 
     // Call action when form submitted
@@ -26,11 +25,15 @@ export class DropdownLogin extends React.Component {
   }
 
   userDropDownItems() {
-    let { user, include_myprofile = true } = this.props;
+    let { user, include_myprofile = true, includeUser = false } = this.props;
     let menu = [];
     // Include a link to myprofile
     if (include_myprofile) {
       menu = menu.concat([{ label: "My Profile", to: "/accounts/profile", octicon: "home" }]);
+    }
+
+    if (includeUser) {
+      menu = menu.concat([{ label: UserLabel(user), to: "/user/", octicon: "person" }]);
     }
     // Superuser-related menus
     if (user && user.get("is_tenant_superuser")) {
