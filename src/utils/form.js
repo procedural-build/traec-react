@@ -168,12 +168,13 @@ class BaseForm extends React.Component {
   }
 
   render_submit() {
-    if (this.props.disabled) {
+    let { disabled, submitBtnText } = this.props;
+    if (disabled) {
       return null;
     }
     return (
       <button type="submit" className="btn btn-sm btn-primary float-right">
-        Submit
+        {submitBtnText || "Submit"}
       </button>
     );
   }
