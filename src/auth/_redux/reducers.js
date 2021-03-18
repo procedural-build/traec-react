@@ -86,6 +86,21 @@ export default function(state = initialState, action) {
           errors: action.payload.errors
         })
       );
+    case types.CHANGE_SUCCESS:
+      return state.mergeIn(
+        ["registration", "password_change"],
+        Im.fromJS({
+          status: "success"
+        })
+      );
+    case types.CHANGE_FAILURE:
+      return state.mergeIn(
+        ["registration", "password_change"],
+        Im.fromJS({
+          status: "failed",
+          errors: action.payload.errors
+        })
+      );
     default:
       return state;
   }
