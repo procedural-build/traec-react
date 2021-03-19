@@ -40,6 +40,11 @@ export class DropdownLogin extends React.Component {
       menu = menu.length ? menu.concat([{ label: null }]) : menu;
       menu = menu.concat([{ label: "Tenacy admin", to: "/tenant/admin/", octicon: "gear" }]);
     }
+    // Password change
+    menu = menu.concat([
+      { label: null },
+      { label: "Change Password", to: "/accounts/password/change/", octicon: "key" }
+    ]);
     // Logout menu
     menu = menu.concat([{ label: null }, { label: "Logout", onClick: this.logoutClicked, octicon: "sign-out" }]);
     return Im.fromJS(menu);

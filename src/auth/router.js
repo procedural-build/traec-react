@@ -7,6 +7,7 @@ import LoginPage from "./registration/login";
 
 import PasswordResetPage from "./password/reset";
 import PasswordResetConfirmPage from "./password/confirm";
+import PasswordChangePage from "./password/change";
 
 class AccountsRouter extends React.Component {
   render() {
@@ -28,6 +29,7 @@ class AccountsRouter extends React.Component {
           <Route exact path={`${baseUrl}/password/reset`} component={PasswordResetPage} />
           <Route exact path={`${baseUrl}/password/reset/:uid/:token`} component={PasswordResetConfirmPage} />
           <Route exact path={`${baseUrl}/reset/:uid/:token`} component={PasswordResetConfirmPage} />
+          <Route exact path={`${baseUrl}/password/change`} component={PasswordChangePage} />
         </Switch>
       </React.Fragment>
     );

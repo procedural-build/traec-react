@@ -54,3 +54,14 @@ export const postPasswordResetConfirm = (body, fetchParams) => {
     fetchParams
   };
 };
+
+export const postPasswordChange = (body, fetchParams) => {
+  fetchParams = Object.assign({ url: "/auth-rest/password/change/", method: "POST" }, { body }, fetchParams);
+  return {
+    APICallTypes: {
+      successType: "CHANGE_SUCCESS",
+      failureType: "CHANGE_FAILURE"
+    },
+    fetchParams
+  };
+};
