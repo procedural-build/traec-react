@@ -13,6 +13,7 @@ export const postLogin = (body, fetchParams) => {
 
 export const postRegistration = (body, fetchParams) => {
   fetchParams = Object.assign({ url: "/auth-rest/register/", method: "POST" }, { body }, fetchParams);
+
   return {
     APICallTypes: {
       successType: "REGISTER_SUCCESS",
