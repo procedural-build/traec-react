@@ -9,7 +9,7 @@ import { ErrorBoundary } from "../errors";
 
 export class CompanyMembers extends React.Component {
   render() {
-    const { companyId, company } = this.props;
+    const { companyId, company, children } = this.props;
     if (!company) {
       return null;
     }
@@ -38,6 +38,7 @@ export class CompanyMembers extends React.Component {
             <AuthGroupList companyId={companyId} />
           </CompanyPermission>
         </ErrorBoundary>
+        {children}
       </React.Fragment>
     );
   }
