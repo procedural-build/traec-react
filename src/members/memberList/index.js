@@ -56,6 +56,11 @@ export class MemberList extends React.Component {
 
   onClick(e) {
     e.preventDefault();
+    this.fetch.updateFetchParams({
+      preFetchHook: data => {
+        return Object.assign(data, { meta_json: { push_below: data.meta_json__push_below } });
+      }
+    });
     this.fetch.toggleForm();
   }
 

@@ -5,6 +5,7 @@ import { BSBtnDropdown } from "traec-react/utils/bootstrap";
 import { CompanyPermission } from "traec/utils/permissions/company";
 import { ProjectPermission } from "traec/utils/permissions/project";
 import { confirmDelete } from "traec-react/utils/sweetalert";
+import company from "../../user/userCompanies/company";
 
 function LastColumns(props) {
   let { projectId, companyId, item, links } = props;
@@ -36,6 +37,7 @@ export default class MemberItem extends React.Component {
     this.deleteMember = this.deleteMember.bind(this);
     this.toggleAssignments = this.toggleAssignments.bind(this);
     this.renderDocuments = this.renderDocuments.bind(this);
+    this.pushMember = this.pushMember.bind(this);
   }
 
   stateParams() {
@@ -49,6 +51,15 @@ export default class MemberItem extends React.Component {
 
   editMember(e) {
     e.preventDefault();
+  }
+
+  pushMember(e) {
+    e.preventDefault();
+    new Traec.Fetch("company_member", "patch", {
+      companyId: this.props.companyId,
+      memberId: this.props.member.get("uid"),
+      pushBelow: true
+    }).dispatch();
   }
 
   deleteMember(e) {
@@ -78,10 +89,12 @@ export default class MemberItem extends React.Component {
   dropDownLinks() {
     let { seeAssignments } = this.props;
     if (!seeAssignments) {
-      return [
-        //{ name: "Edit", onClick: this.editMember },
-        { name: "Delete", onClick: this.deleteMember }
-      ];
+      let links = [{ name: "Delete", onClick: this.deleteMember }];
+
+      if (this.props.companyId) {
+        links.push({ name: "Push to below", onClick: this.pushMember });
+      }
+      return links;
     } else if (seeAssignments) {
       return [
         //{ name: "Edit", onClick: this.editMember },
