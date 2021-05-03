@@ -15,8 +15,6 @@ class BaseForm extends React.Component {
     super(props);
     let { fields, initFields, forceShowForm } = props;
 
-    console.log("Calling constructor on BaseForm");
-
     this.state = {
       formFields: this.initialiseFormFields(fields, initFields),
       formErrors: null,
@@ -29,14 +27,14 @@ class BaseForm extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let { fields, initFields, showForm } = this.props;
+    let { fields, initFields, showForm, reInit } = this.props;
     // Check if the fields are different
     let sameFields = eqSet(new Set(Object.keys(prevState.formFields)), new Set(Object.keys(fields)));
     // Check if the
     if (!sameFields || (!prevProps.showForm && showForm)) {
-      this.setState({
-        formFields: this.initialiseFormFields(fields, initFields)
-      });
+      let formFields = this.initialiseFormFields(fields, initFields);
+      console.log("Setting new form-fields in BaseForm", !sameFields, !prevProps.showForm && showForm, formFields);
+      this.setState({ formFields });
     }
   }
 
@@ -45,6 +43,11 @@ class BaseForm extends React.Component {
     if (!initFields) {
       return fields;
     }
+
+    if (!Im.isImmutable(initFields)) {
+      initFields = Im.fromJS(initFields);
+    }
+
     // Otherwise step through the projectFields and get what you can from initFields
     let initialFormFields = fields;
 
