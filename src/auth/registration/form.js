@@ -57,8 +57,8 @@ class RegistrationForm extends React.Component {
     this.state = {
       first_name: "",
       last_name: "",
-      username: "",
-      email: "",
+      username: props.email || "",
+      email: props.email || "",
       password1: "",
       password2: "",
       errors: null,
@@ -97,9 +97,6 @@ class RegistrationForm extends React.Component {
       name: "",
       gRecaptchaSiteKey
     };
-
-    // Log the post (for debugging registration issues)
-    console.log("Registration form submitted", post);
 
     // Call action when form submitted
     this.props.dispatch(postRegistration(post));

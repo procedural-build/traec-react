@@ -1,24 +1,25 @@
 import React from "react";
 
-export class BSCard extends React.Component {
-  render() {
-    return (
-      <div className={this.props.widthOffset} id={this.props.id ? this.props.id : ""}>
-        <div className="card">
-          <div className="card-header">
-            <h5 className="card-title float-left">{this.props.title}</h5>
-            {this.props.button}
-          </div>
+export const BSCard = props => {
+  let { widthOffset, id, extraBodyClass = "", title, extraBodyStyle, form, body, button, footer } = props;
 
-          <div className={`card-body ${this.props.extraBodyClass}`} style={this.props.extraBodyStyle}>
-            {this.props.form}
-            {this.props.body}
-          </div>
+  return (
+    <div className={widthOffset} id={id ? id : ""}>
+      <div className="card">
+        <div className="card-header">
+          <h5 className="card-title float-left">{title}</h5>
+          {button}
         </div>
+
+        <div className={`card-body ${extraBodyClass}`} style={extraBodyStyle}>
+          {form}
+          {body}
+        </div>
+        {footer ? <div className="card-footer">{footer}</div> : null}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export class BSCardGrid extends React.Component {
   form() {

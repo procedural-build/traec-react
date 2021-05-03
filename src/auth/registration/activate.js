@@ -22,7 +22,7 @@ class ActivationPage extends React.Component {
       <div>
         <p>Your email address is confirmed and account activated.</p>
         <p>Please log in with the username and password you used to register.</p>
-
+        <br />
         <LoginForm show_create_account={false} />
       </div>
     );
@@ -37,12 +37,11 @@ class ActivationPage extends React.Component {
       errors.map(error => {
         if (typeof error === "string" && error.includes("already_activated")) {
           extra = (
-            <p>
-              Your account has already been activated. Please try to{" "}
-              <Link to="/accounts/login">
-                <b>log in here</b>
-              </Link>
-            </p>
+            <div>
+              <p>Your account has already been activated.</p>
+              <br />
+              <LoginForm show_create_account={false} />
+            </div>
           );
         }
       });
