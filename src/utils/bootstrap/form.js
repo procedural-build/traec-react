@@ -124,7 +124,7 @@ export class BSForm extends React.Component {
     const rowBreakDiv = details.endRow ? <div className="w-100" /> : "";
     const labelBlock = details.label === "" ? "" : <label>{label}</label>;
 
-    let initalContent = details.initialContent || value;
+    let initalContent = details.initialContent; //|| value;
     //console.log("RENDERING TINYMCE COMPONENT", initalContent)
 
     return (
