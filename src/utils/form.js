@@ -56,7 +56,12 @@ class BaseForm extends React.Component {
         continue;
       } // Skip if the value is null
       let initValue = typeof initFields.get(key) !== "undefined" ? initFields.get(key) : fields[key].value;
-      initialFormFields[key].value = initValue;
+      // Handle TinyMCE differently
+      if ((initialFormFields[key] || {}).inputType == "tinymce") {
+        initialFormFields[key].initialContent = initValue;
+      } else {
+        initialFormFields[key].value = initValue;
+      }
     }
 
     return initialFormFields;

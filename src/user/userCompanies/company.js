@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
-import { BSBtn, BSCard } from "traec-react/utils/bootstrap";
+import { BSBtn, BSCard, BSModal } from "traec-react/utils/bootstrap";
 import BaseFormConnected from "traec-react/utils/form";
 import CompanyItem from "./companyItem";
 import { isSuperuser } from "traec-react/utils";
@@ -22,10 +22,15 @@ class UserCompanies extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      formParams: {
-        initFields: {}
+    let fetch = new Traec.Fetch("company", "post");
+    fetch.updateFetchParams({
+      postSuccessHook: () => {
+        $(`#addNewCompany`).modal("hide");
       }
+    });
+
+    this.state = {
+      formParams: fetch.params
     };
 
     // Data required from the API for this Component
@@ -41,9 +46,7 @@ class UserCompanies extends React.Component {
 
   onClick(e) {
     e.preventDefault();
-    let fetch = new Traec.Fetch("company", "post");
-    this.setState({ formParams: { params: fetch.params } });
-    fetch.toggleForm();
+    $(`#addNewCompany`).modal("show");
   }
 
   renderAddCompanyButton() {
@@ -54,6 +57,7 @@ class UserCompanies extends React.Component {
 
   render() {
     let { items, dispatch, user } = this.props;
+    let { formParams } = this.state;
 
     let itemList = items ? (
       items
@@ -84,7 +88,15 @@ class UserCompanies extends React.Component {
         title="My Company Memberships"
         button={this.renderAddCompanyButton()}
         body={itemList}
-        form={<BaseFormConnected params={this.state.formParams.params} fields={companyFields} />}
+        form={
+          <BSModal
+            id={"addNewCompany"}
+            title={"Add a company"}
+            body={
+              <BaseFormConnected params={formParams} fields={companyFields} forceShowForm={true} hideUnderline={true} />
+            }
+          />
+        }
       />
     );
   }
