@@ -130,7 +130,7 @@ function SelectInput(props) {
           className={`custom-select ${validClass(error)}`}
           onChange={handleChange}
           name={name}
-          value={value}
+          value={value == null ? "" : value}
           disabled={disabled}
         >
           {options}
@@ -208,8 +208,14 @@ function CreatableSelectField(props) {
 }
 
 function CheckboxField(props) {
-  let { name } = props;
-  let { label = camelCaseToSentence(name), inputType = "checkbox", groupExtraClass = "col", value = false } = props;
+  let { name, error, handleChange } = props;
+  let {
+    label = camelCaseToSentence(name),
+    inputType = "checkbox",
+    groupExtraClass = "col",
+    value = false,
+    disabled = false
+  } = props;
   let id = Crypto.randomBytes(4).toString("hex");
   return (
     <ErrorBoundary>
@@ -222,7 +228,7 @@ function CheckboxField(props) {
             checked={value}
             onChange={handleChange}
             id={id}
-            disabled={details.disabled || false}
+            disabled={disabled || false}
           />
           <label className="form-check-label" htmlFor={id}>
             {label}
@@ -270,7 +276,7 @@ function FormField(props) {
   if (!item || !item.details) {
     return null;
   }
-  let FieldComponent = FIELD_MAP[item.details.inputType || "text"];
+  let FieldComponent = FIELD_MAP[item.details.inputType || "text"] || TextInput;
   let errorText = getErrorText(item.name, errors);
   return (
     <ErrorBoundary>
