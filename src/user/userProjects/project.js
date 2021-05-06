@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 import Traec from "traec";
@@ -43,9 +44,19 @@ class UserProjects extends React.Component {
   }
 
   render() {
-    let { projects } = this.props;
+    let { projects, activeProjectRefs, redirectIfOne } = this.props;
     if (!projects) {
       return null;
+    }
+
+    // To be confirmed
+    if (redirectIfOne && activeProjectRefs && activeProjectRefs.size == 1) {
+      let _ref = activeProjectRefs.first();
+      let wpackId = _ref.get("uid").substring(0, 8);
+      let projectId = _ref.get("project").substring(0, 8);
+      let refUrl = `/project/${projectId}/wpack/${wpackId}/report/`;
+      console.log("REDIRECTING TO", refUrl, activeProjectRefs ? activeProjectRefs.toJS() : null);
+      return <Redirect to={refUrl} />;
     }
 
     let projectList = projects
@@ -84,6 +95,7 @@ const mapStateToProps = (state, ownProps) => {
 
   // Map the responsible refs onto the list of projects
   let userRefs = state.getInPath("entities.refs.byId");
+  let activeProjectRefs = Traec.Im.List();
   if (projects && userRefs) {
     for (let [crefId, cref] of userRefs) {
       if (!cref.getInPath("latest_commit.discipline")) {
@@ -95,6 +107,7 @@ const mapStateToProps = (state, ownProps) => {
       let projectId = cref.get("project");
       if (projects.has(projectId)) {
         projects = projects.addListToSet(`${projectId}.related_refs`, [cref]);
+        activeProjectRefs = activeProjectRefs.push(cref);
       }
     }
   }
@@ -122,7 +135,7 @@ const mapStateToProps = (state, ownProps) => {
     }
   }
 
-  return { projects, newItem, isAuthenticated, userRefs };
+  return { projects, newItem, isAuthenticated, activeProjectRefs };
 };
 
 export default connect(mapStateToProps)(UserProjects);

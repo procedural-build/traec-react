@@ -9,31 +9,27 @@ import PasswordResetPage from "./password/reset";
 import PasswordResetConfirmPage from "./password/confirm";
 import PasswordChangePage from "./password/change";
 
-class AccountsRouter extends React.Component {
-  render() {
-    const baseUrl = this.props.match.url;
-    let { UserProfile } = this.props;
+function AccountsRouter(props) {
+  const baseUrl = props.match.url;
+  let { UserProfile } = props;
 
-    return (
-      <React.Fragment>
-        <Switch>
-          {/* Registration pages */}
-          <Route exact path={`${baseUrl}/register`} component={RegistrationPage} />
-          <Route exact path={`${baseUrl}/activate/:activationKey`} component={ActivationPage} />
+  return (
+    <Switch>
+      {/* Registration pages */}
+      <Route exact path={`${baseUrl}/register`} component={RegistrationPage} />
+      <Route exact path={`${baseUrl}/activate/:activationKey`} component={ActivationPage} />
 
-          {/* Login and profile pages */}
-          <Route exact path={`${baseUrl}/login`} component={LoginPage} />
-          <Route exact path={`${baseUrl}/profile`} component={UserProfile} />
+      {/* Login and profile pages */}
+      <Route exact path={`${baseUrl}/login`} component={LoginPage} />
+      <Route exact path={`${baseUrl}/profile`} component={UserProfile} />
 
-          {/* Password reset pages */}
-          <Route exact path={`${baseUrl}/password/reset`} component={PasswordResetPage} />
-          <Route exact path={`${baseUrl}/password/reset/:uid/:token`} component={PasswordResetConfirmPage} />
-          <Route exact path={`${baseUrl}/reset/:uid/:token`} component={PasswordResetConfirmPage} />
-          <Route exact path={`${baseUrl}/password/change`} component={PasswordChangePage} />
-        </Switch>
-      </React.Fragment>
-    );
-  }
+      {/* Password reset pages */}
+      <Route exact path={`${baseUrl}/password/reset`} component={PasswordResetPage} />
+      <Route exact path={`${baseUrl}/password/reset/:uid/:token`} component={PasswordResetConfirmPage} />
+      <Route exact path={`${baseUrl}/reset/:uid/:token`} component={PasswordResetConfirmPage} />
+      <Route exact path={`${baseUrl}/password/change`} component={PasswordChangePage} />
+    </Switch>
+  );
 }
 
 export default AccountsRouter;
