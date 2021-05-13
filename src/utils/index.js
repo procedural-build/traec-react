@@ -5,7 +5,9 @@ export const isSuperuser = user => {
   if (!user) {
     return null;
   }
-  return user.get("is_superuser") || user.get("email").includes("actionsustainability");
+  return (
+    user.get("is_superuser") || user.get("is_tenant_superuser") || user.get("email").includes("actionsustainability")
+  );
 };
 
 // Convert camelCase to Sentence Case

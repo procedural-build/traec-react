@@ -37,6 +37,7 @@ function TextInput(props) {
     value = "",
     inputType = "text",
     placeholder = "",
+    helpText = "",
     disabled = false
   } = props;
   // Render the component
@@ -55,6 +56,7 @@ function TextInput(props) {
           formNoValidate={true}
           disabled={disabled}
         />
+        <ItemHelp text={helpText} label={name} />
         <ItemErrors error={error} />
         {error}
       </div>
