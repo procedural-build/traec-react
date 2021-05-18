@@ -11,12 +11,16 @@ import PasswordChangePage from "./password/change";
 
 function AccountsRouter(props) {
   const baseUrl = props.match.url;
-  let { UserProfile } = props;
+  let { UserProfile, metaFieldProps } = props;
 
   return (
     <Switch>
       {/* Registration pages */}
-      <Route exact path={`${baseUrl}/register`} component={RegistrationPage} />
+      <Route
+        exact
+        path={`${baseUrl}/register`}
+        render={_props => <RegistrationPage {..._props} metaFieldProps={metaFieldProps} />}
+      />
       <Route exact path={`${baseUrl}/activate/:activationKey`} component={ActivationPage} />
 
       {/* Login and profile pages */}
