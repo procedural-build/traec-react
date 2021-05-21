@@ -24,7 +24,7 @@ const RegistrationPage = props => {
   let email = null;
   if (location.search.indexOf("email") > -1) {
     try {
-      email = location.search.match(/[a-z0-9.\-_]+@[a-z0-9.\-_]+\.[a-z0-9]+/)[0];
+      email = location.toLowerCase().search.match(/[a-z0-9.\-_]+@[a-z0-9.\-_]+\.[a-z0-9]+/)[0];
     } catch (e) {}
   }
 
