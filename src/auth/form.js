@@ -8,7 +8,7 @@ export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
+      username: props.initUsername || "",
       password: "",
       errors: null,
       status: null,

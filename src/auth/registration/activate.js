@@ -103,10 +103,4 @@ const mapStateToProps = state => ({
   errors: state.getInPath("auth.registration.activate.errors")
 });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ActivationPage);
+export default connect(mapStateToProps)(ActivationPage);

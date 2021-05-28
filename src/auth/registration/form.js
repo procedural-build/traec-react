@@ -51,15 +51,28 @@ const isIP = hostname => {
   }
 };
 
-const modifyErrorMessage = errors => {
-  let errorMessages = errors.map(error => {
-    if (error.startsWith("Captcha failed.")) {
-      return "reCAPTCHA failed. Please click the reset reCAPTCHA button and try again." + error.slice(15, 37);
-    } else {
-      return error;
-    }
-  });
-  return errorMessages;
+const modifyErrorMessages = errors => {
+  if (!errors) return null;
+  return errors.map((error, i) => <React.Fragment key={i}>{modifyErrorMessage(error)}</React.Fragment>);
+};
+
+const modifyErrorMessage = error => {
+  if (error.startsWith("Captcha failed.")) {
+    return "reCAPTCHA failed. Please click the reset reCAPTCHA button and try again." + error.slice(15, 37);
+  } else if (error.startsWith("User with that email or username already exists")) {
+    return (
+      <span>
+        User with that email or username already exists.
+        <br />
+        <b>
+          You may be already registered? If so, try logging in <a href="/accounts/login">here</a>
+        </b>
+      </span>
+    );
+  } else {
+    return error;
+  }
+  return error;
 };
 
 function FormItem(props) {
@@ -70,7 +83,7 @@ function FormItem(props) {
 
   // Get the validity and error message of this field
   const validClass = errors && errors.has(name) ? "is-invalid" : "";
-  const error = validClass ? <div className="invalid-feedback">{errors.get(name).join(" ")}</div> : null;
+  const error = validClass ? <div className="invalid-feedback">{modifyErrorMessages(errors.get(name))}</div> : null;
 
   // Render
   return (
@@ -94,7 +107,7 @@ function FormNonFieldErrors({ errors }) {
   const attr = "non_field_errors";
   if (errors && errors.has(attr)) {
     //console.log("NON_FIELD_ERRORS", errors);
-    return <div className="alert alert-danger">{modifyErrorMessage(errors.get(attr))}</div>;
+    return <div className="alert alert-danger">{modifyErrorMessages(errors.get(attr))}</div>;
   }
   return "";
 }
@@ -141,7 +154,7 @@ class RegistrationForm extends React.Component {
       password1: "",
       password2: "",
       errors: null,
-      meta_json: {},
+      meta_json: props.initMeta || {},
       gRecaptchaResponse: null,
       showRecaptcha: !isIP(location.hostname)
     };
