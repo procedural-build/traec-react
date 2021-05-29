@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 import Traec from "traec";
 import { BSBtnDropdown, BSBtn } from "traec-react/utils/bootstrap";
+import { ActionButton } from "../button";
 
 export default class CompanyInviteItem extends React.Component {
   constructor(props) {
