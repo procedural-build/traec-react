@@ -14,7 +14,6 @@ export default class InviteItem extends React.Component {
 
     let PermissionWrapper = projectId ? ProjectPermission : CompanyPermission;
 
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAA", projectId, companyId, item?.toJS());
     return (
       <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
         <div className="col-sm-6">{item.get("email")}</div>

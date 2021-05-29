@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import Traec from "traec";
-import { BSBtnDropdown } from "traec-react/utils/bootstrap";
+import { BSBtnDropdown, BSBtn } from "traec-react/utils/bootstrap";
 
 export default class CompanyInviteItem extends React.Component {
   constructor(props) {
@@ -36,9 +36,11 @@ export default class CompanyInviteItem extends React.Component {
     return (
       <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
         <div className="col-sm-7">{invite.getIn(["company", "name"])}</div>
-        <div className="col-sm-4">{invite.getIn(["auth", "name"])}</div>
-        <div className="col-sm-1">
-          <BSBtnDropdown links={this.dropDownLinks()} />
+        <div className="col-sm-3">{invite.getIn(["auth", "name"])}</div>
+        <div className="col-sm-2">
+          {/*<BSBtnDropdown links={this.dropDownLinks()} />*/}
+          <ActionButton color="success" text="accept" onClickHandler={e => this.respondInvite(e, true)} />
+          <ActionButton color="danger" text="reject" onClickHandler={e => this.respondInvite(e, false)} />
         </div>
       </div>
     );

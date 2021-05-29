@@ -90,10 +90,4 @@ const mapStateToProps = (state, ownProps) => ({
   isAuthenticated: state.getInPath("auth.isAuthenticated")
 });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyInvites);
+export default connect(mapStateToProps)(CompanyInvites);
