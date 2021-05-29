@@ -54,18 +54,10 @@ const mapStateToProps = (state, ownProps) => {
   let company = null;
   let invites = null;
 
-  if (ownProps.projectId) {
+  if (projectId) {
     project = state.getInPath(`entities.projects.byId.${projectId}`);
     invites = state.getInPath(`entities.projectObjects.byId.${projectId}.invites`);
-    let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`);
-
-    if (invites && disciplines) {
-      for (let [key, invite] of invites) {
-        let disciplineId = invite.get("project_discipline");
-        invites = invites.setInPath(`${key}.project_discipline`, disciplines.get(disciplineId));
-      }
-    }
-  } else if (ownProps.companyId) {
+  } else if (companyId) {
     company = state.getInPath(`entities.companies.byId.${companyId}`);
     invites = state.getInPath(`entities.companyObjects.byId.${companyId}.invites`);
   }
@@ -78,10 +70,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: dispatch
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(InviteList);
+export default connect(mapStateToProps)(InviteList);

@@ -43,6 +43,10 @@ class UserProjects extends React.Component {
     Traec.fetchRequired.bind(this)();
   }
 
+  componentDidUpdate() {
+    Traec.fetchRequired.bind(this)();
+  }
+
   render() {
     let { projects, activeProjectRefs, redirectIfOne } = this.props;
     if (!projects) {
