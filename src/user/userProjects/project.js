@@ -49,7 +49,7 @@ class UserProjects extends React.Component {
 
   render() {
     let { projects, activeProjectRefs, redirectIfOne } = this.props;
-    if (!projects) {
+    if (!projects || !projects.size) {
       return null;
     }
 
