@@ -2,7 +2,24 @@ import React from "react";
 import Traec from "traec";
 import { connect } from "react-redux";
 import { BSCard } from "traec-react/utils/bootstrap";
-import InviteItem from "./item";
+import InviteItem, { RequestItem } from "./item";
+import { ErrorBoundary } from "traec-react/errors/handleError";
+
+export function SubInviteList({ items, title }) {
+  if (!items || !items.size) {
+    return null;
+  }
+  return (
+    <ErrorBoundary>
+      <div className="row">
+        <div className="col-sm-12">
+          <b>{title}</b>
+        </div>
+      </div>
+      {items}
+    </ErrorBoundary>
+  );
+}
 
 export class InviteList extends React.Component {
   constructor(props) {
@@ -19,11 +36,11 @@ export class InviteList extends React.Component {
   }
 
   componentDidMount() {
-    Traec.fetchRequired.bind(this)();
+    Traec.fetchRequiredFor(this);
   }
 
   componentDidUpdate() {
-    Traec.fetchRequired.bind(this)();
+    Traec.fetchRequiredFor(this);
   }
 
   render() {
@@ -32,9 +49,19 @@ export class InviteList extends React.Component {
       return null;
     }
 
-    // Get the list of Invite components
-    let itemList = invites
+    // Get the company requests
+    let requestList = invites
       .toList()
+      .filter(i => i && i.has("uid") && i.get("is_request"))
+      .sortBy((obj, i) => obj.get("created"))
+      .map((invite, i) => (
+        <RequestItem key={i} index={i} item={invite} companyId={companyId} projectId={projectId} dispatch={dispatch} />
+      ));
+
+    // Get the list of Invite components
+    let inviteList = invites
+      .toList()
+      .filter(i => i && i.has("uid") && !i.get("is_request"))
       .sortBy((obj, i) => obj.get("created"))
       .map((invite, i) => (
         <InviteItem key={i} index={i} item={invite} companyId={companyId} projectId={projectId} dispatch={dispatch} />
@@ -42,7 +69,18 @@ export class InviteList extends React.Component {
 
     return (
       <div className="row">
-        <BSCard widthOffset="col-sm-12" title="Outstanding Invitations" button={null} body={itemList} form={null} />
+        <BSCard
+          widthOffset="col-sm-12"
+          title="Outstanding Invitations or Requests"
+          button={null}
+          body={
+            <ErrorBoundary>
+              <SubInviteList items={requestList} title="Requests" />
+              <SubInviteList items={inviteList} title="Invitations" />
+            </ErrorBoundary>
+          }
+          form={null}
+        />
       </div>
     );
   }
