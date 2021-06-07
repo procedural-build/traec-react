@@ -58,7 +58,13 @@ export class MemberList extends React.Component {
     e.preventDefault();
     this.fetch.updateFetchParams({
       preFetchHook: data => {
-        return Object.assign(data, { meta_json: { push_below: data.meta_json__push_below } });
+        console.log("Sending invite data", data);
+        return Object.assign(data, {
+          meta_json: {
+            push_below: data.meta_json__push_below,
+            auto_accept_if_user_exists: data.meta_json__auto_accept_if_user_exists
+          }
+        });
       }
     });
     this.fetch.toggleForm();
