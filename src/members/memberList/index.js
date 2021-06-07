@@ -45,11 +45,11 @@ export class MemberList extends React.Component {
   }
 
   componentDidMount() {
-    Traec.fetchRequired.bind(this)();
+    Traec.fetchRequiredFor(this);
   }
 
   componentDidUpdate() {
-    Traec.fetchRequired.bind(this)();
+    Traec.fetchRequiredFor(this);
   }
 
   /* ACTIONS */
@@ -81,6 +81,8 @@ export class MemberList extends React.Component {
 
     let inviteFields = projectId ? projectInviteFields : companyInviteFields;
     let PermissionRender = projectId ? ProjectPermission : CompanyPermission;
+
+    console.log("RENDERING MemberList", companyId, projectId, members?.toJS());
 
     return (
       <div className="row">
