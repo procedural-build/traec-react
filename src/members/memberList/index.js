@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Traec from "traec";
 
-import { BSCard, BSBtn, BSBtnDropdown } from "traec-react/utils/bootstrap";
+import { BSBtn, BSCard } from "traec-react/utils/bootstrap";
 
 import { objToList } from "traec-react/utils";
 import InviteForm, { companyInviteFields, projectInviteFields } from "./form";

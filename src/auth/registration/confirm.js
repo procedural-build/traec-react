@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { BSCard, BSBtn } from "traec-react/utils/bootstrap";
+import { BSCard } from "traec-react/utils/bootstrap";
 
 function UserIsActiveBody() {
   return <Redirect to="/accounts/login" />;

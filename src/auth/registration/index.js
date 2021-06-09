@@ -6,7 +6,6 @@ import RegistrationForm from "./form";
 import RegistrationConfirmationCard from "./confirm";
 import { BSCard } from "traec-react/utils/bootstrap";
 import AcceptProjectInvites from "./acceptProjectInvites";
-import logger from "redux-logger";
 
 const RegistrationCard = props => {
   let { redirect, email, metaFieldProps, initMeta } = props;

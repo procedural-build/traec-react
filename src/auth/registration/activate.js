@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Traec from "traec";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 
 import { BSCard } from "traec-react/utils/bootstrap";
 
