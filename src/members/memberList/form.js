@@ -11,18 +11,25 @@ export const companyInviteFields = {
   email: { inputType: "email", value: "", class: "col-sm-7 mb-1", label: "", placeholder: "Email" },
   auth: {
     value: "",
-    class: "col-sm-4 mb-1",
+    class: "col-sm-5 mb-1",
     label: "",
     placeholder: "Authority Group",
     inputType: "select",
     defaultValue: "",
-    header: "Choose an Authority Group"
+    header: "Choose an Authority Group",
+    endRow: true
   },
   meta_json__push_below: {
     value: false,
-    class: "col-sm-1 mb-1",
+    class: "col-sm-7 mb-1",
     inputType: "checkbox",
     label: "Push To Below"
+  },
+  meta_json__auto_accept_if_user_exists: {
+    value: false,
+    class: "col-sm-5 mb-1",
+    inputType: "checkbox",
+    label: "Auto-accept (if/when user exists)"
   }
 };
 

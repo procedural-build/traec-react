@@ -50,6 +50,4 @@ const mapStateToProps = (state, ownProps) => {
   return { companyId, company };
 };
 
-const mapDispatchToProps = dispatch => ({ dispatch });
-
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyMembers);
+export default connect(mapStateToProps)(CompanyMembers);
