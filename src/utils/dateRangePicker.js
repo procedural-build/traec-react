@@ -92,8 +92,8 @@ export class DateRangePicker extends React.Component {
     return (
       <div className="float-right" aria-label="date-range-menu">
         <a onClick={this.toggleShowDropdown}>
-          <Octicon name="calendar" /> {Moment(fromDateValue).format("MMM Do YY")} to{" "}
-          {Moment(toDateValue).format("MMM Do YY")} <span className="caret" />
+          <Octicon name="calendar" /> {Moment(fromDateValue).format("Do MMM YY")} to{" "}
+          {Moment(toDateValue).format("Do MMM YY")} <span className="caret" />
         </a>
         {this.render_calendars()}
       </div>
