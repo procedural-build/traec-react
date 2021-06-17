@@ -27,8 +27,8 @@ export class MemberList extends React.Component {
         new Traec.Fetch("project_discipline", "list"),
         new Traec.Fetch("project_tracker", "list"),
         new Traec.Fetch("tracker_commit_target", "list"),
-        new Traec.Fetch("tracker_documents", "list", this.props.trackerId),
-        new Traec.Fetch("project_permission", "list", this.props.projectId)
+        new Traec.Fetch("tracker_documents", "list"),
+        new Traec.Fetch("project_permission", "list")
       ];
     }
     let { fetchParams, stateParams } = this.fetch.params;
@@ -45,10 +45,12 @@ export class MemberList extends React.Component {
   }
 
   componentDidMount() {
+    console.log("componentDidMount Calling Traec.fetchRequiredFor", this.props.projectId);
     Traec.fetchRequiredFor(this);
   }
 
   componentDidUpdate() {
+    console.log("componentDidUpdate Calling Traec.fetchRequiredFor", this.props.projectId);
     Traec.fetchRequiredFor(this);
   }
 
