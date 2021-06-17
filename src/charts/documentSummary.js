@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Traec from "traec";
 
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
+import { ErrorBoundary } from "../errors";
 
 const Chart = props => {
   let { data, width, height } = props;
@@ -111,20 +112,23 @@ class DocumentSummary extends Component {
 
   render() {
     let { trackerData } = this.props;
-    if (!trackerData) return "";
+    if (!trackerData) return null;
+
     return (
-      <div className="container">
-        <div className="row justify-content-cente">
-          {trackerData.valueSeq().map((data, index) => {
-            return (
-              <div key={index} className="col-md-6">
-                <h2 className="ml-5 mt-4">{data.get("title")}</h2>
-                <Chart data={this.convertTrackerDataToChartData(data)} />
-              </div>
-            );
-          })}
+      <ErrorBoundary>
+        <div className="container">
+          <div className="row justify-content-cente">
+            {trackerData.valueSeq().map((data, index) => {
+              return (
+                <div key={index} className="col-md-6">
+                  <h2 className="ml-5 mt-4">{data.get("title")}</h2>
+                  <Chart data={this.convertTrackerDataToChartData(data)} />
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      </ErrorBoundary>
     );
   }
 }

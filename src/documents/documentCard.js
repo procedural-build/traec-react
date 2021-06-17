@@ -229,7 +229,7 @@ const mapDispatchToProps = dispatch => {
 export default DocumentCard = connect(mapStateToProps, mapDispatchToProps)(DocumentCard);
 
 const getTreeId = (state, cref, docId) => {
-  let latestCommitId = cref.getInPath(`latest_commit.uid`);
+  let latestCommitId = cref?.getInPath(`latest_commit.uid`);
   let subTrees = state.getInPath(`entities.commitEdges.byId.${latestCommitId}.trees`);
 
   if (!subTrees) return;
@@ -238,8 +238,8 @@ const getTreeId = (state, cref, docId) => {
 };
 
 const addTreeTitleToDescription = ({ state, cref, description, treeId }) => {
-  let latestCommitId = cref.getInPath(`latest_commit.uid`);
-  let rootTreeId = cref.getInPath(`latest_commit.tree_root.uid`);
+  let latestCommitId = cref?.getInPath(`latest_commit.uid`);
+  let rootTreeId = cref?.getInPath(`latest_commit.tree_root.uid`);
 
   let categoryDescriptionIds = state.getInPath(
     `entities.commitEdges.byId.${latestCommitId}.trees.${rootTreeId}.descriptions`

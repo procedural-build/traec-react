@@ -1,9 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect, Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { BSCard } from "traec-react/utils/bootstrap";
 import { postPasswordChange } from "../_redux/actionCreators";
-import LoginForm from "../form";
 import { renderItem, renderNonFieldErrors } from "./utils";
 
 class PasswordChangePage extends React.Component {
