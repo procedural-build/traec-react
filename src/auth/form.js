@@ -93,7 +93,7 @@ export class LoginForm extends React.Component {
         {this.renderNonFieldErrors()}
         <LoginField
           attribute="username"
-          placeholder="Username"
+          placeholder="Username or Email"
           onChange={this.onChange}
           value={this.state["username"]}
           errors={errors}

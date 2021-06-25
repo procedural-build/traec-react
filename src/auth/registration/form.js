@@ -116,7 +116,7 @@ const mandatoryFieldProps = [
   { name: "first_name", placeholder: "First Name" },
   { name: "last_name", placeholder: "Last Name" },
   { name: "email", placeholder: "Email", type: "email" },
-  { name: "username", placeholder: "Username" },
+  { name: "username", placeholder: "Username or Email" },
   { name: "password1", placeholder: "Password", type: "password" },
   { name: "password2", placeholder: "Password (again)", type: "password" }
 ];

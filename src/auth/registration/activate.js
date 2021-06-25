@@ -20,7 +20,7 @@ class ActivationPage extends React.Component {
     return (
       <div>
         <p>Your email address is confirmed and account activated.</p>
-        <p>Please log in with the username and password you used to register.</p>
+        <p>Please log in with the username or email and password you used to register.</p>
         <br />
         <LoginForm show_create_account={false} />
       </div>
