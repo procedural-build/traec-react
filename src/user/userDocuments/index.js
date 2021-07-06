@@ -177,6 +177,7 @@ class UserDocuments extends React.Component {
   render() {
     let { disciplines, title } = this.props;
     if (!disciplines) return null;
+    //console.log("RENDERING USER DOCUMENTS")
     return (
       <div className="container">
         <h2 className="mt-3 mb-3">{title ? title : "My Documents"}</h2>

@@ -51,7 +51,10 @@ export class DropdownLogin extends React.Component {
   }
 
   render() {
-    let { isAuthenticated, user } = this.props;
+    let { isAuthenticated, user, userLabel = null } = this.props;
+
+    userLabel = userLabel || UserLabel({ user });
+
     if (!isAuthenticated) {
       //console.log("I am not Authenticated")
       return (
@@ -75,7 +78,7 @@ export class DropdownLogin extends React.Component {
       //console.log("I am Authenticated")
       return (
         <DropDownItem
-          label={<span className="user-dropdown-header">{UserLabel({ user })}</span>}
+          label={<span className="user-dropdown-header">{userLabel}</span>}
           items={this.userDropDownItems()}
           extraDropdownClass={"dropdown-menu-right"}
         />

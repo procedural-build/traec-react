@@ -29,7 +29,7 @@ export class NavBar extends React.Component {
   }
 
   render() {
-    let { extraClass, include_myprofile = true, includeUser = false } = this.props;
+    let { extraClass, include_myprofile = true, includeUser = false, userLabel = null } = this.props;
     return (
       <div className="navbar-area">
         <nav
@@ -52,7 +52,7 @@ export class NavBar extends React.Component {
               <ul className="nav navbar-nav flex-row justify-content-between ml-auto">
                 {this.renderItems()}
                 {this.props.preUserItems}
-                <DropdownLogin include_myprofile={include_myprofile} includeUser={includeUser} />
+                <DropdownLogin include_myprofile={include_myprofile} includeUser={includeUser} userLabel={userLabel} />
               </ul>
             </div>
           </div>
