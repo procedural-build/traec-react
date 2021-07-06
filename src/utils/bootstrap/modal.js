@@ -1,6 +1,6 @@
 import React from "react";
 
-export function BSModalHeader({ title, id }) {
+export function BSModalHeader({ title, id, hideClose }) {
   let _id = `${id}Label`;
   let _title = title ? (
     <h5 className="modal-title" id={_id}>
@@ -10,9 +10,11 @@ export function BSModalHeader({ title, id }) {
   return (
     <div className="modal-header">
       {_title}
-      <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      {hideClose ? null : (
+        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      )}
     </div>
   );
 }
@@ -48,7 +50,7 @@ export function BSModalButton({ id, text, className }) {
 }
 
 export function BSModal(props) {
-  let { id, body, fullWidth } = props;
+  let { id, body, fullWidth, hideClose } = props;
   let classNames = fullWidth
     ? "modal-dialog modal-dialog-centered pl-4 pr-2"
     : "modal-dialog modal-lg modal-dialog-centered";
