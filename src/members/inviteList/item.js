@@ -5,6 +5,8 @@ import { ProjectPermission } from "traec/utils/permissions/project";
 import { CompanyPermission } from "traec/utils/permissions/company";
 import { alertSuccess } from "traec-react/utils/sweetalert";
 
+import { ActionButton } from "traec-react/user/button";
+
 const roleName = invite => {
   return invite.getInPath("project_discipline.name") || invite.getInPath("auth.name");
 };
@@ -27,16 +29,18 @@ export function RequestItem(props) {
 
   return (
     <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
-      <div className="col-sm-6">{invite.get("email")}</div>
-      <div className="col-sm-5">{roleName(invite)}</div>
-      <div className="col-sm-1">
+      <div className="col-sm-7">{invite.get("email")}</div>
+      <div className="col-sm-3">{roleName(invite)}</div>
+      <div className="col-sm-2">
         <PermissionWrapper {...props} requiresAdmin={true}>
-          <BSBtnDropdown
+          <ActionButton color="success" text="Accept" onClickHandler={e => respondInvite(invite, true)} />
+          <ActionButton color="danger" text="Reject" onClickHandler={e => respondInvite(invite, false)} />
+          {/*<BSBtnDropdown
             links={[
               { name: "Approve Request", onClick: e => respondInvite(invite, true) },
               { name: "Reject Request", onClick: e => respondInvite(invite, false) }
             ]}
-          />
+          />*/}
         </PermissionWrapper>
       </div>
     </div>
