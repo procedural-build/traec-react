@@ -37,8 +37,8 @@ export function RequestItem(props) {
           <ActionButton color="danger" text="Reject" onClickHandler={e => respondInvite(invite, false)} />
           {/*<BSBtnDropdown
             links={[
-              { name: "Approve Request", onClick: e => respondInvite(invite, true) },
-              { name: "Reject Request", onClick: e => respondInvite(invite, false) }
+              { name: "Approve Request", onClick: (e) => respondInvite(invite, true) },
+              { name: "Reject Request", onClick: (e) => respondInvite(invite, false) },
             ]}
           />*/}
         </PermissionWrapper>
