@@ -5,9 +5,9 @@ import { isIP } from "./index";
 export const TraecRecaptcha = props => {
   let { show, setRecaptcha, recaptchaInstance, recaptchaExtra } = props;
 
-  /*if (!show) {
-      return null;
-    }*/
+  if (!show) {
+    return null;
+  }
 
   return (
     <div className="row mb-3">

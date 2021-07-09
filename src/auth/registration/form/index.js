@@ -30,7 +30,7 @@ const RegistrationForm = props => {
     errors: null,
     showRecaptcha: !isIP(location.hostname)
   });
-  const [recaptchaState, setRecaptcha] = React.useState({});
+  const [recaptchaState, setRecaptcha] = React.useState(isIP(location.hostname) ? "localsite" : null);
 
   const onChange = e => {
     if (!e.target) {
@@ -38,11 +38,12 @@ const RegistrationForm = props => {
     }
     if (e.target.name === "email") {
       setState({
+        ...state,
         [e.target.name]: e.target.value,
         username: e.target.value
       });
     } else {
-      setState({ [e.target.name]: e.target.value });
+      setState({ ...state, [e.target.name]: e.target.value });
     }
   };
 
@@ -62,6 +63,8 @@ const RegistrationForm = props => {
     let gRecaptchaSiteKey = getRecaptchaSiteKey();
     const post = {
       ...state,
+      meta_json: { ...metaJSON },
+      gRecaptchaResponse: recaptchaState,
       name: "",
       gRecaptchaSiteKey
     };
