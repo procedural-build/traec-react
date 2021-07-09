@@ -1,4 +1,4 @@
-import { getRecaptchaSiteKey } from "AppSrc/auth/registration/form";
+import { getRecaptchaSiteKey } from "AppSrc/auth/registration/form/recaptcha";
 
 describe("getRecaptchaSiteKey", () => {
   beforeEach(() => {
