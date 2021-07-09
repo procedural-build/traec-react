@@ -8,7 +8,8 @@ import LoginForm from "traec-react/auth/form";
 import { logoutToken } from "traec-react/auth/_redux/actions";
 import { DropDownItem } from "./dropdown";
 
-const UserLabel = ({ user }) => {
+const UserLabel = ({ user, getUserItemLabel }) => {
+  if (getUserItemLabel) return getUserItemLabel(user);
   let label = user
     ? ((user.get("first_name") || "").charAt(0) + (user.get("last_name") || "").charAt(0)).trim() ||
       user.get("username")
@@ -33,7 +34,7 @@ export class DropdownLogin extends React.Component {
     }
 
     if (includeUser) {
-      menu = menu.concat([{ label: UserLabel(user), to: "/user/", octicon: "person" }]);
+      menu = menu.concat([{ label: UserLabel(this.props), to: "/user/", octicon: "person" }]);
     }
     // Superuser-related menus
     if (user && user.get("is_tenant_superuser")) {
