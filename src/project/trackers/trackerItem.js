@@ -1,56 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { BSBtnDropdown } from "traec-react/utils/bootstrap";
+import Traec from "traec";
+import { ErrorBoundary } from "../../errors";
+import BaseFormConnected from "traec-react/utils/form";
 
-export class TrackerItem extends React.Component {
-  constructor(props) {
-    super(props);
+export const TrackerItem = props => {
+  let { index, tracker } = props;
+  let trackerId = tracker?.get("uid").substring(0, 8);
+  let trackerName = tracker?.get("name");
+  let fetch = new Traec.Fetch("tracker", "patch", { trackerId });
+  const [formParams, setFormParams] = useState(fetch.params);
 
-    this.state = {};
-
-    this.onClick = this.onClick.bind(this);
-    this.addFromTemplate = this.addFromTemplate.bind(this);
-  }
-
-  onClick(e) {
-    e.preventDefault();
-  }
-
-  addFromTemplate(e) {
-    e.preventDefault();
-  }
-
-  dropDownLinks() {
+  const dropDownLinks = () => {
     return [
-      { name: "Edit", onClick: this.onClick },
-      { name: "Add from template", linkTo: `/tracker/${this.props.tracker.get("uid").slice(0, 8)}/template` },
+      { name: "Edit", onClick: () => fetch.toggleForm() },
+      { name: "Add from template", linkTo: `/tracker/${trackerId}/template` },
       {},
       {
         name: "Delete",
         onClick: () => {
           console.log("Deleting Tracker");
+          new Traec.Fetch("tracker", "delete", { trackerId }).dispatch();
         }
       }
     ];
-  }
+  };
 
-  render() {
-    const i = this.props.index;
-    const item = this.props.tracker;
-
-    let trackerId = item.get("uid");
-    trackerId = trackerId ? trackerId.substring(0, 8) : trackerId;
-
-    return (
-      <div className="row" key={i} style={{ backgroundColor: (i + 1) % 2 ? "#ddd" : "" }}>
+  return (
+    <ErrorBoundary>
+      <div className="row" key={index} style={{ backgroundColor: (index + 1) % 2 ? "#ddd" : "" }}>
         <div className="col-sm-10">
-          <Link to={`/tracker/${trackerId}`}>{item.get("name")}</Link>
+          <Link to={`/tracker/${trackerId}`}>{trackerName}</Link>
         </div>
         <div className="col-sm-2">
-          <BSBtnDropdown links={this.dropDownLinks()} />
+          <BSBtnDropdown links={dropDownLinks()} />
         </div>
       </div>
-    );
-  }
-}
+      <BaseFormConnected
+        params={formParams}
+        fields={{ name: { value: "", endRow: true } }}
+        initFields={{ name: trackerName }}
+      />
+    </ErrorBoundary>
+  );
+};
