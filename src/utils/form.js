@@ -19,7 +19,8 @@ class BaseForm extends React.Component {
       formFields: this.initialiseFormFields(fields, initFields),
       formErrors: null,
       forceShowForm: forceShowForm || false,
-      requiresRefresh: false
+      requiresRefresh: false,
+      pending: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -156,7 +157,15 @@ class BaseForm extends React.Component {
       fetchParams: this.fetchParams(),
       stateParams: this.stateParams()
     };
+    // Wrapp the postSuccessHook to set pending to false again
+    let _postSuccessHook = params.fetchParams.postSuccessHook || (() => {});
+    params.fetchParams.postSuccessHook = data => {
+      _postSuccessHook(data);
+      this.setState({ pending: false });
+    };
+    // Dispatch the action (disable the submit button at the same time)
     let action = fetchToState(params, post);
+    this.setState({ pending: true });
     if (dispatchHandler) {
       dispatchHandler(dispatch, action);
     } else {
@@ -177,12 +186,17 @@ class BaseForm extends React.Component {
 
   render_submit() {
     let { disabled, submitBtnText } = this.props;
+    let { pending } = this.state;
     if (disabled) {
       return null;
     }
     return (
-      <button type="submit" className="btn btn-sm btn-primary float-right">
-        {submitBtnText || "Submit"}
+      <button type="submit" disabled={pending} className="btn btn-sm btn-primary float-right">
+        {pending ? (
+          <div className="spinner-border spinner-border-sm text-light" role="status" />
+        ) : (
+          submitBtnText || "Submit"
+        )}
       </button>
     );
   }
