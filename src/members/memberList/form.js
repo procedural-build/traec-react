@@ -42,7 +42,14 @@ export const projectInviteFields = {
     placeholder: "Supplier",
     inputType: "select",
     defaultValue: "",
-    header: "Choose a Supplier"
+    header: "Choose a Supplier",
+    endRow: true
+  },
+  meta_json__auto_accept_if_user_exists: {
+    value: false,
+    class: "col-sm-5 mb-1",
+    inputType: "checkbox",
+    label: "Auto-accept (if/when user exists)"
   }
 };
 
