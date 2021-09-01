@@ -9,7 +9,7 @@ import { ErrorBoundary } from "../errors";
 
 export class CompanyMembers extends React.Component {
   render() {
-    const { companyId, company, children } = this.props;
+    const { companyId, company, children, initFormFields } = this.props;
     if (!company) {
       return null;
     }
@@ -21,7 +21,7 @@ export class CompanyMembers extends React.Component {
         {/*Render the members panel if allowed */}
         <ErrorBoundary>
           <CompanyPermission companyId={companyId} requiresAdmin={false} requiredActions={["READ_COMPANY_MEMBER"]}>
-            <MemberList companyId={companyId} />
+            <MemberList companyId={companyId} initFormFields={initFormFields} />
           </CompanyPermission>
         </ErrorBoundary>
 

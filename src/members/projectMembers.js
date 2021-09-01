@@ -11,7 +11,7 @@ import { ErrorBoundary } from "../errors";
 
 export class ProjectMembers extends React.Component {
   render() {
-    const { children, projectId, project, company, seeAssignments } = this.props;
+    const { children, projectId, project, company, seeAssignments, initFormFields } = this.props;
     if (!project) {
       return "";
     }
@@ -23,7 +23,7 @@ export class ProjectMembers extends React.Component {
         {/*Render the members panel if allowed */}
 
         <ErrorBoundary>
-          <MemberList projectId={projectId} seeAssignments={seeAssignments} />
+          <MemberList projectId={projectId} seeAssignments={seeAssignments} initFormFields={initFormFields} />
         </ErrorBoundary>
 
         {/*Render the invites panel if allowed */}

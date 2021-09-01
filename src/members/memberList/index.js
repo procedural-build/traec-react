@@ -75,7 +75,7 @@ export class MemberList extends React.Component {
   /* RENDERING */
 
   render() {
-    let { companyId, projectId, members } = this.props;
+    let { companyId, projectId, members, initFormFields } = this.props;
 
     let itemList = objToList(members)
       .sortBy(i => i.getIn(["user", "first_name"]))
@@ -84,7 +84,7 @@ export class MemberList extends React.Component {
     let inviteFields = projectId ? projectInviteFields : companyInviteFields;
     let PermissionRender = projectId ? ProjectPermission : CompanyPermission;
 
-    console.log("RENDERING MemberList", companyId, projectId, members?.toJS());
+    console.log("RENDERING MemberList", companyId, projectId, members?.toJS(), initFormFields);
 
     return (
       <div className="row">
@@ -103,6 +103,7 @@ export class MemberList extends React.Component {
               projectId={projectId}
               params={this.state.formParams}
               fields={inviteFields}
+              initFields={initFormFields || Traec.Im.Map()}
             />
           }
         />
