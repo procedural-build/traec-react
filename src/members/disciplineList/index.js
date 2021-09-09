@@ -37,7 +37,14 @@ export class DisciplineList extends React.Component {
   }
 
   render() {
-    let { projectId, dispatch, disciplines, tree } = this.props;
+    let {
+      projectId,
+      dispatch,
+      disciplines,
+      tree,
+      title = "Project Suppliers",
+      buttonText = "Add a Supplier"
+    } = this.props;
     if (!disciplines) {
       return null;
     }
@@ -62,10 +69,10 @@ export class DisciplineList extends React.Component {
       <div className="row">
         <BSCard
           widthOffset="col-sm-12"
-          title="Project Suppliers"
+          title={title}
           button={
             <ProjectPermission projectId={projectId} requiresAdmin={true}>
-              <BSBtn onClick={this.onClick} text="Add a Supplier" />
+              <BSBtn onClick={this.onClick} text={buttonText} />
             </ProjectPermission>
           }
           body={itemList}
@@ -90,6 +97,7 @@ const mapStateToProps = (state, ownProps) => {
   // Make a tree of the discipline approval heirarchy
   let tree = {};
   if (disciplines) {
+    disciplines = disciplines.filter(discipline => !discipline.getInPath("meta_json.user_discipline"));
     for (let [itemId, item] of disciplines) {
       let approverId = item.get("approver") || "root";
       // Add the item to the tree
