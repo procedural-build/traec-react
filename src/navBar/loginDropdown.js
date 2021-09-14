@@ -52,7 +52,7 @@ export class DropdownLogin extends React.Component {
   }
 
   render() {
-    let { isAuthenticated, user, userLabel = null } = this.props;
+    let { createText, isAuthenticated, user, userLabel = null } = this.props;
 
     userLabel = userLabel || UserLabel({ user });
 
@@ -70,7 +70,7 @@ export class DropdownLogin extends React.Component {
           </button>
           <ul className="dropdown-menu dropdown-menu-right mt-1 dropdown-login-form">
             <li className="p-3">
-              <LoginForm />
+              <LoginForm createText={createText} />
             </li>
           </ul>
         </li>

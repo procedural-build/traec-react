@@ -60,13 +60,14 @@ export class LoginForm extends React.Component {
   }
 
   renderCreateAccount() {
-    if (this.props.show_create_account === false) {
-      return "";
+    let { show_create_account, createText } = this.props;
+    if (show_create_account === false) {
+      return null;
     }
     return (
       <div className="text-center border-top pt-3">
         <Link to="/accounts/register/?navbar">
-          <b>Create an account</b>
+          <b>{createText || "Create an account"}</b>
         </Link>
       </div>
     );

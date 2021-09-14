@@ -63,6 +63,7 @@ export class NavBar extends React.Component {
                   includeUser={includeUser}
                   userLabel={userLabel}
                   getUserItemLabel={getUserItemLabel}
+                  createText={this.props.createText}
                 />
               </ul>
             </div>
