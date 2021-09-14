@@ -82,6 +82,10 @@ class DocumentSummary extends Component {
   }
 
   convertTrackerDataToChartData(data) {
+    if (!data) {
+      return null;
+    }
+
     let subCategories = data.get("subCategories");
     let documents = data.get("documents");
     let chartData = [];
@@ -98,13 +102,13 @@ class DocumentSummary extends Component {
       });
     } else if (documents) {
       let element = {};
-      element.name = data.get("title").slice(0, 10);
+      element.name = data.get("title")?.slice(0, 10);
       documents.map(document => {
         let statusName = document.getInPath("status.name") ? document.getInPath("status.name") : "Nothing Received";
         let occurences = element[statusName];
         element[statusName] = occurences ? occurences + element[statusName] : 1;
       });
-      return element;
+      return [element];
     }
 
     return chartData.length > 0 ? chartData : null;
@@ -121,7 +125,7 @@ class DocumentSummary extends Component {
             {trackerData.valueSeq().map((data, index) => {
               return (
                 <div key={index} className="col-md-6">
-                  <h2 className="ml-5 mt-4">{data.get("title")}</h2>
+                  <h2 className="ml-5 mt-4">{data?.get("title")}</h2>
                   <Chart data={this.convertTrackerDataToChartData(data)} />
                 </div>
               );
@@ -181,7 +185,7 @@ function recursiveDataExtraction(parentRefs, allRefs, commitEdges, documentStatu
       );
     }
 
-    subData = subData.set("title", getTitle(commitEdge, treeRootId, descriptions));
+    subData = subData?.set("title", getTitle(commitEdge, treeRootId, descriptions));
     return subData;
   });
 
@@ -193,7 +197,7 @@ function getDocumentData(documents, documentStatuses, descriptions) {
     let documentData = Traec.Im.Map({});
     let documentStatusId = document.get("status");
     let documentDescriptionIds = document.get("descriptions");
-    documentData = documentData.set("status", documentStatuses.getInPath(`${documentStatusId}.status`));
+    documentData = documentData.set("status", documentStatuses?.getInPath(`${documentStatusId}.status`));
 
     if (!documentDescriptionIds) return documentData;
 
@@ -204,7 +208,7 @@ function getDocumentData(documents, documentStatuses, descriptions) {
 
 function getTitle(commitEdge, treeRootId, descriptions) {
   let descriptionIds = commitEdge.getInPath(`trees.${treeRootId}.descriptions`);
-  if (!descriptionIds) return subData;
+  if (!descriptionIds) return null;
   let description = descriptions.get(descriptionIds.first());
   return description.get("title");
 }
