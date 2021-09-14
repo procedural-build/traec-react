@@ -37,7 +37,16 @@ export class DisciplineList extends React.Component {
   }
 
   render() {
-    let { projectId, dispatch, disciplines, tree } = this.props;
+    let {
+      projectId,
+      dispatch,
+      disciplines,
+      tree,
+      title = "Project Suppliers",
+      buttonText = "Add a Supplier",
+      canAssignLeader,
+      projectMembers
+    } = this.props;
     if (!disciplines) {
       return null;
     }
@@ -45,11 +54,21 @@ export class DisciplineList extends React.Component {
     let rootChildren = [...tree["root"].children];
     let rootItems = Traec.Im.fromJS(rootChildren.map(id => tree[id].obj));
 
+    let membersByDiscipline = projectMembers?.groupBy(member => member.getInPath(`project_discipline.uid`));
     let itemList = rootItems
       .sortBy(i => i.get("name"))
       .filter(i => !i.get("approver"))
       .map((discipline, i) => (
-        <DisciplineItem key={i} index={i} item={discipline} tree={tree} projectId={projectId} dispatch={dispatch} />
+        <DisciplineItem
+          key={i}
+          index={i}
+          disciplineMembers={membersByDiscipline?.get(discipline.get("uid"))}
+          item={discipline}
+          tree={tree}
+          projectId={projectId}
+          dispatch={dispatch}
+          canAssignLeader={canAssignLeader}
+        />
       ));
 
     let fields = {
@@ -62,16 +81,16 @@ export class DisciplineList extends React.Component {
       <div className="row">
         <BSCard
           widthOffset="col-sm-12"
-          title="Project Suppliers"
+          title={title}
           button={
             <ProjectPermission projectId={projectId} requiresAdmin={true}>
-              <BSBtn onClick={this.onClick} text="Add a Supplier" />
+              <BSBtn onClick={this.onClick} text={buttonText} />
             </ProjectPermission>
           }
           body={itemList}
           form={
             <DisciplineForm
-              projectId={this.props.projectId}
+              projectId={projectId}
               stateParams={this.state.formParams.stateParams}
               fetchParams={this.state.formParams.fetchParams}
               fields={fields}
@@ -87,9 +106,12 @@ const mapStateToProps = (state, ownProps) => {
   let { projectId } = ownProps;
   let project = state.getInPath(`entities.projects.byId.${projectId}`);
   let disciplines = state.getInPath(`entities.projectObjects.byId.${projectId}.disciplines`);
+  let projectMembers = state.getInPath(`entities.projectObjects.byId.${projectId}.members`);
+
   // Make a tree of the discipline approval heirarchy
   let tree = {};
   if (disciplines) {
+    disciplines = disciplines.filter(discipline => !discipline.getInPath("meta_json.user_discipline"));
     for (let [itemId, item] of disciplines) {
       let approverId = item.get("approver") || "root";
       // Add the item to the tree
@@ -103,7 +125,7 @@ const mapStateToProps = (state, ownProps) => {
     }
   }
   // Return this
-  return { project, disciplines, tree };
+  return { project, disciplines, tree, projectMembers };
 };
 
 const mapDispatchToProps = dispatch => {

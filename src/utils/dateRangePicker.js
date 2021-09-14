@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 import DatePicker from "react-date-picker";
 import Octicon from "react-octicon";
