@@ -43,8 +43,11 @@ class CompanyInvites extends React.Component {
   }
 
   render() {
-    let { items } = this.props;
+    let { items, dontShow } = this.props;
     if (!items || !items.size) {
+      if (dontShow) {
+        return null;
+      }
       return (
         <div className="col-sm-12">
           <p>No outstanding Company Invites</p>

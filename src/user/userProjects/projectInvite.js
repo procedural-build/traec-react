@@ -35,8 +35,11 @@ class ProjectInvites extends React.Component {
   }
 
   render() {
-    let { items } = this.props;
+    let { items, dontShow } = this.props;
     if (!items || !items.size) {
+      if (dontShow) {
+        return null;
+      }
       return (
         <div className="col-sm-12">
           <p>No outstanding Project Invites</p>
@@ -53,7 +56,6 @@ class ProjectInvites extends React.Component {
         id="project-invite-list"
         widthOffset="col-sm-12"
         title="Project Invites"
-        //button={<BSBtn onClick={this.onClick} text="Create a Company" />}
         body={itemList}
         form={
           <BaseFormConnected
