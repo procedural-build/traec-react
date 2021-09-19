@@ -185,13 +185,13 @@ class BaseForm extends React.Component {
   }
 
   render_submit() {
-    let { disabled, submitBtnText } = this.props;
+    let { disabled, submitBtnText, submitBtnStyle = "btn-primary" } = this.props;
     let { pending } = this.state;
     if (disabled) {
       return null;
     }
     return (
-      <button type="submit" disabled={pending} className="btn btn-sm btn-primary float-right">
+      <button type="submit" disabled={pending} className={`btn btn-sm ${submitBtnStyle} float-right`}>
         {pending ? (
           <div className="spinner-border spinner-border-sm text-light" role="status" />
         ) : (
