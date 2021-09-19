@@ -56,10 +56,14 @@ class UserCompanies extends React.Component {
   }
 
   render() {
-    let { items, dispatch, user } = this.props;
+    let { items, dispatch, user, show } = this.props;
     let { formParams } = this.state;
 
-    let itemList = items ? (
+    if (!show) {
+      return null;
+    }
+
+    let itemList = items?.size ? (
       items
         .toList()
         .sortBy((obj, i) => obj.get("created"))
