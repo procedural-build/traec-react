@@ -5,6 +5,7 @@ import DropdownLogin from "./loginDropdown";
 import { MenuItem } from "./item";
 import { DropDownItem } from "./dropdown";
 import { setNavBarItems } from "traec/redux/actionCreators";
+import { isSuperuser } from "../utils";
 
 export { setNavBarItems };
 
@@ -13,7 +14,7 @@ export class NavBar extends React.Component {
     if (this.props.items == null) {
       return null;
     }
-    return this.props.items.map((item, i) => renderItem(item, i));
+    return this.props.items.map((item, i) => renderItem(item, i, this.props.user));
   }
 
   renderBrand() {
@@ -74,9 +75,14 @@ export class NavBar extends React.Component {
   }
 }
 
-const renderItem = function(item, keyIndex) {
+const renderItem = function(item, keyIndex, user) {
   const label = item.get("label");
   const to = item.get("to");
+  const requiresAdmin = item.get("requiresAdmin");
+
+  if (requiresAdmin && !isSuperuser(user)) {
+    return null;
+  }
 
   if (Im.List.isList(to)) {
     return <DropDownItem key={keyIndex} label={label} items={to} />;
@@ -87,7 +93,8 @@ const renderItem = function(item, keyIndex) {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    items: state.getInPath(`ui.navbar.items`)
+    items: state.getInPath(`ui.navbar.items`),
+    user: state.getInPath("auth.user")
   };
 };
 

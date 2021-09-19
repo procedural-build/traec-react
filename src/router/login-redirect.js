@@ -5,7 +5,6 @@ import { Redirect } from "react-router-dom";
 
 class LoginRedirect extends React.Component {
   render_spinner() {
-    //https://loading.io/css/
     return (
       <div className="text-center">
         <div className="lds-dual-ring" />
@@ -16,7 +15,7 @@ class LoginRedirect extends React.Component {
   render() {
     let { isAuthenticated, authStatus } = this.props;
     const nextUrl = this.props.location.pathname;
-    //console.log("LOGIN REDIRECT: ", isAuthenticated, authStatus, nextUrl)
+
     if (!isAuthenticated) {
       if (authStatus == "pending") {
         return this.render_spinner();
@@ -45,7 +44,7 @@ class LoginRedirect extends React.Component {
         //pass through to render_routes below
       }
     } else {
-      if (authStatus == "confirmed" && nextUrl == "/") {
+      if (authStatus === "confirmed" && nextUrl === "/") {
         return <Redirect to={`/accounts/profile/`} />;
       }
     }

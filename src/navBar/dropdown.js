@@ -26,7 +26,7 @@ class DropDownItem extends React.Component {
     );
     const to = item.get("to");
     const onClick = item.get("onClick");
-    if (!(label == undefined)) {
+    if (!(label === undefined)) {
       if (onClick) {
         return (
           <a key={keyIndex} onClick={onClick} className="dropdown-item">
