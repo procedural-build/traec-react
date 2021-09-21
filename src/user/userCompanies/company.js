@@ -56,7 +56,7 @@ class UserCompanies extends React.Component {
   }
 
   render() {
-    let { items, dispatch, user, show } = this.props;
+    let { items, dispatch, user, show = true } = this.props;
     let { formParams } = this.state;
 
     if (!show) {
