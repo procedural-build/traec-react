@@ -5,21 +5,23 @@ import Traec from "traec";
 import BaseFormConnected from "traec-react/utils/form";
 import { TrackerItem } from "./trackerItem";
 import { BSBtn, BSCard } from "traec-react/utils/bootstrap";
-import Swal from "sweetalert2";
 import Im from "traec/immutable";
 import { ProjectPermission } from "traec/utils/permissions/project";
 
 export const counter = { row: 0 };
 
-function TrackerList({ trackers }) {
+const TrackerList = props => {
+  let { trackers, TrackerItemComponent = TrackerItem, project } = props;
+
   if (!trackers || !trackers.size) {
     return <p className="text-center">No trackers. Add a Tracker to get started</p>;
   }
+
   return trackers
     .toList()
-    .sortBy((obj, i) => obj.get("created"))
-    .map((tracker, i) => <TrackerItem key={i} index={i} tracker={tracker} />);
-}
+    .sortBy(obj => obj.get("created"))
+    .map((tracker, i) => <TrackerItemComponent key={i} index={i} tracker={tracker} project={project} />);
+};
 
 class TraecUserTrackers extends React.Component {
   constructor(props) {
@@ -48,30 +50,19 @@ class TraecUserTrackers extends React.Component {
     let { projectId } = this.props;
     let fetch = new Traec.Fetch("tracker", "post", { projectId });
     this.setState({ formParams: fetch.params });
-    /*fetch.updateFetchParams({
-      postSuccessHook: data => {
-        return Swal.fire({
-          title: "Tracker Created!",
-          text: "Would you like to add categories from a template?",
-          type: "success",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes"
-        }).then(result => {
-          if (result.value) {
-            return this.props.history.push(`/tracker/${data.uid}/template`);
-          } else {
-            return null;
-          }
-        });
-      }
-    });*/
     fetch.toggleForm();
   }
 
   render() {
-    let { projectId, trackers, trackerTemplates, title, addButtonText } = this.props;
+    let {
+      project,
+      projectId,
+      trackers,
+      trackerTemplates,
+      title,
+      addButtonText,
+      TrackerItemComponent = TrackerItem
+    } = this.props;
 
     return (
       <div className="row">
@@ -83,7 +74,7 @@ class TraecUserTrackers extends React.Component {
               <BSBtn onClick={this.onClick} text={addButtonText || "Add a Tracker"} />
             </ProjectPermission>
           }
-          body={<TrackerList trackers={trackers} />}
+          body={<TrackerList trackers={trackers} TrackerItemComponent={TrackerItemComponent} project={project} />}
           form={<BaseFormConnected params={this.state.formParams} fields={trackerFields(trackerTemplates)} />}
         />
       </div>
