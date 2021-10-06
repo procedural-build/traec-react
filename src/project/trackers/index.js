@@ -49,6 +49,13 @@ class TraecUserTrackers extends React.Component {
     e.preventDefault();
     let { projectId } = this.props;
     let fetch = new Traec.Fetch("tracker", "post", { projectId });
+    fetch.updateFetchParams({
+      postSuccessHook: data => {
+        if (data.from_template) {
+          location.reload();
+        }
+      }
+    });
     this.setState({ formParams: fetch.params });
     fetch.toggleForm();
   }
