@@ -28,7 +28,7 @@ const RegistrationForm = props => {
     password1: "",
     password2: "",
     errors: null,
-    showRecaptcha: true //!isIP(location.hostname)
+    showRecaptcha: !isIP(location.hostname)
   });
   const [recaptchaState, setRecaptcha] = React.useState(isIP(location.hostname) ? "localsite" : null);
   const [recaptchaInstance, setRecaptchaInstance] = React.useState(null);
