@@ -32,7 +32,7 @@ export const TraecRecaptcha = props => {
 };
 
 export const ReloadRecaptcha = props => {
-  let { setRecaptcha, recaptchaInstance } = props;
+  let { setRecaptchaInstance, recaptchaInstance } = props;
 
   if (!recaptchaInstance) {
     return null;
@@ -44,7 +44,7 @@ export const ReloadRecaptcha = props => {
         style={{ cursor: "pointer" }}
         onClick={() => {
           recaptchaInstance.reset();
-          setRecaptcha(null);
+          setRecaptchaInstance(null);
         }}
       >
         Reload reCaptcha
