@@ -3,7 +3,7 @@ import Recaptcha from "react-recaptcha";
 import { isIP } from "./index";
 
 export const TraecRecaptcha = props => {
-  let { show, setRecaptcha, recaptchaInstance, recaptchaExtra } = props;
+  let { show, setRecaptcha, setRecaptchaInstance, recaptchaExtra } = props;
 
   if (!show) {
     return null;
@@ -14,7 +14,7 @@ export const TraecRecaptcha = props => {
       <div className="col-sm-6">
         <Recaptcha
           ref={e => {
-            recaptchaInstance = e;
+            setRecaptchaInstance(e);
           }}
           sitekey={getRecaptchaSiteKey()}
           render="explicit"

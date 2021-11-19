@@ -28,10 +28,10 @@ const RegistrationForm = props => {
     password1: "",
     password2: "",
     errors: null,
-    showRecaptcha: !isIP(location.hostname)
+    showRecaptcha: true //!isIP(location.hostname)
   });
   const [recaptchaState, setRecaptcha] = React.useState(isIP(location.hostname) ? "localsite" : null);
-  const [setRecaptchaInstance, recaptchaInstance] = React.useState(isIP(location.hostname) ? "localsite" : null);
+  const [recaptchaInstance, setRecaptchaInstance] = React.useState(null);
 
   const onChange = e => {
     if (!e.target) {
@@ -81,7 +81,7 @@ const RegistrationForm = props => {
       <TraecRecaptcha
         show={state.showRecaptcha}
         setRecaptcha={setRecaptcha}
-        recaptchaInstance={recaptchaInstance}
+        setRecaptchaInstance={setRecaptchaInstance}
         recaptchaExtra={recaptchaExtra}
       />
       <RegisterButton gRecaptchaResponse={recaptchaState} />
