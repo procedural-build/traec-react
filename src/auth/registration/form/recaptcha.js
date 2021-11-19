@@ -10,7 +10,7 @@ export const TraecRecaptcha = props => {
   }
 
   return (
-    <div className="row mb-3">
+    <div className="row mb-1">
       <div className="col-sm-6">
         <Recaptcha
           ref={e => {
@@ -39,7 +39,7 @@ export const ReloadRecaptcha = props => {
   }
 
   return (
-    <div className="m-0 p-0 float-right">
+    <div className="m-0 p-0 mb-3">
       <a
         style={{ cursor: "pointer" }}
         onClick={() => {

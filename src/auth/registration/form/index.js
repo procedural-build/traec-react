@@ -84,8 +84,8 @@ const RegistrationForm = props => {
         setRecaptchaInstance={setRecaptchaInstance}
         recaptchaExtra={recaptchaExtra}
       />
-      <RegisterButton gRecaptchaResponse={recaptchaState} />
       <ReloadRecaptcha setRecaptchaInstance={setRecaptchaInstance} recaptchaInstance={recaptchaInstance} />
+      <RegisterButton gRecaptchaResponse={recaptchaState} />
     </form>
   );
 };
