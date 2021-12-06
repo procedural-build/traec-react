@@ -63,6 +63,7 @@ export class DisciplineList extends React.Component {
           key={i}
           index={i}
           disciplineMembers={membersByDiscipline?.get(discipline.get("uid"))}
+          membersByDiscipline={membersByDiscipline}
           item={discipline}
           tree={tree}
           projectId={projectId}

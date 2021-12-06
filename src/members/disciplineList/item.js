@@ -142,21 +142,24 @@ export default class DisciplineItem extends React.Component {
   }
 
   render_children() {
-    let { tree, item, projectId, dispatch, indent = 0 } = this.props;
+    let { tree, item, projectId, dispatch, indent = 0, canAssignLeader, membersByDiscipline } = this.props;
     let childIds = [...tree[item.get("uid")].children];
     let children = Traec.Im.fromJS(childIds.map(id => tree[id].obj));
     return children
-      .sortBy(i => i.get("name"))
-      .map((child, i) => {
+      .sortBy(discipline => discipline.get("name"))
+      .map((discipline, i) => {
         return (
           <DisciplineItem
             key={i}
             index={i}
-            item={child}
+            item={discipline}
             tree={tree}
             projectId={projectId}
             dispatch={dispatch}
             indent={indent + 1}
+            canAssignLeader={canAssignLeader}
+            membersByDiscipline={membersByDiscipline}
+            disciplineMembers={membersByDiscipline?.get(discipline.get("uid"))}
           />
         );
       });
