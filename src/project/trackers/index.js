@@ -20,7 +20,7 @@ const TrackerList = props => {
   return trackers
     .toList()
     .sortBy(obj => obj.get("created"))
-    .map((tracker, i) => <TrackerItemComponent key={i} index={i} tracker={tracker} project={project} />);
+    .map((tracker, i) => <TrackerItemComponent key={i} index={i} tracker={tracker} project={project} {...props} />);
 };
 
 class TraecUserTrackers extends React.Component {
@@ -81,7 +81,14 @@ class TraecUserTrackers extends React.Component {
               <BSBtn onClick={this.onClick} text={addButtonText || "Add a Tracker"} />
             </ProjectPermission>
           }
-          body={<TrackerList trackers={trackers} TrackerItemComponent={TrackerItemComponent} project={project} />}
+          body={
+            <TrackerList
+              trackers={trackers}
+              TrackerItemComponent={TrackerItemComponent}
+              project={project}
+              {...this.props}
+            />
+          }
           form={<BaseFormConnected params={this.state.formParams} fields={trackerFields(trackerTemplates)} />}
         />
       </div>
