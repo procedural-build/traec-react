@@ -103,9 +103,9 @@ const NavItem = props => {
 const mapStateToProps = (state, ownProps) => {
   let { location } = ownProps;
 
-  let locationParts = location.pathname.split("/");
+  let locationParts = location?.pathname.split("/");
   let projectPermission = null;
-  if (locationParts[1] === "project") {
+  if (locationParts && locationParts[1] === "project") {
     let projectId = state.getInPath(`entities.projects.byId.${locationParts[2]}.uid`);
     projectPermission = getProjectPermissions(state, projectId);
   }
