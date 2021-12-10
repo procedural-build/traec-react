@@ -58,7 +58,6 @@ function TextInput(props) {
         />
         <ItemHelp text={helpText} label={name} />
         <ItemErrors error={error} />
-        {error}
       </div>
     </ErrorBoundary>
   );
