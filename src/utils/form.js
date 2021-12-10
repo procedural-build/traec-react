@@ -163,6 +163,14 @@ class BaseForm extends React.Component {
       _postSuccessHook(data);
       this.setState({ pending: false });
     };
+
+    // Wrapp the postSuccessHook to set pending to false again
+    let _postFailureHook = params.fetchParams.postFailureHook || (() => {});
+    params.fetchParams.postFailureHook = data => {
+      _postFailureHook(data);
+      this.setState({ pending: false });
+    };
+
     // Dispatch the action (disable the submit button at the same time)
     let action = fetchToState(params, post);
     this.setState({ pending: true });
