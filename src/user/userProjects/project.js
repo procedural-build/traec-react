@@ -54,7 +54,7 @@ class UserProjects extends React.Component {
     }
 
     // To be confirmed
-    if (redirectIfOne && activeProjectRefs && activeProjectRefs.size == 1) {
+    if (redirectIfOne && projects && projects.size <= 1 && activeProjectRefs && activeProjectRefs.size == 1) {
       let _ref = activeProjectRefs.first();
       let wpackId = _ref.get("uid").substring(0, 8);
       let projectId = _ref.get("project").substring(0, 8);
