@@ -53,8 +53,11 @@ class UserProjects extends React.Component {
       return null;
     }
 
+    // Projects can include long and short ids.  So just get a set of short ids
+    let shortProjectIds = Traec.Im.Set((projects || Traec.Im.Map()).keySeq().map(i => i.substring(0, 8)));
+
     // To be confirmed
-    if (redirectIfOne && projects && projects.size <= 1 && activeProjectRefs && activeProjectRefs.size == 1) {
+    if (redirectIfOne && shortProjectIds.size <= 1 && activeProjectRefs && activeProjectRefs.size == 1) {
       let _ref = activeProjectRefs.first();
       let wpackId = _ref.get("uid").substring(0, 8);
       let projectId = _ref.get("project").substring(0, 8);
