@@ -7,6 +7,7 @@ import { DropDownItem } from "./dropdown";
 import { setNavBarItems } from "traec/redux/actionCreators";
 import { isSuperuser } from "../utils";
 import { getProjectPermissions } from "traec/utils/permissions/project";
+import { getCompanyPermissions } from "traec/utils/permissions/company";
 
 export { setNavBarItems };
 
@@ -100,20 +101,17 @@ const NavItem = props => {
   }
 };
 
-const mapStateToProps = (state, ownProps) => {
-  let { location } = ownProps;
+const mapStateToProps = state => {
+  let id = state.getInPath("ui.navbar.id");
+  let type = state.getInPath("ui.navbar.type");
 
-  let locationParts = location?.pathname.split("/");
-  let projectPermission = null;
-  if (locationParts && locationParts[1] === "project") {
-    let projectId = state.getInPath(`entities.projects.byId.${locationParts[2]}.uid`);
-    projectPermission = getProjectPermissions(state, projectId);
-  }
+  let permissionGetter = type == "project" ? getProjectPermissions : getCompanyPermissions;
+  let permission = permissionGetter(state, id);
 
   return {
     items: state.getInPath(`ui.navbar.items`),
     user: state.getInPath("auth.user"),
-    permission: projectPermission
+    permission
   };
 };
 
