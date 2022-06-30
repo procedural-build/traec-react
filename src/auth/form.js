@@ -65,10 +65,8 @@ export class LoginForm extends React.Component {
       return null;
     }
     return (
-      <div className="text-center border-top pt-3">
-        <Link to="/accounts/register/?navbar">
-          <b>{createText || "Create an account"}</b>
-        </Link>
+      <div className="login-button btn btn-sm btn-block">
+        <Link to="/accounts/register/?navbar">{createText || "Register with email"}</Link>
       </div>
     );
   }
@@ -113,8 +111,35 @@ export class LoginForm extends React.Component {
             Login
           </button>
         </div>
+        <div className="form-group">
+          <button className="login-button btn btn-sm btn-block" type="submit">
+            {" "}
+            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+              <title>MS-SymbolLockup</title>
+              <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+              <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+              <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+              <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+            </svg>
+            {"   "}Login with Microsoft
+          </button>
+        </div>
 
-        {this.renderCreateAccount()}
+        <div className="form-group">
+          <hr />
+          {this.renderCreateAccount()}
+          <button className="login-button btn btn-sm btn-block ">
+            {" "}
+            <svg width="21" height="21" viewBox="0 0 21 21">
+              <title>MS-SymbolLockup</title>
+              <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+              <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+              <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+              <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+            </svg>
+            {"   "}Register with Microsoft
+          </button>
+        </div>
       </form>
     );
   }
