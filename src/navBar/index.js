@@ -23,7 +23,8 @@ export const NavBar = props => {
     userLabel,
     getUserItemLabel,
     createText,
-    permission
+    permission,
+    azureConfig
   } = props;
 
   return (
@@ -56,6 +57,7 @@ export const NavBar = props => {
                 userLabel={userLabel}
                 getUserItemLabel={getUserItemLabel}
                 createText={createText}
+                azureConfig={azureConfig}
               />
             </ul>
           </div>
