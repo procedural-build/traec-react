@@ -29,9 +29,9 @@ const swapAzureTokenForLocalToken = tokenState => {
     .post("/auth-jwt/sso/azure/", tokenState)
     .then(response => {
       console.log("response from backend", response.data);
-      if (response.data.access) {
-        let { access, token } = action.payload;
-        token = access || token;
+      let { access, token } = response.data;
+      token = access || token;
+      if (token) {
         localStorage.setItem("token", token);
         console.log("Got valid token redirecting to accounts/profile...");
         window.location = "/accounts/profile";
