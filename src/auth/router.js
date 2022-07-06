@@ -9,6 +9,8 @@ import PasswordResetPage from "./password/reset";
 import PasswordResetConfirmPage from "./password/confirm";
 import PasswordChangePage from "./password/change";
 
+import { AzureSSORedirectPage } from "./azure";
+
 function AccountsRouter(props) {
   const baseUrl = props.match.url;
   let { UserProfile, metaFieldProps, recaptchaExtra } = props;
@@ -34,6 +36,9 @@ function AccountsRouter(props) {
       <Route exact path={`${baseUrl}/password/reset/:uid/:token`} component={PasswordResetConfirmPage} />
       <Route exact path={`${baseUrl}/reset/:uid/:token`} component={PasswordResetConfirmPage} />
       <Route exact path={`${baseUrl}/password/change`} component={PasswordChangePage} />
+
+      {/* Password reset pages */}
+      <Route exact path={`${baseUrl}/login/sso/azure`} component={AzureSSORedirectPage} />
     </Switch>
   );
 }
