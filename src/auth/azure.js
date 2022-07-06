@@ -30,6 +30,9 @@ const swapAzureTokenForLocalToken = tokenState => {
     .then(response => {
       console.log("response from backend", response.data);
       if (response.data.access) {
+        let { access, token } = action.payload;
+        token = access || token;
+        localStorage.setItem("token", token);
         console.log("Got valid token redirecting to accounts/profile...");
         window.location = "/accounts/profile";
       } else {
