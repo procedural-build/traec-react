@@ -43,16 +43,17 @@ export const verifyToken = () => dispatch => {
 
   let token = localStorage.getItem("token");
 
-  if (token == null) {
-    /* We may have the required token stored in cookies - but we don't know
+  if (token == null || token == "undefined") {
+    /* We may still have the required token stored in cookies - but we don't know
     so we try to call the refresh endpoint to get a new access/refresh token 
     */
     console.log("No token found - trying to refresh");
     dispatch({ type: LOGIN_STATUS, payload: { status: "pending" } });
     dispatch(postRefresh());
     return;
-  } else if (token == "failed" || token == "undefined") {
-    console.log("Token is", token);
+  } else if (token == "failed") {
+    /* If the token failed then don't try again */
+    console.log("Token is ", token, " - not attempting refresh");
     return;
   }
 
