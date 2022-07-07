@@ -93,6 +93,9 @@ const redirectToCommonSSOPage = ({ config }) => {
   let configToken = jwt_encode(_config, "nosecret");
   let url = `${ssoRedirectPage}?config=${configToken}`;
 
+  console.log(`Removing token from localStorage prior to SSO redirect`);
+  localStorage.removeItem("token");
+
   console.log(`Redirecting to complete SSO: ${url}`);
   location.replace(url);
 };
