@@ -56,6 +56,9 @@ export class LoginForm extends React.Component {
       if (errorMessage.startsWith("No active account")) {
         errorMessage = "Unable to log in with provided credentials.";
       }
+      if (errorMessage.startsWith("Token is invalid or expired")) {
+        return null;
+      }
       return <div className="alert alert-danger p-2">{errorMessage}</div>;
     }
     return "";
