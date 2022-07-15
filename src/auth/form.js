@@ -57,16 +57,16 @@ export class LoginForm extends React.Component {
         errorMessage = "Unable to log in with provided credentials.";
       }
       if (errorMessage.startsWith("Token is invalid or expired")) {
-        return null;
+        errorMessage = "Your login has expired. Please login again.";
       }
-      return <div className="alert alert-danger p-2">{errorMessage}</div>;
+      return <div className="alert alert-info p-2">{errorMessage}</div>;
     }
     return "";
   }
 
   renderCreateAccount() {
-    let { show_create_account, createText } = this.props;
-    if (show_create_account === false) {
+    let { createText } = this.props;
+    if (createText === "") {
       return null;
     }
     return (
