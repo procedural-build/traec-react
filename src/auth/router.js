@@ -13,7 +13,7 @@ import { AzureSSORedirectPage } from "./azure";
 
 function AccountsRouter(props) {
   const baseUrl = props.match.url;
-  let { UserProfile, metaFieldProps, recaptchaExtra } = props;
+  let { UserProfile, metaFieldProps, recaptchaExtra, azureConfig } = props;
 
   return (
     <Switch>
@@ -22,7 +22,12 @@ function AccountsRouter(props) {
         exact
         path={`${baseUrl}/register`}
         render={_props => (
-          <RegistrationPage {..._props} metaFieldProps={metaFieldProps} recaptchaExtra={recaptchaExtra} />
+          <RegistrationPage
+            {..._props}
+            metaFieldProps={metaFieldProps}
+            recaptchaExtra={recaptchaExtra}
+            azureConfig={azureConfig}
+          />
         )}
       />
       <Route exact path={`${baseUrl}/activate/:activationKey`} component={ActivationPage} />

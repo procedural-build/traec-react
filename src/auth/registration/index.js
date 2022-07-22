@@ -8,7 +8,7 @@ import { BSCard } from "traec-react/utils/bootstrap";
 import AcceptProjectInvites from "./acceptProjectInvites";
 
 const RegistrationCard = props => {
-  let { redirect, email, metaFieldProps, initMeta, recaptchaExtra } = props;
+  let { redirect } = props;
 
   if (redirect === "register_success_confirm") {
     return <RegistrationConfirmationCard />;
@@ -16,23 +16,12 @@ const RegistrationCard = props => {
     return <AcceptProjectInvites />;
   }
 
-  return (
-    <BSCard
-      title="Register"
-      body={
-        <RegistrationForm
-          email={email}
-          metaFieldProps={metaFieldProps}
-          initMeta={initMeta}
-          recaptchaExtra={recaptchaExtra}
-        />
-      }
-    />
-  );
+  return <BSCard title="Register" body={<RegistrationForm {...props} />} />;
 };
 
 const RegistrationPage = props => {
-  let { isAuthenticated, location, metaFieldProps, recaptchaExtra } = props;
+  let { isAuthenticated, location, metaFieldProps, recaptchaExtra, azureConfig } = props;
+  console.log(`Azure Config I Made it :D`, azureConfig);
 
   if (isAuthenticated) {
     return <Redirect to="/accounts/profile" />;
@@ -68,6 +57,7 @@ const RegistrationPage = props => {
             metaFieldProps={metaFieldProps}
             initMeta={initMeta}
             recaptchaExtra={recaptchaExtra}
+            azureConfig={azureConfig}
           />
         </div>
       </div>

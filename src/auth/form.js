@@ -3,7 +3,6 @@ import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { postLogin, verifyToken } from "./_redux/actions";
-
 import AzureSSOButton from "traec-react/auth/azure";
 
 export class LoginForm extends React.Component {
