@@ -88,8 +88,8 @@ const RegistrationForm = props => {
       />
       <ReloadRecaptcha setRecaptchaInstance={setRecaptchaInstance} recaptchaInstance={recaptchaInstance} />
       <RegisterButton gRecaptchaResponse={recaptchaState} />
-      Or
-      <AzureSSOButton showTopSeparator={true} config={azureConfig} />
+
+      <AzureSSOButton showTopSeparator={true} config={azureConfig} register={true} />
     </form>
   );
 };

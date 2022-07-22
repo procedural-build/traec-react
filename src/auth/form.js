@@ -118,7 +118,7 @@ export class LoginForm extends React.Component {
           </button>
         </div>
 
-        <AzureSSOButton showTopSeparator={true} config={azureConfig} />
+        <AzureSSOButton showTopSeparator={true} config={azureConfig} register={false} />
 
         {this.renderCreateAccount()}
       </form>
