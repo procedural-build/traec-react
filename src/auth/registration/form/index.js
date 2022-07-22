@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import { postRegistration } from "../../_redux/actionCreators";
 import { FormFields, FormMetaFields, FormNonFieldErrors, mandatoryFieldProps } from "./formItems";
 import { getRecaptchaSiteKey, ReloadRecaptcha, TraecRecaptcha } from "./recaptcha";
-import AzureSSOButton from "../../azure";
+// import AzureSSOButton from "../../azure";
+import AzureSSOButton from "traec-react/auth/azure";
 
 export const isIP = hostname => {
   if (hostname === "localhost") {
