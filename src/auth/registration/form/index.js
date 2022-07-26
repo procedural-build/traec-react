@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { postRegistration } from "../../_redux/actionCreators";
 import { FormFields, FormMetaFields, FormNonFieldErrors, mandatoryFieldProps } from "./formItems";
 import { getRecaptchaSiteKey, ReloadRecaptcha, TraecRecaptcha } from "./recaptcha";
+import AzureSSOButton from "../../azure";
+//import AzureSSOButton from "traec-react/auth/azure";
 
 export const isIP = hostname => {
   if (hostname === "localhost") {
@@ -18,7 +20,7 @@ export const isIP = hostname => {
 };
 
 const RegistrationForm = props => {
-  let { dispatch, errors, metaFieldProps, initMeta, recaptchaExtra } = props;
+  let { dispatch, errors, metaFieldProps, initMeta, recaptchaExtra, azureConfig } = props;
   const [metaJSON, setMetaJSON] = React.useState(initMeta || {});
   const [state, setState] = React.useState({
     first_name: "",
@@ -86,6 +88,8 @@ const RegistrationForm = props => {
       />
       <ReloadRecaptcha setRecaptchaInstance={setRecaptchaInstance} recaptchaInstance={recaptchaInstance} />
       <RegisterButton gRecaptchaResponse={recaptchaState} />
+
+      <AzureSSOButton showTopSeparator={true} config={azureConfig} register={true} />
     </form>
   );
 };

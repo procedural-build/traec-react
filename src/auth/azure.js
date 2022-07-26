@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+import logo from "./MicrosoftIcon.svg";
 import { PublicClientApplication } from "@azure/msal-browser";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -101,8 +101,9 @@ const redirectToCommonSSOPage = ({ config }) => {
 };
 
 export default function AzureSSO(props) {
-  let { config } = props;
+  let { config, register } = props;
 
+  let buttonText = register ? `Register ` : `Login `;
   if (!config) {
     console.log("No Azure config provided. Not rendering Microsoft SSO button");
     return null;
@@ -114,9 +115,14 @@ export default function AzureSSO(props) {
     <ErrorBoundary>
       <div className="mb-3 mt-0 text-center">
         <TopSeparator {...props} />
-        <a onClick={() => action(props)} style={{ cursor: "pointer" }}>
-          <img src={logo} alt="azure-ad-sso" />
-        </a>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-dark btn-block mt-2 inline-block"
+          onClick={() => action(props)}
+        >
+          <img src={logo} alt="azure-ad-sso" style={{ width: "1rem", marginRight: "0.75rem" }} />
+          {buttonText} with Microsoft
+        </button>
       </div>
     </ErrorBoundary>
   );
