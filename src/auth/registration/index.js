@@ -21,7 +21,6 @@ const RegistrationCard = props => {
 
 const RegistrationPage = props => {
   let { isAuthenticated, location, metaFieldProps, recaptchaExtra, azureConfig } = props;
-  console.log(`Azure Config I Made it :D`, azureConfig);
 
   if (isAuthenticated) {
     return <Redirect to="/accounts/profile" />;
@@ -29,6 +28,17 @@ const RegistrationPage = props => {
 
   let query_params = new URLSearchParams(location.search);
   let email = query_params.get("email");
+
+  let reason = query_params.get("reason");
+  let REASONS = {
+    user_not_found:
+      "The user for this Microsoft account does not exist on this system.  Please click the Register with Microsoft button below to create your account."
+  };
+  let _reason = reason ? (
+    <div className="alert alert-primary" role="alert">
+      {REASONS[reason]}
+    </div>
+  ) : null;
 
   let initMeta = {};
   if (metaFieldProps) {
@@ -51,6 +61,7 @@ const RegistrationPage = props => {
     <React.Fragment>
       <div className="container" style={{ marginTop: "24px" }}>
         <div className="col-sm-8 offset-sm-2">
+          {_reason}
           <RegistrationCard
             redirect={props.redirect}
             email={email}

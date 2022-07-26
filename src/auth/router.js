@@ -9,7 +9,7 @@ import PasswordResetPage from "./password/reset";
 import PasswordResetConfirmPage from "./password/confirm";
 import PasswordChangePage from "./password/change";
 
-import { AzureSSORedirectPage } from "./azure";
+import { AzureSSORedirectPage, AzureSSOFailurePage } from "./azure";
 
 function AccountsRouter(props) {
   const baseUrl = props.match.url;
@@ -44,6 +44,7 @@ function AccountsRouter(props) {
 
       {/* Password reset pages */}
       <Route exact path={`${baseUrl}/login/sso/azure`} component={AzureSSORedirectPage} />
+      <Route exact path={`${baseUrl}/login/sso/fail`} component={AzureSSOFailurePage} />
     </Switch>
   );
 }

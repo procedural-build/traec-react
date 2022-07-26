@@ -18,17 +18,19 @@ function TopSeparator({ showTopSeparator }) {
   );
 }
 
-const swapAzureTokenForLocalToken = (tokenState, successRedirectUrl) => {
+const swapAzureTokenForLocalToken = (tokenState, config) => {
   let { accessToken } = tokenState;
+  let { redirectOnSuccess: successRedirectUrl, redirectOnFailure: failureRedirectUrl, register: registration } = config;
 
   if (!accessToken) {
     console.warn("No valid access token found from Microsoft response");
     return null;
   }
 
-  console.log("Switching Azure access token for local app token");
-  axios
-    .post("/auth-jwt/sso/azure/", tokenState)
+  console.log(`Switching Azure access token for local app token. registration=${registration}`);
+  let callFunction = registration ? axios.post : axios.put;
+
+  callFunction("/auth-jwt/sso/azure/", tokenState)
     .then(response => {
       console.log("response from backend", response.data);
       let { access, token } = response.data;
@@ -41,7 +43,18 @@ const swapAzureTokenForLocalToken = (tokenState, successRedirectUrl) => {
         console.log("token is invalid");
       }
     })
-    .catch(error => console.log("Error swapping token:", error));
+    .catch(error => {
+      let redirectUrl = failureRedirectUrl || "/accounts/register";
+      let err_msg = (error.response?.data || [])[0];
+      console.log("Error swapping token:", error, err_msg);
+      if (err_msg.startsWith("User for Azure SSO not found")) {
+        console.log("Redirecting to registration page", redirectUrl);
+        window.location = `${redirectUrl}?reason=user_not_found`;
+      } else {
+        console.log("Redirecting to host", errHost);
+        window.location = redirectUrl;
+      }
+    });
 
   return undefined;
 };
@@ -70,7 +83,7 @@ export const doAzureSSOLogin = ({ config }) => {
     })
     .then(response => {
       console.log("Successfully logged into Microsoft account", response);
-      swapAzureTokenForLocalToken(response, config.redirectOnSuccess);
+      swapAzureTokenForLocalToken(response, config);
     })
     .catch(() => {
       console.log("Error logging into Microsoft account");
@@ -82,9 +95,11 @@ const redirectToCommonSSOPage = ({ config }) => {
   let { ssoRedirectPage } = config;
 
   // The SSO page could be on another sub-domain.  Set the redirect back to here
+  let { protocol, host } = window.location;
   let _config = {
     ...config,
-    redirectOnSuccess: `${window.location.protocol}//${window.location.host}/accounts/profile`
+    redirectOnSuccess: config.redirectOnSuccess || `${protocol}//${host}/accounts/profile`,
+    redirectOnFailure: config.redirectOnFailure || `${protocol}//${host}/accounts/register`
   };
   delete _config.ssoRedirectPage;
   console.log("Encoding SSO config parameters to JWT for query params", _config);
@@ -101,9 +116,9 @@ const redirectToCommonSSOPage = ({ config }) => {
 };
 
 export default function AzureSSO(props) {
-  let { config, register } = props;
+  let { config } = props;
 
-  let buttonText = register ? `Register ` : `Login `;
+  let buttonText = config.register ? `Register ` : `Login `;
   if (!config) {
     console.log("No Azure config provided. Not rendering Microsoft SSO button");
     return null;
@@ -142,7 +157,19 @@ export function AzureSSORedirectPage(props) {
 
   return (
     <div className="container" style={{ marginTop: "24px" }}>
-      <p>Logging in via Azure AD</p>
+      <div className="alert alert-primary" role="alert">
+        Logging in with Microsoft SSO. You will be redirected back to your original domain after the sign in process.
+      </div>
+    </div>
+  );
+}
+
+export function AzureSSOFailurePage(props) {
+  return (
+    <div className="container" style={{ marginTop: "24px" }}>
+      <div className="alert alert-primary" role="alert">
+        Single sign on failed. The user for this Microsoft account does not exist.
+      </div>
     </div>
   );
 }
