@@ -82,6 +82,8 @@
     "patchversion": "npm --no-git-tag-version version patch",
     "build": "npx babel src --out-dir ./dist && cp -v ./package.json ./dist/package.json && cd ./src && find ./ -type f ! -name \"*.js\" -exec cp -v --parents \\{\\} ../dist \\;",
     "pub": "npm run matchversion && npm run patchversion && npm run build && npm publish ./dist",
+    "prepare": "husky install",
+    "run-pretty-quick": "pretty-quick --staged --print-width 120",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "documentation": "npx babel src --out-dir ./dist && documentation serve --watch ../traec-react/dist/"
