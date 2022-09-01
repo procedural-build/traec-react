@@ -132,7 +132,7 @@ export default function AzureSSO(props) {
         <TopSeparator {...props} />
         <button
           type="button"
-          class="btn btn-sm btn-outline-dark btn-block mt-2 inline-block"
+          className="btn btn-sm btn-outline-dark btn-block mt-2 inline-block"
           onClick={() => action(props)}
         >
           <img src={logo} alt="azure-ad-sso" style={{ width: "1rem", marginRight: "0.75rem" }} />
