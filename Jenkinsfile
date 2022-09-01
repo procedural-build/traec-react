@@ -35,7 +35,7 @@ pipeline {
     stage('Publish NPM and Docs') {
       when {
         anyOf {
-          branch 'master'
+          //branch 'master'
           branch 'stage'
         }
       }
