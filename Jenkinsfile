@@ -35,8 +35,8 @@ pipeline {
     stage('Publish NPM and Docs') {
       when {
         anyOf {
-          //branch 'master'
-          branch 'stage'
+          branch 'master'
+          //branch 'stage'
         }
       }
       steps {
@@ -52,11 +52,11 @@ pipeline {
         sh 'documentation build src/** -f html -o docs'
         sh 'echo $NPM_TOKEN && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
 
-        echo "Uploading documentation files to ${S3_DOCS_PATH}"
-        withAWS(region: 'eu-west-2', credentials: 'docker_euwest2') {
-          s3Delete(bucket:'procedural-frontend-bundles', path:"${S3_DOCS_PATH}")
-          s3Upload(file: 'docs/', bucket:'procedural-frontend-bundles', path:"${S3_DOCS_PATH}")
-        }
+        // echo "Uploading documentation files to ${S3_DOCS_PATH}"
+        // withAWS(region: 'eu-west-2', credentials: 'docker_euwest2') {
+        //   s3Delete(bucket:'procedural-frontend-bundles', path:"${S3_DOCS_PATH}")
+        //   s3Upload(file: 'docs/', bucket:'procedural-frontend-bundles', path:"${S3_DOCS_PATH}")
+        // }
 
       }
     }
