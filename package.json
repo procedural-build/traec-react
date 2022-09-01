@@ -7,6 +7,7 @@
     "@azure/msal-browser": "^2.27.0",
     "@tinymce/tinymce-react": "^3.8.4",
     "axios": "^0.27.2",
+    "ci": "^2.2.0",
     "d3": "^5.14.2",
     "d3-tip": "^0.9.1",
     "enzyme": "^3.11.0",
