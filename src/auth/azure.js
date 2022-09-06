@@ -85,8 +85,8 @@ export const doAzureSSOLogin = ({ config }) => {
       console.log("Successfully logged into Microsoft account", response);
       swapAzureTokenForLocalToken(response, config);
     })
-    .catch(() => {
-      console.log("Error logging into Microsoft account");
+    .catch((err) => {
+      console.log("Error logging into Microsoft account", err);
     });
 };
 
