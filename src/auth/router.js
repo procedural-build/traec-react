@@ -19,8 +19,7 @@ function AccountsRouter(props) {
     <Switch>
       {/* Registration pages */}
       <Route
-        exact
-        path={`${baseUrl}/register`}
+        exact path={`${baseUrl}/register`}
         render={_props => (
           <RegistrationPage
             {..._props}
@@ -33,7 +32,15 @@ function AccountsRouter(props) {
       <Route exact path={`${baseUrl}/activate/:activationKey`} component={ActivationPage} />
 
       {/* Login and profile pages */}
-      <Route exact path={`${baseUrl}/login`} component={LoginPage} />
+      <Route 
+        exact path={`${baseUrl}/login`} 
+        render={_props => (
+          <LoginPage
+            {..._props}
+            azureConfig={azureConfig}
+          />
+        )}
+      />
       <Route exact path={`${baseUrl}/profile`} component={UserProfile} />
 
       {/* Password reset pages */}

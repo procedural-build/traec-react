@@ -31,7 +31,14 @@ export function LoginPage(props) {
     <div className="container" style={{ marginTop: "24px" }}>
       <div className="col-sm-8 offset-sm-2">
         <LoginMessage {...props} />
-        <BSCard title="Login" body={<LoginForm nextUrl={nextUrl} initUsername={registrationUser.get("username")} />} />
+        <BSCard 
+          title="Login" 
+          body={(
+            <LoginForm 
+              nextUrl={nextUrl} 
+              initUsername={registrationUser.get("username")} />
+          )} 
+        />
       </div>
     </div>
   );

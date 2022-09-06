@@ -118,12 +118,12 @@ const redirectToCommonSSOPage = ({ config }) => {
 export default function AzureSSO(props) {
   let { config } = props;
 
-  let buttonText = config.register ? `Register ` : `Login `;
   if (!config) {
     console.log("No Azure config provided. Not rendering Microsoft SSO button");
     return null;
   }
 
+  let buttonText = config.register ? `Register ` : `Login `;
   let action = config.ssoRedirectPage ? redirectToCommonSSOPage : doAzureSSOLogin;
 
   return (
