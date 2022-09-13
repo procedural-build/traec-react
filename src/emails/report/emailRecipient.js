@@ -2,6 +2,8 @@ import React from "react";
 import { ReportLink } from "./utils";
 import { emailTypes } from "../emailTypes";
 import { getEmailSettingType } from "../settings/emailSettingRow";
+import { getBgColor } from "./utils";
+
 
 export const EmailRecipient = props => {
   let { recipient, projectId, companyId, compute } = props;
@@ -27,7 +29,7 @@ export const EmailRecipient = props => {
 
   return (
     <div>
-      <div className="row">
+      <div className="row" style={{backgroundColor: getBgColor(recipient)}}>
         <div className="col-sm-5">
           <ReportLink companyId={companyId} projectId={projectId} recipient={recipient} />
         </div>

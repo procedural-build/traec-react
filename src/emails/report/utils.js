@@ -20,3 +20,8 @@ export const ReportLink = props => {
   }
   return null;
 };
+
+
+export const getBgColor = (recipient) => {
+  return recipient?.get("blocked") ? "#ffccf2" : (recipient?.get("blocked_address") ? "#ffcccc" : null )
+}

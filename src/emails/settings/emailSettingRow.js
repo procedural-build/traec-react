@@ -1,7 +1,7 @@
 import React from "react";
 import { emailDefaultFrequencies, emailTypes } from "../emailTypes";
 import Traec from "traec";
-import { ReportLink } from "../report/utils";
+import { ReportLink, getBgColor } from "../report/utils";
 
 export const EmailSettingRow = props => {
   let { recipient, projectId, companyId, compute } = props;
@@ -56,7 +56,7 @@ export const EmailSettingRow = props => {
 
   return (
     <div>
-      <div className="row mt-1 mb-1">
+      <div className="row mt-1 mb-1" style={{backgroundColor: getBgColor(recipient)}} >
         <div className="col-sm-4 d-flex align-items-center">
           <ReportLink companyId={companyId} projectId={projectId} recipient={recipient} />
         </div>
@@ -87,7 +87,9 @@ const SettingsInput = props => {
   let blocked = recipient.get("blocked");
 
   return (
-    <div className={`col-sm-1 d-flex justify-content-center ${frequencyType === "checkbox" ? "form-inline" : ""}`}>
+    <div 
+      className={`col-sm-1 d-flex justify-content-center ${frequencyType === "checkbox" ? "form-inline" : ""}`}
+    >
       <input
         className={`form-control text-center align-middle p-0 m-0 ${frequencyType === "checkbox" ? "" : "w-50"}`}
         type={frequencyType}
