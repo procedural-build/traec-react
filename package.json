@@ -7,7 +7,7 @@
     "@azure/msal-browser": "^2.27.0",
     "@tinymce/tinymce-react": "^3.8.4",
     "axios": "^0.27.2",
-    "d3": "^5.14.2",
+    "d3": "^7.6.1",
     "d3-tip": "^0.9.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
@@ -30,7 +30,7 @@
     "react-select": "^3.1.0",
     "react-style-proptype": "^3.2.2",
     "react-tinymce": "^0.7.0",
-    "recharts": "^1.8.5",
+    "recharts": "^2.1.14",
     "sweetalert2": "^8.19.0",
     "traec": "^1.1.212"
   },
