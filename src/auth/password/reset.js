@@ -75,7 +75,7 @@ class PasswordResetPage extends React.Component {
     }
     return (
       <div className="container">
-        <div className="col-sm-8 offset-sm-2">
+        <div className="col-sm-8 offset-sm-2 mt-3">
           <BSCard title={title} body={body} />
         </div>
       </div>

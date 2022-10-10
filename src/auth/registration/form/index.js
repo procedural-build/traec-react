@@ -78,6 +78,11 @@ const RegistrationForm = props => {
     <form className="form" onSubmit={onSubmit}>
       <FormNonFieldErrors errors={errors} />
       <FormFields fieldProps={mandatoryFieldProps} values={state} errors={errors} onChangeHandler={onChange} />
+      <div style={{marginTop: "-1em", marginLeft: "0.25em"}} className="form-group">
+        <small className="text-muted"><b>
+          All passwords must contain at least 12 characters, one uppercase, one special character and one numeric character.  It also cannot be similar to parts of your name or email address.
+        </b></small>
+      </div>     
       <FormMetaFields fieldProps={metaFieldProps} values={metaJSON} onChangeHandler={onChangeMeta} />
       <TraecRecaptcha
         show={state.showRecaptcha}

@@ -41,6 +41,12 @@ class PasswordChangePage extends React.Component {
         {this.renderItem("new_password1", "New Password", "", "password")}
         {this.renderItem("new_password2", "New Password (again)", "", "password")}
 
+        <div style={{marginTop: "-1em", marginLeft: "0.25em"}} className="form-group">
+          <small className="text-muted"><b>
+            All passwords must contain at least 12 characters, one uppercase, one special character and one numeric character.  It also cannot be similar to parts of your name or email address.
+          </b></small>
+        </div>   
+
         <div className="form-group">
           <button className="btn btn-sm btn-primary btn-block" type="submit">
             Set new password
@@ -79,7 +85,7 @@ class PasswordChangePage extends React.Component {
 
     return (
       <div className="container">
-        <div className="col-sm-8 offset-sm-2">
+        <div className="col-sm-8 offset-sm-2 mt-3">
           <BSCard title={title} body={body} />
         </div>
       </div>
