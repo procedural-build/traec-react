@@ -1,4 +1,5 @@
 import React from "react";
+import modal from "traec-react/utils/bootstrap/modal";
 
 export function BSModalHeader({ title, id, hideClose }) {
   let _id = `${id}Label`;
@@ -50,11 +51,12 @@ export function BSModalButton({ id, text, className }) {
 }
 
 export function BSModal(props) {
-  let { id, body, fullWidth, hideClose } = props;
+  let { id, body, fullWidth, hideClose, fullHeight } = props;
   let classNames = fullWidth
     ? "modal-dialog modal-dialog-centered pl-4 pr-2"
     : "modal-dialog modal-lg modal-dialog-centered";
   let modalStyle = fullWidth ? { maxWidth: "none", width: "100%" } : {};
+  fullHeight ? (modalStyle.height = "100%") : null;
   return (
     <div className="modal fade" id={id} tabIndex="-1" role="dialog" aria-labelledby={`${id}Label`} aria-hidden="true">
       <div className={classNames} role="document" style={modalStyle}>
