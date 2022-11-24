@@ -51,21 +51,49 @@ export function BSModalButton({ id, text, className }) {
 }
 
 export function BSModal(props) {
-  let { id, body, fullWidth, hideClose, fullHeight } = props;
-  let classNames = fullWidth
-    ? "modal-dialog modal-dialog-centered pl-4 pr-2"
-    : "modal-dialog modal-lg modal-dialog-centered";
-  let modalStyle = fullWidth ? { maxWidth: "none", width: "100%" } : {};
-  fullHeight ? (modalStyle.height = "100%") : null;
+  let { id, body, fullWidth, hideClose, fullScreen } = props;
+
+  let modalClassNames = "";
+  fullWidth ? (modalClassNames += "modal-dialog modal-dialog-centered pl-4 pr-2") : null;
+  fullScreen ? (modalClassNames += "modal-dialog modal-dialog-centered mt-0 mb-0 ") : null;
+  if (!fullScreen && !fullWidth) {
+    classNames += "modal-dialog modal-lg modal-dialog-centered";
+  }
+  let classNames = modalClassNames;
+
+  let modalStyle = {};
+  fullWidth || fullScreen ? (modalStyle = { maxWidth: "none", width: "100%" }) : null;
+
   return (
     <div className="modal fade" id={id} tabIndex="-1" role="dialog" aria-labelledby={`${id}Label`} aria-hidden="true">
       <div className={classNames} role="document" style={modalStyle}>
-        <div className="modal-content">
-          <BSModalHeader {...props} />
+        <div className="modal-content modal-content-scrollable" style={fullScreen ? { height: "100vh" } : null}>
+          {fullScreen ? null : <BSModalHeader {...props} />}
 
-          <div className="modal-body">{body}</div>
+          <div className={fullScreen ? "modal-body p-0 bg-white" : "modal-body"}>{body}</div>
 
           <BSModalFooter {...props} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function WizardModal(props) {
+  let { id, heading, subheading, body, hideClose } = props;
+
+  return (
+    <div className="modal fade" id={id} tabIndex="-1" role="dialog" aria-labelledby={`${id}Label`} aria-hidden="true">
+      <div
+        className="modal-dialog modal-dialog-centered mt-0 mb-0 "
+        role="document"
+        style={{ maxWidth: "none", width: "100%" }}
+      >
+        <div className="jumbotron jumbotron-fluid text-white " style={{ backgroundColor: "#337ab7" }}>
+          <div className="container">
+            <h3 className="display-4 pb-2">{heading}</h3>
+            <p className="lead pt-3">{subheading}</p>
+          </div>
         </div>
       </div>
     </div>
