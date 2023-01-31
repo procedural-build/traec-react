@@ -16,7 +16,7 @@ function LoginMessage({ isActive, registrationUser }) {
 }
 
 export function LoginPage(props) {
-  let { registrationUser, azureConfig } = props;
+  let { createText, registrationUser, azureConfig } = props;
   let { state, search } = props.location || {};
 
   let nextUrl = "/accounts/profile";
@@ -35,6 +35,7 @@ export function LoginPage(props) {
           title="Login" 
           body={(
             <LoginForm 
+              createText={createText || "Create an account"}
               nextUrl={nextUrl} 
               initUsername={registrationUser.get("username")} 
               azureConfig={azureConfig}

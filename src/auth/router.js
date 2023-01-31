@@ -13,7 +13,7 @@ import { AzureSSORedirectPage, AzureSSOFailurePage } from "./azure";
 
 function AccountsRouter(props) {
   const baseUrl = props.match.url;
-  let { UserProfile, metaFieldProps, recaptchaExtra, azureConfig } = props;
+  let { UserProfile, metaFieldProps, recaptchaExtra, azureConfig, createText } = props;
 
   return (
     <Switch>
@@ -37,6 +37,7 @@ function AccountsRouter(props) {
         render={_props => (
           <LoginPage
             {..._props}
+            createText={createText}
             azureConfig={azureConfig}
           />
         )}
