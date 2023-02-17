@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { postRegistration } from "../../_redux/actionCreators";
 import { FormFields, FormMetaFields, FormNonFieldErrors, mandatoryFieldProps } from "./formItems";
@@ -20,8 +20,8 @@ export const isIP = hostname => {
 
 const RegistrationForm = props => {
   let { dispatch, errors, metaFieldProps, initMeta, recaptchaExtra, azureConfig } = props;
-  const [metaJSON, setMetaJSON] = React.useState(initMeta || {});
-  const [state, setState] = React.useState({
+  const [metaJSON, setMetaJSON] = useState(initMeta || {});
+  const [state, setState] = useState({
     first_name: "",
     last_name: "",
     username: props.email || "",
@@ -31,8 +31,8 @@ const RegistrationForm = props => {
     errors: null,
     showRecaptcha: !isIP(location.hostname)
   });
-  const [recaptchaState, setRecaptcha] = React.useState(isIP(location.hostname) ? "localsite" : null);
-  const [recaptchaInstance, setRecaptchaInstance] = React.useState(null);
+  const [recaptchaState, setRecaptcha] = useState(isIP(location.hostname) ? "localsite" : null);
+  const [recaptchaInstance, setRecaptchaInstance] = useState(null);
 
   const onChange = e => {
     if (!e.target) {
@@ -78,11 +78,14 @@ const RegistrationForm = props => {
     <form className="form" onSubmit={onSubmit}>
       <FormNonFieldErrors errors={errors} />
       <FormFields fieldProps={mandatoryFieldProps} values={state} errors={errors} onChangeHandler={onChange} />
-      <div style={{marginTop: "-1em", marginLeft: "0.25em"}} className="form-group">
-        <small className="text-muted"><b>
-          All passwords must contain at least 12 characters, one uppercase, one special character and one numeric character.  It also cannot be similar to parts of your name or email address.
-        </b></small>
-      </div>     
+      <div style={{ marginTop: "-1em", marginLeft: "0.25em" }} className="form-group">
+        <small className="text-muted">
+          <b>
+            All passwords must contain at least 12 characters, one uppercase, one special character and one numeric
+            character. It also cannot be similar to parts of your name or email address.
+          </b>
+        </small>
+      </div>
       <FormMetaFields fieldProps={metaFieldProps} values={metaJSON} onChangeHandler={onChangeMeta} />
       <TraecRecaptcha
         show={state.showRecaptcha}
@@ -93,10 +96,7 @@ const RegistrationForm = props => {
       <ReloadRecaptcha setRecaptchaInstance={setRecaptchaInstance} recaptchaInstance={recaptchaInstance} />
       <RegisterButton gRecaptchaResponse={recaptchaState} />
 
-      <AzureSSOButton 
-        showTopSeparator={true} 
-        config={azureConfig ? {...azureConfig, register: true} : null} 
-      />
+      <AzureSSOButton showTopSeparator={true} config={azureConfig ? { ...azureConfig, register: true } : null} />
     </form>
   );
 };
