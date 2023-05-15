@@ -2,7 +2,7 @@ import React from "react";
 import { ErrorBoundary } from "traec-react/errors/handleError";
 
 export default function WizardModal(props) {
-  let { id, heading, body, hideClose } = props;
+  let { id, heading, body, hideClose, fullWidth } = props;
 
   return (
     <div
@@ -31,7 +31,7 @@ export default function WizardModal(props) {
             ) : null}
           </div>
           <ErrorBoundary>
-            <div className={"modal-body p-0 bg-white container"}>{body}</div>
+            <div className={`modal-body p-0 bg-white ${fullWidth ? "" : "container"}`}>{body}</div>
           </ErrorBoundary>
         </div>
       </div>
