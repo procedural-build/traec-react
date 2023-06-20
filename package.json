@@ -1,6 +1,6 @@
 {
   "name": "traec-react",
-  "version": "0.1.58",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -14,8 +14,6 @@
     "jwt-decode": "^2.2.0",
     "jwt-encode": "^1.0.1",
     "moment": "^2.24.0",
-    "node": "^10.17.0",
-    "nodejs": "^0.0.0",
     "react": "^17.0.2",
     "react-date-picker": "^7.9.0",
     "react-dom": "^17.0.2",

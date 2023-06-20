@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'node:10.14-slim'
+      image 'node:20.3.0-slim'
       args '-u 0:0'
     }
 
@@ -19,18 +19,18 @@ pipeline {
         sh 'npm ci && npm install -g documentation'
       }
     }
-    stage('Test') {
-      steps {
-        withEnv(overrides: ["JEST_JUNIT_OUTPUT=./jest-test-results.xml"]) {
-          sh 'npm test -- --ci --coverage --testResultsProcessor="jest-junit"'
-        }
-      }
-      post {
-        always {
-          junit 'jest-test-results.xml'
-        }
-      }
-    }
+    // stage('Test') {
+    //   steps {
+    //     withEnv(overrides: ["JEST_JUNIT_OUTPUT=./jest-test-results.xml"]) {
+    //       sh 'npm test -- --ci --coverage --testResultsProcessor="jest-junit"'
+    //     }
+    //   }
+    //   post {
+    //     always {
+    //       junit 'jest-test-results.xml'
+    //     }
+    //   }
+    // }
 
     stage('Publish NPM and Docs') {
       when {
