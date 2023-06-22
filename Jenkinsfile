@@ -16,7 +16,8 @@ pipeline {
   stages {
     stage('NPM Install') {
       steps {
-        sh 'npm ci && npm install -g documentation'
+        sh 'npm ci'
+        sh 'npm install -g documentation documentation-devseed-theme clean-documentation-theme'
       }
     }
     // stage('Test') {
@@ -50,7 +51,8 @@ pipeline {
         }
 
         // sh 'documentation build src/** -f html -o docs'
-        sh 'echo $NPM_TOKEN && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc && npm run matchversion && npm run patchversion && npm run pub'
+        sh 'echo $NPM_TOKEN && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
+        sh 'npm run pub'
 
         // echo "Uploading documentation files to ${S3_DOCS_PATH}"
         // withAWS(region: 'eu-west-2', credentials: 'docker_euwest2') {
