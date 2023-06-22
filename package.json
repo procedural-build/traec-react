@@ -29,7 +29,7 @@
     "react-style-proptype": "^3.2.2",
     "recharts": "^2.3.2",
     "sweetalert2": "^8.19.0",
-    "traec": "^1.5.4"
+    "traec": "^1.5.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
