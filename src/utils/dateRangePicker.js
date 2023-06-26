@@ -4,6 +4,9 @@ import DatePicker from "react-date-picker";
 import Octicon from "react-octicon";
 import Moment from "moment";
 
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
+
 export class DateRangePicker extends React.Component {
   constructor(props) {
     super(props);
