@@ -1,5 +1,6 @@
 import React from "react";
-import Recaptcha from "react-recaptcha";
+//import Recaptcha from "react-recaptcha";
+import ReCAPTCHA from "react-google-recaptcha"
 import { isIP } from "./index";
 
 export const TraecRecaptcha = props => {
@@ -8,21 +9,22 @@ export const TraecRecaptcha = props => {
   if (!show) {
     return null;
   }
+  
+  let sitekey = getRecaptchaSiteKey()
+  console.log("Rendering recaptcha site sitekey", sitekey)
 
   return (
     <div className="row mb-1">
       <div className="col-sm-6">
-        <Recaptcha
+        <ReCAPTCHA
           ref={e => {
             setRecaptchaInstance(e);
           }}
-          sitekey={getRecaptchaSiteKey()}
-          render="explicit"
-          verifyCallback={response => {
+          sitekey={sitekey}
+          // render="explicit"
+          onChange={response => {
+            console.log("recaptcha changed", response)
             setRecaptcha(response);
-          }}
-          onloadCallback={() => {
-            console.log("ONLOAD CALLBACK");
           }}
         />
       </div>
@@ -66,6 +68,7 @@ export const getRecaptchaSiteKey = () => {
   } else if (hostname.endsWith("procedural.build")) {
     return "6LcpY-MUAAAAAGsdHWQsRy7VJN1iydQD95e1RRnA";
   } else if (isIP(hostname)) {
+    return "6LfJt4sUAAAAAIGNjKs8OeA3gmDAYXmeiUHMtp2o";
     return "localsite";
   } else {
     return "6LcbH3wUAAAAANJthLG_viHtCcXrDnXJ_kzH8Nga";

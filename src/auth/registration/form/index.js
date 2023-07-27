@@ -90,7 +90,7 @@ const RegistrationForm = props => {
           </div>
           <FormMetaFields fieldProps={metaFieldProps} values={metaJSON} onChangeHandler={onChangeMeta} />
           <TraecRecaptcha
-            show={state.showRecaptcha}
+            show={true || state.showRecaptcha}
             setRecaptcha={setRecaptcha}
             setRecaptchaInstance={setRecaptchaInstance}
             recaptchaExtra={recaptchaExtra}
