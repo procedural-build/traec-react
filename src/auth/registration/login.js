@@ -1,6 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import Traec from "traec";
 import { BSCard } from "traec-react/utils/bootstrap";
 import LoginForm from "../form";
 
@@ -15,7 +13,7 @@ function LoginMessage({ isActive, registrationUser }) {
   );
 }
 
-export function LoginPage(props) {
+export default function LoginPage(props) {
   let { createText, registrationUser, azureConfig } = props;
   let { state, search } = props.location || {};
 
@@ -37,7 +35,7 @@ export function LoginPage(props) {
             <LoginForm 
               createText={createText || "Create an account"}
               nextUrl={nextUrl} 
-              initUsername={registrationUser.get("username")} 
+              initUsername={registrationUser?.get("username")} 
               azureConfig={azureConfig}
             />
           )} 
@@ -46,18 +44,3 @@ export function LoginPage(props) {
     </div>
   );
 }
-
-const mapStateToProps = state => {
-  let redirect = state.getInPath("auth.registration.redirect");
-  let isAuthenticated = state.getInPath("auth.isAuthenticated");
-  let isActive = state.getInPath("auth.registration.user.is_active");
-  let registrationUser = state.getInPath("auth.registration.user") || Traec.Im.Map();
-  return {
-    redirect,
-    isAuthenticated,
-    isActive,
-    registrationUser
-  };
-};
-
-export default connect(mapStateToProps)(LoginPage);
