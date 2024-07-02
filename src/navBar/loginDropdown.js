@@ -44,7 +44,9 @@ export class DropdownLogin extends React.Component {
     // Password change
     menu = menu.concat([
       { label: null },
-      { label: "Change Password", to: "/accounts/password/change/", octicon: "key" }
+      { label: "Change Password", to: "/accounts/password/change/", octicon: "key" },
+      { label: null },
+      { label: "Terms & Conditions", to: "/terms", octicon: "pencil" }
     ]);
     // Logout menu
     menu = menu.concat([{ label: null }, { label: "Logout", onClick: this.logoutClicked, octicon: "sign-out" }]);
