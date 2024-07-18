@@ -1,5 +1,5 @@
 import { LOGIN_SUCCESS, LOGIN_STATUS, LOGIN_FAILURE, LOGOUT_FAILURE, LOGOUT_SUCCESS } from "./types";
-import fetchJSON from "traec/redux/fetch";
+
 
 export const postLogin = postData => dispatch => {
   //console.log("POSTing login data")
@@ -94,5 +94,9 @@ export const logoutToken = () => dispatch => {
     fetchParams
   });
 
+  if (localStorage.getItem("token_refresh")) {
+    localStorage.removeItem("token_refresh")
+  }
+
   localStorage.setItem("token", "undefined");
-};
+}
