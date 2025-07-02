@@ -1,7 +1,7 @@
 import React from "react";
 import modal from "traec-react/utils/bootstrap/modal";
 
-export function BSModalHeader({ title, id, hideClose }) {
+export function BSModalHeader({ title, id, hideClose, onClose }) {
   let _id = `${id}Label`;
   let _title = title ? (
     <h5 className="modal-title" id={_id}>
@@ -12,7 +12,15 @@ export function BSModalHeader({ title, id, hideClose }) {
     <div className="modal-header">
       {_title}
       {hideClose ? null : (
-        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          className="close"
+          aria-label="Close"
+          onClick={() => {
+            if (!onClose) $(`#${id}`).modal("hide");
+            else onClose();
+          }}
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       )}
